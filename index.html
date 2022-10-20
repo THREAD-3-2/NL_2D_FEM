@@ -36,50 +36,39 @@
             
   <section id="documentation-of-nl-2d-fem">
 <h1>Documentation of <cite>NL_2D_FEM</cite><a class="headerlink" href="#documentation-of-nl-2d-fem" title="Permalink to this heading">¶</a></h1>
-<p>This Matlab code presents a novel method for simulating the nonlinear dynamics of highly flexible beam structures based on a finite element discretization of the geometrically exact beam model. The finite element model, currently limited to capturing in-plane motion, is solved in the frequency domain using a combination of harmonic balance and numerical continuation. The solving scheme is automated with the solver MANLAB, freely available to download at <a class="reference external" href="http://manlab.lma.cnrs-mrs.fr/">(the MANLAB website)</a>. Several different computations are available to the user with this code, notably classical forced response simulations, but also computation of the nonlinear modes (i.e. the backbone curves).</p>
+<p>This Matlab code presents a novel method for
+simulating the nonlinear dynamics of
+highly flexible beam structures
+based on a finite element discretization of
+the geometrically exact beam model.
+The finite element model,
+currently limited to capturing in-plane motion,
+is solved in the frequency domain
+using a combination of harmonic balance and numerical continuation.
+The solving scheme is automated with the solver MANLAB,
+freely available to download at
+<a class="reference external" href="http://manlab.lma.cnrs-mrs.fr/">(the MANLAB website)</a>.
+Several different computations are available to the user with this code,
+notably classical forced response simulations,
+but also computation of the nonlinear modes (i.e. the backbone curves).</p>
 <section id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="theory.html#finite-element-model-fem-of-geometrically-exact-beam-structures">Finite element model (FEM) of geometrically exact beam structures</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="theory.html#strain-measure">Strain measure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="theory.html#mass-matrix">Mass matrix</a></li>
-<li class="toctree-l3"><a class="reference internal" href="theory.html#elementary-internal-force-vector">Elementary internal force vector</a></li>
-<li class="toctree-l3"><a class="reference internal" href="theory.html#equation-of-motion">Equation of motion</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="theory.html#searching-for-periodic-response">Searching for periodic response</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="theory.html#forced-response">Forced response</a></li>
-<li class="toctree-l3"><a class="reference internal" href="theory.html#nonlinear-modes">Nonlinear modes</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#finite-element-model-fem-of-geometrically-exact-beam-structures">Finite element model (FEM) of geometrically exact beam structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#searching-for-periodic-response">Searching for periodic response</a></li>
 <li class="toctree-l2"><a class="reference internal" href="theory.html#frequency-domain-resolution-with-manlab">Frequency domain resolution with MANLAB</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="object.html">Description of the <cite>NL_2D_FEM</cite> object</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="object.html#attributes">Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="object.html#methods">Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="object.html#initialization-methods">Initialization methods</a></li>
-<li class="toctree-l3"><a class="reference internal" href="object.html#fem-methods">FEM methods</a></li>
-<li class="toctree-l3"><a class="reference internal" href="object.html#mechanics-related-methods">Mechanics-related methods</a></li>
-<li class="toctree-l3"><a class="reference internal" href="object.html#man-related-methods">MAN-related methods</a></li>
-<li class="toctree-l3"><a class="reference internal" href="object.html#equation-residual-related-methods">Equation (residual)-related methods</a></li>
-<li class="toctree-l3"><a class="reference internal" href="object.html#display-related-methods">Display-related methods</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="object.html#methods">Methods</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="useful.html">Useful functions folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inputs.html">Description of the inputs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="inputs.html#input-by-defining-a-model-data-base">Input by defining a model data base</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="inputs.html#geometry-input">Geometry input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="inputs.html#properties-input">Properties input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="inputs.html#visualization-input">Visualization input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="inputs.html#boundary-conditions-input">Boundary conditions input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="inputs.html#force-definition">Force definition</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="inputs.html#input-by-defining-a-model-data-base">Input by defining a model data base</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">Code use</a><ul>
@@ -89,28 +78,13 @@
 <li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Complete walkthrough of a simple example</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="walkthrough.html#set-the-matlab-path">Set the Matlab Path</a></li>
 <li class="toctree-l2"><a class="reference internal" href="walkthrough.html#create-a-new-fe-model">Create a new FE model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="walkthrough.html#input-definition">Input definition</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="walkthrough.html#using-a-model-data-structure">Using a model data structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="walkthrough.html#manual-input-definition">Manual input definition</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="walkthrough.html#input-definition">Input definition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="walkthrough.html#matrices-and-force-vector-initialization">Matrices and force vector initialization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="walkthrough.html#static-solution">Static solution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="walkthrough.html#modal-analysis">Modal analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="walkthrough.html#linear-forced-analysis">Linear forced analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="walkthrough.html#manlab-analysis">MANLAB analysis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="walkthrough.html#manlab-inputs">MANLAB inputs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="walkthrough.html#nonlinear-normal-modes-starting-point">Nonlinear normal modes starting point</a></li>
-<li class="toctree-l3"><a class="reference internal" href="walkthrough.html#forced-response-starting-point">Forced response starting point</a></li>
-<li class="toctree-l3"><a class="reference internal" href="walkthrough.html#display-variables-and-call-to-manlab">Display variables and call to MANLAB</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="walkthrough.html#quick-launch-of-a-computation">Quick launch of a computation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="walkthrough.html#define-the-model">Define the model</a></li>
-<li class="toctree-l3"><a class="reference internal" href="walkthrough.html#initialize-the-computation">Initialize the computation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="walkthrough.html#call-to-manlab">Call to MANLAB</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="walkthrough.html#manlab-analysis">MANLAB analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="walkthrough.html#quick-launch-of-a-computation">Quick launch of a computation</a></li>
 </ul>
 </li>
 </ul>

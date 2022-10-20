@@ -40,159 +40,152 @@
 <span id="inputs"></span><h1>Description of the inputs<a class="headerlink" href="#description-of-the-inputs" title="Permalink to this heading">¶</a></h1>
 <section id="input-by-defining-a-model-data-base">
 <h2>Input by defining a model data base<a class="headerlink" href="#input-by-defining-a-model-data-base" title="Permalink to this heading">¶</a></h2>
-<p>The easiest way to define the data of a <code class="xref py py-mod docutils literal notranslate"><span class="pre">NL_2D_FEM</span></code> object is to fill the field of a Matlab structure called the {bf model data structure} (<code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code>). An empty <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> can be created as <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span> <span class="pre">=</span> <span class="pre">create_empty_mds()</span></code>. Otherwise, an existing <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> can be simply copied and edited.</p>
-<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">NL_2D_FEM</span></code> model <code class="xref py py-mod docutils literal notranslate"><span class="pre">model</span></code> can be initialized automatically with the method <code class="xref py py-mod docutils literal notranslate"><span class="pre">model</span> <span class="pre">=</span> <span class="pre">model.set_model_from_mds(mds)</span></code>.</p>
+<p>The easiest way to define the data of a <code class="xref py py-mod docutils literal notranslate"><span class="pre">NL_2D_FEM</span></code> object is
+to fill the field of a Matlab structure called
+the {bf model data structure} (<code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code>).
+An empty <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> can be created as <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span> <span class="pre">=</span> <span class="pre">create_empty_mds()</span></code>.
+Otherwise, an existing <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> can be simply copied and edited.</p>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">NL_2D_FEM</span></code> model <code class="xref py py-mod docutils literal notranslate"><span class="pre">model</span></code> can be initialized automatically
+with the method <code class="xref py py-mod docutils literal notranslate"><span class="pre">model</span> <span class="pre">=</span> <span class="pre">model.set_model_from_mds(mds)</span></code>.</p>
 <section id="geometry-input">
 <h3>Geometry input<a class="headerlink" href="#geometry-input" title="Permalink to this heading">¶</a></h3>
 <p>There are two ways to define the geometry:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>begin{itemize}</dt><dd><p>item Provide a list of points and lines that will be discretized automatically.
-item Provide a mesh directly by giving the coordinates of the nodes and the connectivity table.</p>
-</dd>
-</dl>
-<p>end{itemize}</p>
-</div></blockquote>
-<p>paragraph{Global geometry input}</p>
-<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">geom</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the global geometry input. There are three sub-fields to be defined:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.geom.geom_node</span></code>: List of number and coordinates of the key points of the geometry. Each line is of the type <cite>point number, x coordinate, y coordinate’.
-item :mod:`mds.geom.geom_element</cite>: List of lines of the geometry. Each line is of the type <cite>line number, point 1, point 2’.
-item :mod:`mds.geom.discretisation</cite>: List of number of elements in each line (list of integers, with size the number of lines of the geometry).</p>
-</dd>
-</dl>
-<p>end{enumerate}</p>
-</div></blockquote>
+<ul class="simple">
+<li><p>Provide a list of points and lines that will be discretized automatically.</p></li>
+<li><p>Provide a mesh directly by giving the coordinates of the nodes and the connectivity table.</p></li>
+</ul>
+<section id="global-geometry-input">
+<h4>Global geometry input<a class="headerlink" href="#global-geometry-input" title="Permalink to this heading">¶</a></h4>
+<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">geom</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the global geometry input.
+There are three sub-fields to be defined:</p>
+<ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.geom.geom_node</span></code>: List of number and coordinates of the key points of the geometry.
+Each line is of the type <cite>point number, x coordinate, y coordinate</cite>.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.geom.geom_element</span></code>: List of lines of the geometry.
+Each line is of the type <cite>line number, point 1, point 2</cite>.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.geom.discretisation</span></code>: List of number of elements in each line
+(list of integers, with size the number of lines of the geometry).</p></li>
+</ul>
 <p>If the geometry is inputted, the mesh is generated automatically.</p>
-<p>paragraph{User-defined mesh input}</p>
-<p>Alternatively, the geometry input can be left empty, if the mesh is provided directly. The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">mesh</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the mesh. There are two sub-field to be defined:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.mesh.nodes</span></code>: List of number and coordinates of the nodes of the mesh. Each line is of the type <cite>node number, x coordinate, y coordinate’.
-item :mod:`mds.mesh.connect</cite>: Connectivity table; list of elements of the mesh. Each line is of the type <a href="#id1"><span class="problematic" id="id2">`</span></a>element number, node 1, node 2’.</p>
-</dd>
-</dl>
-<p>end{enumerate}</p>
-</div></blockquote>
+</section>
+<section id="user-defined-mesh-input">
+<h4>User-defined mesh input<a class="headerlink" href="#user-defined-mesh-input" title="Permalink to this heading">¶</a></h4>
+<p>Alternatively, the geometry input can be left empty, if the mesh is provided directly.
+The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">mesh</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the mesh.
+There are two sub-field to be defined:</p>
+<ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.mesh.nodes</span></code>: List of number and coordinates of the nodes of the mesh.
+Each line is of the type <cite>node number, x coordinate, y coordinate</cite>.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.mesh.connect</span></code>: Connectivity table; list of elements of the mesh.
+Each line is of the type <cite>element number, node 1, node 2</cite>.</p></li>
+</ul>
+</section>
 </section>
 <section id="properties-input">
 <h3>Properties input<a class="headerlink" href="#properties-input" title="Permalink to this heading">¶</a></h3>
-<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the cross-section profile and the material properties. The three sub-fields to be defined are:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.S</span></code>: Area of the cross-section (constant for all elements).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.I</span></code>: Second moment of area of the cross-section (constant for all elements).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.k</span></code>: Shear coefficient of the cross-section (constant for all elements).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.rho</span></code>: Material density (constant for all elements).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.E</span></code>: Material Young’s modulus (constant for all elements).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.poisson</span></code>: Material Poisson’s ratio (constant for all elements).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.alpha</span></code>: Material damping coefficient (linear Rayleigh damping, constant for all elements).</p>
-</dd>
-</dl>
-<p>end{enumerate}</p>
-</div></blockquote>
+<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the cross-section profile and the material properties.
+The three sub-fields to be defined are:</p>
+<ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.S</span></code>: Area of the cross-section (constant for all elements).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.I</span></code>: Second moment of area of the cross-section (constant for all elements).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.k</span></code>: Shear coefficient of the cross-section (constant for all elements).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.rho</span></code>: Material density (constant for all elements).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.E</span></code>: Material Young’s modulus (constant for all elements).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.poisson</span></code>: Material Poisson’s ratio (constant for all elements).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.alpha</span></code>: Material damping coefficient (linear Rayleigh damping, constant for all elements).</p></li>
+</ul>
 <p>The shear modulus <span class="math notranslate nohighlight">\(G\)</span> is computed automatically from the data.</p>
 </section>
 <section id="visualization-input">
 <h3>Visualization input<a class="headerlink" href="#visualization-input" title="Permalink to this heading">¶</a></h3>
-<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">visu</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the visualization input. There is only a single field, representative of a cell of structures:</p>
+<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">visu</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the visualization input.
+There is only a single field, representative of a cell of structures:</p>
+<ul>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list</span></code>: List (cell array) of observed node(s) and dof.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}</span></code> is a structure with two fields:</p>
 <blockquote>
-<div><dl>
-<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list</span></code>: List (cell array) of observed node(s) and dof.
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}</span></code> is a structure with two fields:
-begin{enumerate}</p>
-<blockquote>
-<div><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.node</span></code>: Node number.
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.dof</span></code>: List of dof number(s).</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.node</span></code>: Node number.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.dof</span></code>: List of dof number(s).</p></li>
+</ul>
 </div></blockquote>
-<p>end{enumerate}</p>
-</dd>
-</dl>
-<p>end{enumerate}</p>
-</div></blockquote>
+</li>
+</ul>
 </section>
 <section id="boundary-conditions-input">
 <h3>Boundary conditions input<a class="headerlink" href="#boundary-conditions-input" title="Permalink to this heading">¶</a></h3>
-<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">boundary</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the (Dirichlet) boundary conditions. There is only a single field, representative of a cell of structures:</p>
+<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">boundary</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the (Dirichlet) boundary conditions.
+There is only a single field, representative of a cell of structures:</p>
+<ul>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node_list</span></code>: List (cell array) of observed node(s) and dof.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node_list{n}</span></code> is a structure with two fields:</p>
 <blockquote>
-<div><dl>
-<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node_list</span></code>: List (cell array) of observed node(s) and dof.
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node_list{n}</span></code> is a structure with two fields:
-begin{enumerate}</p>
-<blockquote>
-<div><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.node</span></code>: Node number(s).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.dof</span></code>: List of dof number(s).</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.node</span></code>: Node number(s).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.dof</span></code>: List of dof number(s).</p></li>
+</ul>
 </div></blockquote>
-<p>end{enumerate}</p>
-</dd>
-</dl>
-<p>end{enumerate}</p>
-</div></blockquote>
+</li>
+</ul>
 </section>
 <section id="force-definition">
 <h3>Force definition<a class="headerlink" href="#force-definition" title="Permalink to this heading">¶</a></h3>
-<p>subsubsection*{Static force definition}</p>
+</section>
+<section id="static-force-definition">
+<h3>Static force definition<a class="headerlink" href="#static-force-definition" title="Permalink to this heading">¶</a></h3>
 <p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">force.static</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the definition of static forces.</p>
-<p>paragraph{Static point forces}</p>
+<section id="static-point-forces">
+<h4>Static point forces<a class="headerlink" href="#static-point-forces" title="Permalink to this heading">¶</a></h4>
 <p>The first forces to consider are static point loads, which are defined as:</p>
+<ol class="arabic">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}</span></code> is a structure with three fields:</p>
 <blockquote>
-<div><dl>
-<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}</span></code> is a structure with three fields:
-begin{enumerate}</p>
-<blockquote>
-<div><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.node</span></code>: Node number(s).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field).</p>
+<div><p>2.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.node</span></code>: Node number(s).
+2.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).
+2.3 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field).</p>
 </div></blockquote>
-<p>end{enumerate}</p>
-</dd>
-</dl>
-<p>end{enumerate}</p>
-</div></blockquote>
-<p>paragraph{Static distributed forces}</p>
+</li>
+</ol>
+</section>
+<section id="static-distributed-forces">
+<h4>Static distributed forces<a class="headerlink" href="#static-distributed-forces" title="Permalink to this heading">¶</a></h4>
 <p>Next, we consider static distributed forces, which are defined as:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_direction</span></code>: List of directions, chosen from among (1) x-axis, (2) y-axis  or (3) moment.
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_amplitude</span></code>: List of amplitudes (linear force density).</p>
-</dd>
-</dl>
-<p>end{enumerate}</p>
-</div></blockquote>
-<p>subsubsection*{Periodic force definition}</p>
-<p>Periodic loadings can also be applied to the structure. The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">force.periodic</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the definition of periodic forces.</p>
-<p>paragraph{Periodic point forces}</p>
+<ol class="arabic simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_direction</span></code>: List of directions, chosen from among (1) x-axis, (2) y-axis  or (3) moment.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_amplitude</span></code>: List of amplitudes (linear force density).</p></li>
+</ol>
+</section>
+</section>
+<section id="periodic-force-definition">
+<h3>Periodic force definition<a class="headerlink" href="#periodic-force-definition" title="Permalink to this heading">¶</a></h3>
+<p>Periodic loadings can also be applied to the structure.
+The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">force.periodic</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the definition of periodic forces.</p>
+<section id="periodic-point-forces">
+<h4>Periodic point forces<a class="headerlink" href="#periodic-point-forces" title="Permalink to this heading">¶</a></h4>
 <p>As before, consider first periodic point loads, defined as:</p>
+<ol class="arabic">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}</span></code> is a structure with three fields:</p>
 <blockquote>
-<div><dl>
-<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}</span></code> is a structure with three fields:
-begin{enumerate}</p>
-<blockquote>
-<div><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.node</span></code>: Node number(s).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field). Each element of the list is a complex number <span class="math notranslate nohighlight">\(z\)</span>.
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.harmonic</span></code>: List of harmonics (one harmonic for each dof in the previous field).</p>
+<div><p>2.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.node</span></code>: Node number(s).
+2.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).
+2.3 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field). Each element of the list is a complex number <span class="math notranslate nohighlight">\(z\)</span>.
+2.4 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.harmonic</span></code>: List of harmonics (one harmonic for each dof in the previous field).</p>
+<p>For each forced dof, the force is written as: <span class="math notranslate nohighlight">\(f(t) = real(z) \cos(h t) + \real(z) \sin(h t)\)</span>.</p>
 </div></blockquote>
-<p>end{enumerate}
-For each forced dof, the force is written as: <span class="math notranslate nohighlight">\(f(t) = real(z) \cos(h t) + \real(z) \sin(h t)\)</span>.</p>
-</dd>
-</dl>
-<p>end{enumerate}</p>
-</div></blockquote>
-<p>paragraph{Periodic distributed forces}</p>
+</li>
+</ol>
+</section>
+<section id="periodic-distributed-forces">
+<h4>Periodic distributed forces<a class="headerlink" href="#periodic-distributed-forces" title="Permalink to this heading">¶</a></h4>
 <p>Next, consider the definition of periodic distributed forces, defined as:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_direction</span></code>: List of directions, chosen from among (1) x-axis, (2) y-axis  or (3) moment.
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_amplitude</span></code>: List of amplitudes, complex numbers (linear force density).
-item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_harmonic</span></code>: List of harmonics.</p>
-</dd>
-</dl>
-<p>end{enumerate}</p>
-</div></blockquote>
+<ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_direction</span></code>: List of directions, chosen from among (1) x-axis, (2) y-axis  or (3) moment.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_amplitude</span></code>: List of amplitudes, complex numbers (linear force density).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_harmonic</span></code>: List of harmonics.</p></li>
+</ul>
+</section>
 </section>
 </section>
 </section>
@@ -219,14 +212,7 @@ item <code class="xref py py-mod docutils literal notranslate"><span class="pre"
 <li class="toctree-l1"><a class="reference internal" href="object.html">Description of the <cite>NL_2D_FEM</cite> object</a></li>
 <li class="toctree-l1"><a class="reference internal" href="useful.html">Useful functions folder</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Description of the inputs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#input-by-defining-a-model-data-base">Input by defining a model data base</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#geometry-input">Geometry input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#properties-input">Properties input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#visualization-input">Visualization input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#boundary-conditions-input">Boundary conditions input</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#force-definition">Force definition</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#input-by-defining-a-model-data-base">Input by defining a model data base</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">Code use</a></li>
