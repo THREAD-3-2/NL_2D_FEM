@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Theory &#8212; NL_2D_FEM 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Description of the NL_2D_FEM object" href="object.html" />
+    <link rel="prev" title="Documentation of NL_2D_FEM" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="theory">
+<span id="id1"></span><h1>Theory<a class="headerlink" href="#theory" title="Permalink to this heading">¶</a></h1>
+<section id="finite-element-model-fem-of-geometrically-exact-beam-structures">
+<h2>Finite element model (FEM) of geometrically exact beam structures<a class="headerlink" href="#finite-element-model-fem-of-geometrically-exact-beam-structures" title="Permalink to this heading">¶</a></h2>
+<p>The principal advantage of the geometrically exact beam model for the simulation of highly flexible structures is that there is no truncation or linearization of the rotation terms, meaning that the model is valid even at extreme amplitudes of cross-section rotation. A continuum mechanics-based derivation of the geometrically exact beam model based on the weak form / principle of virtual work is presented in detail in <a class="reference external" href="https://link.springer.com/article/10.1007/s11071-016-2965-0">(O. Thomas, A. Sénéchal, J.-F. Deü, 2016)</a> and is not recopied here. Instead, we focus primarily on the discretization of the model into finite elements.</p>
+<p>The beam is discretized into <span class="math notranslate nohighlight">\(N_e\)</span> elements of length <span class="math notranslate nohighlight">\(L^e\)</span>, where at each node <span class="math notranslate nohighlight">\(i\)</span> of an element there are three degrees of freedom <span class="math notranslate nohighlight">\(\mathbf{u}_i = \left( u_i, w_i, \theta_i \right)\)</span> corresponding to the axial displacement, transverse displacement and cross-section rotation, respectively. The elements used in this code are two-node Timoshenko beam elements with linear shape functions. The vector <span class="math notranslate nohighlight">\(\mathbf{q}^e\)</span> contains all degrees of freedom at both nodes of the element:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-q-e">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eqn-q-e" title="Permalink to this equation">¶</a></span>\[    \begin{equation}
+            \mathbf{q}^e = \begin{bmatrix}
+                    u_1 &amp; w_1 &amp; \theta_1 &amp; u_2 &amp; w_2 &amp; \theta_2
+            \end{bmatrix}^\intercal,
+    \end{equation}\]</div>
+<p>which are related to the interpolated displacements of the element <span class="math notranslate nohighlight">\(\mathbf{u}^e(x,t) = \left( u^e(x,t), w^e(x,t), \theta^e(x,t) \right)\)</span> via the linear shape functions.</p>
+<section id="strain-measure">
+<h3>Strain measure<a class="headerlink" href="#strain-measure" title="Permalink to this heading">¶</a></h3>
+<p>Based on these definitions, the continuous strains can be discretized into elemental strain values as:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-strains-disc">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eqn-strains-disc" title="Permalink to this equation">¶</a></span>\[\begin{split}    \begin{align}
+            &amp;e^e = \left( 1 + \dfrac{u_2 - u_1}{L^e}\right)\cos{\theta^e} + \left(\dfrac{w_2 - w_1}{L^e}\right)\sin{\theta^e} - 1, \notag \\
+            &amp;\gamma^e = \left(\dfrac{w_2 - w_1}{L^e}\right)\cos{\theta^e} - \left( 1 + \dfrac{u_2 - u_1}{L^e}\right)\sin{\theta^e}, \\
+            &amp;\kappa^e = \dfrac{\theta_2 - \theta_1}{L^e}, \notag
+    \end{align}\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(e^e\)</span> and <span class="math notranslate nohighlight">\(\gamma^e\)</span> related to the axial and transverse strains, respectively, and <span class="math notranslate nohighlight">\(\kappa^e\)</span> the curvature.</p>
+</section>
+<section id="mass-matrix">
+<h3>Mass matrix<a class="headerlink" href="#mass-matrix" title="Permalink to this heading">¶</a></h3>
+<p>Next, discretization and evaluation of the different virtual work terms (recall the principle of virtual work: $delta W_{mathrm{inertial}} + delta W_{mathrm{internal}} = delta W_{mathrm{external}}$) leads to the definitions of the elementary vectors and matrices. Evaluation of the discretized inertial work component yields the expression for the elementary mass matrix:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-mass">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eqn-mass" title="Permalink to this equation">¶</a></span>\[\begin{split}    \begin{equation}
+    \mathbf{M}^e = \dfrac{\rho L^e}{6}\begin{bmatrix} 2A &amp; 0 &amp; 0 &amp; A &amp; 0 &amp; 0 \\ 0 &amp; 2A &amp; 0 &amp; 0 &amp; A &amp; 0\\ 0 &amp; 0 &amp; 2I &amp; 0 &amp; 0 &amp; I \\ A &amp; 0 &amp; 0 &amp; 2A &amp; 0 &amp; 0 \\ 0 &amp; A &amp; 0 &amp; 0 &amp; 2A &amp; 0 \\ 0 &amp; 0 &amp; I &amp; 0 &amp; 0 &amp; 2I\end{bmatrix},
+    \end{equation}\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(A\)</span> the cross-sectional area, <span class="math notranslate nohighlight">\(\rho\)</span> the density, and <span class="math notranslate nohighlight">\(I\)</span> the second moment of area.</p>
+</section>
+<section id="elementary-internal-force-vector">
+<h3>Elementary internal force vector<a class="headerlink" href="#elementary-internal-force-vector" title="Permalink to this heading">¶</a></h3>
+<p>The elementary internal force vector is likewise obtained by evaluating the discretized internal work component:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-internal-force-vec">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eqn-internal-force-vec" title="Permalink to this equation">¶</a></span>\[\begin{split}    \begin{equation}
+    \mathbf{f}^e_\mathrm{int} = EA \bar{e} \begin{bmatrix} -\cos{\bar \theta} \\ -\sin{ \bar  \theta} \\ \bar \gamma \frac{L^e}{2} \\ \cos{\bar  \theta} \\ \sin{\bar  \theta} \\ \bar \gamma \frac{L^e}{2}\end{bmatrix} + kGA\bar \gamma \begin{bmatrix} \sin{\bar \theta} \\ -\cos{\bar \theta} \\  -\frac{L^e}{2}(1+\bar e) \\ -\sin{\bar \theta} \\ \cos{\bar \theta} \\ -\frac{L^e}{2}(1 + \bar e) \end{bmatrix} + EI \bar \kappa \begin{bmatrix} 0 \\ 0 \\ -1 \\ 0 \\ 0 \\ 1 \end{bmatrix},
+    \end{equation}\end{split}\]</div>
+<p>where the <span class="math notranslate nohighlight">\(\Bar{(\; )}\)</span> indicates a term evaluated at <span class="math notranslate nohighlight">\(\Bar{\theta} = (\theta_1 + \theta_2)/2\)</span> and with <span class="math notranslate nohighlight">\(E\)</span> the Young’s modulus, <span class="math notranslate nohighlight">\(G\)</span> the shear modulus and <span class="math notranslate nohighlight">\(k\)</span> the shear correction factor. It is readily seen that the geometrical nonlinearities (the sine and cosine functions) appear in this internal force vector.</p>
+</section>
+<section id="equation-of-motion">
+<h3>Equation of motion<a class="headerlink" href="#equation-of-motion" title="Permalink to this heading">¶</a></h3>
+<p>After assembly of the elemental matrices into their global counterparts according to traditional finite element procedures, the discretized nonlinear finite element model can be written in the general form:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-fem-model">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eqn-fem-model" title="Permalink to this equation">¶</a></span>\[    \begin{equation}
+            \mathbf{M}\mathbf{\Ddot{q}} + \mathbf{C}\mathbf{\Dot{q}} + \mathbf{f}_{\mathrm{int}}(\mathbf{q}) = \mathbf{f}_{\mathrm{ext}},
+    \end{equation}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\mathbf{q}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{M}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{f}_\mathrm{int}\)</span> the degree-of-freedom vector, the mass matrix and the internal force vector, respectively, for the entire structure, all expressed in a global reference frame. Note that a damping matrix <span class="math notranslate nohighlight">\(\mathbf{D}\)</span> can be added into the model depending on the desired simulation; in the case of the forced response simulations (see below), a linear Rayleigh-type damping is considered, proportional to the mass. Additionally, the external force vector <span class="math notranslate nohighlight">\(\mathbf{f}_\mathrm{ext}\)</span> is evaluated according to any applied forces <span class="math notranslate nohighlight">\(n(x,t)\)</span>, <span class="math notranslate nohighlight">\(p(x,t)\)</span> and <span class="math notranslate nohighlight">\(q(x,t)\)</span>, representing, respectively, the distributed axial force, transverse force and bending moment.</p>
+</section>
+</section>
+<section id="searching-for-periodic-response">
+<h2>Searching for periodic response<a class="headerlink" href="#searching-for-periodic-response" title="Permalink to this heading">¶</a></h2>
+<p>Different simulations are possible depending on how Eq. <a class="reference internal" href="#equation-eqn-fem-model">(5)</a> is written. Here, two different nonlinear computations are proposed to the user, namely the periodic response of the system under harmonic forcing (forced response) and the periodic response of the free and undamped system (nonlinear modes).</p>
+<section id="forced-response">
+<h3>Forced response<a class="headerlink" href="#forced-response" title="Permalink to this heading">¶</a></h3>
+<p>Consider first the periodic response of the system under harmonic forcing. In this case, a harmonic force vector is applied for <span class="math notranslate nohighlight">\(\mathbf{f}_\mathrm{ext}\)</span>:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-femforced">
+<span class="eqno">(6)<a class="headerlink" href="#equation-eqn-femforced" title="Permalink to this equation">¶</a></span>\[    \begin{equation}
+            \mathbf{M}\Ddot{\mathbf{q}}(t) + \mathbf{C}\Dot{\mathbf{q}}(t) + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{F} \sin{\Omega t},
+    \end{equation}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> the vector of harmonic forcing amplitudes and <span class="math notranslate nohighlight">\(\Omega\)</span> the harmonic forcing frequency. The amplitude of the response (e.g. the maximum transverse displacement, the amplitude of a single harmonic of a certain degree of freedom, etc.) as a function of the response frequency yields the traditional forced response curves.</p>
+</section>
+<section id="nonlinear-modes">
+<h3>Nonlinear modes<a class="headerlink" href="#nonlinear-modes" title="Permalink to this heading">¶</a></h3>
+<p>Next we consider the second type of nonlinear computation, that of the periodic response of the free and undamped system, equivalent to the nonlinear modes. The nonlinear modes are graphically represented as the “backbone curve” in the same frequency-amplitude plot as the forced response, which is the curve representing the locus of all resonance points. Within the nonlinear dynamics community, there are different definitions of the nonlinear modes, aimed at extending the concept of the linear mode to the nonlinear regime. For more insight on the definitions and usefulness of nonlinear modes, see <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0888327008001015">(G. Kerschen, M. Peeters, et. al., 2009)</a>, <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0022460X03010083">(C. Touzé, O. Thomas and A. Chaigne, 2004)</a> or <a class="reference external" href="https://hal.archives-ouvertes.fr/hal-01310674">(S. Shaw, C. Pierre, 1991)</a>.</p>
+<p>There are two methods proposed for computing the nonlinear modes. The first represents the true physical definition of the nonlinear modes and can be thought of as the reference backbone curve. The second method makes use of a concept known as phase resonance to compute the same backbone curve.</p>
+<p>paragraph{Nonlinear normal modes computation}</p>
+<p>Recalling that the nonlinear modes can be thought of in a physical sense as the periodic response of the free and undamped nonlinear system. Therefore, Eq. <a class="reference internal" href="#equation-eqn-fem-model">(5)</a> takes the form:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-femfree">
+<span class="eqno">(7)<a class="headerlink" href="#equation-eqn-femfree" title="Permalink to this equation">¶</a></span>\[    \begin{equation}
+            \mathbf{M}\Ddot{\mathbf{q}}(t)  + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{0},
+    \end{equation}\]</div>
+<p>where it can be seen that the damping term <span class="math notranslate nohighlight">\(\mathbf{D}\mathbf{\Dot{q}}\)</span> and the forcing term <span class="math notranslate nohighlight">\(\mathbf{f}_\mathrm{ext}\)</span> have been removed. The backbone curve of a particular mode is traced when plotting the amplitude of the response as a function of the oscillation frequency (in fact, the backbone curve can be overlaid onto the forced response curves to show the intersection with the points of nonlinear resonance, which is often done in the literature).</p>
+<p>paragraph{Phase resonance computation}</p>
+<p>Another method for the computation of the nonlinear modes consists in creating a phase resonance between the applied external forcing and the displacement of the system <span class="math notranslate nohighlight">\(\mathbf{u}\)</span>.
+A detailed explanation is beyond the scope of this short summary, but, in short, it has been shown that at a phase difference of <span class="math notranslate nohighlight">\(\pi/2\)</span> between the external forcing and the response <span class="math notranslate nohighlight">\(\mathbf{u}\)</span>, the external forcing term <span class="math notranslate nohighlight">\(\mathbf{f}_\mathrm{ext}\)</span> exactly equals and, therefore, cancels the damping term <span class="math notranslate nohighlight">\(\mathbf{D}\mathbf{\Dot{q}}\)</span>, leading to a simulation mathematically equivalent to Eq. <a class="reference internal" href="#equation-eqn-femfree">(7)</a> (see e.g. <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0022460X10005559">(M. Peeters, G. Kerschen and J. C. Golinval, 2011)</a>).</p>
+</section>
+</section>
+<section id="frequency-domain-resolution-with-manlab">
+<h2>Frequency domain resolution with MANLAB<a class="headerlink" href="#frequency-domain-resolution-with-manlab" title="Permalink to this heading">¶</a></h2>
+<p>The equation of motion for the simulation under consideration is solved in the frequency domain by the solver MANLAB. The computation is performed automatically without intervention on behalf of the user. For this reason, only a high-level overview of MANLAB is presented here; the user is encouraged to download the solver, its documentation and some example test cases at <a class="reference external" href="http://manlab.lma.cnrs-mrs.fr/">(the MANLAB website)</a>.</p>
+<p>The formalism of MANLAB requires that the system contain only polynomial nonlinearities of quadratic order or less. For this reason, an extra step known as the “quadratic recast” of any non-quadratic nonlinearities (in this case, notably the geometric nonlinearities <span class="math notranslate nohighlight">\(\sin{\theta}\)</span> and <span class="math notranslate nohighlight">\(\cos{\theta}\)</span>) is required, wherein additional variables are added into the system. After this step, the FE equation of motion Eq. <a class="reference internal" href="#equation-eqn-fem-model">(5)</a> takes the form of a differential-algebraic system of equations (DAE). This process is explained in detail in a recently-submitted paper, <a class="reference external" href="https://hal.archives-ouvertes.fr/hal-03819580">(M. Debeurre, A. Grolet, B. Cochelin and O. Thomas, submitted 2022)</a>.</p>
+<p>paragraph{Harmonic balance method}</p>
+<p>The unknowns of the system are solved in the frequency domain using a combination of harmonic balance expansion and numerical continuation. First, the harmonic balance method (HBM) is applied. Each unknown <span class="math notranslate nohighlight">\(x(t)\)</span> is assumed periodic and is expanded in Fourier series up to harmonic <span class="math notranslate nohighlight">\(H\)</span>:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-hbm">
+<span class="eqno">(8)<a class="headerlink" href="#equation-eqn-hbm" title="Permalink to this equation">¶</a></span>\[    \begin{equation}
+            x(t) = x_0 + \sum_{k=1}^H (x_{k}^c\cos{k\omega t} + x_{k}^s\sin{k\omega t}),
+    \end{equation}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x_0\)</span>, <span class="math notranslate nohighlight">\(x_{k}^c\)</span> and  <span class="math notranslate nohighlight">\(x_{k}^s\)</span> represent the Fourier coefficients and <span class="math notranslate nohighlight">\(\omega\)</span> the angular frequency. Substituting the harmonic balance expansion Eq. <a class="reference internal" href="#equation-eqn-hbm">(8)</a> into the quadratically-recast DAE equations governing the system, the resulting system of (quadratic) algebraic equations can be written as:</p>
+<div class="math notranslate nohighlight" id="equation-eqn-residual">
+<span class="eqno">(9)<a class="headerlink" href="#equation-eqn-residual" title="Permalink to this equation">¶</a></span>\[    \begin{equation}
+            \mathbf{R}(\mathbf{X},\omega,\lambda) = \mathbf{R}(\tilde{\mathbf{X}}) =  0,
+    \end{equation}\]</div>
+<p>with <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> the vector containing the Fourier coefficients of all variables and <span class="math notranslate nohighlight">\(\lambda\)</span> a continuation parameter. Eq. <a class="reference internal" href="#equation-eqn-residual">(9)</a> is the one solved by numerical continuation.</p>
+<p>paragraph{Asymptotic numerical continuation}</p>
+<p>The asymptotic numerical method (ANM) is used as the strategy for numerical continuation of periodic solutions. The details of this method can be found in many references (see e.g. <a class="reference external" href="https://onlinelibrary.wiley.com/doi/10.1002/nme.1620370706">(B. Cochelin, N. Damil and M. Potier-Ferry, 1994)</a> or <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0022460X09001217?via%3Dihub">(B. Cochelin and C. Vergez, 2009)</a>). Globally, the ANM seeks the solution in a power series expansion of the unknowns <span class="math notranslate nohighlight">\(\tilde{\mathbf{X}}\)</span> around <span class="math notranslate nohighlight">\(a\)</span>, a pseudo arc-length parameter. Since the process is entirely automated in MANLAB, a detailed investigation is left to the interested user.</p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">NL_2D_FEM</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Theory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#finite-element-model-fem-of-geometrically-exact-beam-structures">Finite element model (FEM) of geometrically exact beam structures</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#strain-measure">Strain measure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mass-matrix">Mass matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#elementary-internal-force-vector">Elementary internal force vector</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#equation-of-motion">Equation of motion</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#searching-for-periodic-response">Searching for periodic response</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#forced-response">Forced response</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nonlinear-modes">Nonlinear modes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#frequency-domain-resolution-with-manlab">Frequency domain resolution with MANLAB</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="object.html">Description of the <cite>NL_2D_FEM</cite> object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="useful.html">Useful functions folder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inputs.html">Description of the inputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">Code use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Complete walkthrough of a simple example</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Documentation of <cite>NL_2D_FEM</cite></a></li>
+      <li>Next: <a href="object.html" title="next chapter">Description of the <cite>NL_2D_FEM</cite> object</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Marielle Debeurre, Aurélien Grolet, Olivier Thomas, Bruno Cochelin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/theory.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

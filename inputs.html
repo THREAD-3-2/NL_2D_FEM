@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Description of the inputs &#8212; NL_2D_FEM 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Code use" href="gui.html" />
+    <link rel="prev" title="Useful functions folder" href="useful.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="description-of-the-inputs">
+<span id="inputs"></span><h1>Description of the inputs<a class="headerlink" href="#description-of-the-inputs" title="Permalink to this heading">¶</a></h1>
+<section id="input-by-defining-a-model-data-base">
+<h2>Input by defining a model data base<a class="headerlink" href="#input-by-defining-a-model-data-base" title="Permalink to this heading">¶</a></h2>
+<p>The easiest way to define the data of a <code class="xref py py-mod docutils literal notranslate"><span class="pre">NL_2D_FEM</span></code> object is to fill the field of a Matlab structure called the {bf model data structure} (<code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code>). An empty <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> can be created as <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span> <span class="pre">=</span> <span class="pre">create_empty_mds()</span></code>. Otherwise, an existing <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> can be simply copied and edited.</p>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">NL_2D_FEM</span></code> model <code class="xref py py-mod docutils literal notranslate"><span class="pre">model</span></code> can be initialized automatically with the method <code class="xref py py-mod docutils literal notranslate"><span class="pre">model</span> <span class="pre">=</span> <span class="pre">model.set_model_from_mds(mds)</span></code>.</p>
+<section id="geometry-input">
+<h3>Geometry input<a class="headerlink" href="#geometry-input" title="Permalink to this heading">¶</a></h3>
+<p>There are two ways to define the geometry:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>begin{itemize}</dt><dd><p>item Provide a list of points and lines that will be discretized automatically.
+item Provide a mesh directly by giving the coordinates of the nodes and the connectivity table.</p>
+</dd>
+</dl>
+<p>end{itemize}</p>
+</div></blockquote>
+<p>paragraph{Global geometry input}</p>
+<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">geom</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the global geometry input. There are three sub-fields to be defined:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.geom.geom_node</span></code>: List of number and coordinates of the key points of the geometry. Each line is of the type <cite>point number, x coordinate, y coordinate’.
+item :mod:`mds.geom.geom_element</cite>: List of lines of the geometry. Each line is of the type <cite>line number, point 1, point 2’.
+item :mod:`mds.geom.discretisation</cite>: List of number of elements in each line (list of integers, with size the number of lines of the geometry).</p>
+</dd>
+</dl>
+<p>end{enumerate}</p>
+</div></blockquote>
+<p>If the geometry is inputted, the mesh is generated automatically.</p>
+<p>paragraph{User-defined mesh input}</p>
+<p>Alternatively, the geometry input can be left empty, if the mesh is provided directly. The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">mesh</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the mesh. There are two sub-field to be defined:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.mesh.nodes</span></code>: List of number and coordinates of the nodes of the mesh. Each line is of the type <cite>node number, x coordinate, y coordinate’.
+item :mod:`mds.mesh.connect</cite>: Connectivity table; list of elements of the mesh. Each line is of the type <a href="#id1"><span class="problematic" id="id2">`</span></a>element number, node 1, node 2’.</p>
+</dd>
+</dl>
+<p>end{enumerate}</p>
+</div></blockquote>
+</section>
+<section id="properties-input">
+<h3>Properties input<a class="headerlink" href="#properties-input" title="Permalink to this heading">¶</a></h3>
+<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">prop</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the cross-section profile and the material properties. The three sub-fields to be defined are:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.S</span></code>: Area of the cross-section (constant for all elements).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.I</span></code>: Second moment of area of the cross-section (constant for all elements).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.k</span></code>: Shear coefficient of the cross-section (constant for all elements).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.rho</span></code>: Material density (constant for all elements).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.E</span></code>: Material Young’s modulus (constant for all elements).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.poisson</span></code>: Material Poisson’s ratio (constant for all elements).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.alpha</span></code>: Material damping coefficient (linear Rayleigh damping, constant for all elements).</p>
+</dd>
+</dl>
+<p>end{enumerate}</p>
+</div></blockquote>
+<p>The shear modulus <span class="math notranslate nohighlight">\(G\)</span> is computed automatically from the data.</p>
+</section>
+<section id="visualization-input">
+<h3>Visualization input<a class="headerlink" href="#visualization-input" title="Permalink to this heading">¶</a></h3>
+<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">visu</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the visualization input. There is only a single field, representative of a cell of structures:</p>
+<blockquote>
+<div><dl>
+<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list</span></code>: List (cell array) of observed node(s) and dof.
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}</span></code> is a structure with two fields:
+begin{enumerate}</p>
+<blockquote>
+<div><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.node</span></code>: Node number.
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.dof</span></code>: List of dof number(s).</p>
+</div></blockquote>
+<p>end{enumerate}</p>
+</dd>
+</dl>
+<p>end{enumerate}</p>
+</div></blockquote>
+</section>
+<section id="boundary-conditions-input">
+<h3>Boundary conditions input<a class="headerlink" href="#boundary-conditions-input" title="Permalink to this heading">¶</a></h3>
+<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">boundary</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the (Dirichlet) boundary conditions. There is only a single field, representative of a cell of structures:</p>
+<blockquote>
+<div><dl>
+<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node_list</span></code>: List (cell array) of observed node(s) and dof.
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node_list{n}</span></code> is a structure with two fields:
+begin{enumerate}</p>
+<blockquote>
+<div><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.node</span></code>: Node number(s).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.dof</span></code>: List of dof number(s).</p>
+</div></blockquote>
+<p>end{enumerate}</p>
+</dd>
+</dl>
+<p>end{enumerate}</p>
+</div></blockquote>
+</section>
+<section id="force-definition">
+<h3>Force definition<a class="headerlink" href="#force-definition" title="Permalink to this heading">¶</a></h3>
+<p>subsubsection*{Static force definition}</p>
+<p>The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">force.static</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the definition of static forces.</p>
+<p>paragraph{Static point forces}</p>
+<p>The first forces to consider are static point loads, which are defined as:</p>
+<blockquote>
+<div><dl>
+<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}</span></code> is a structure with three fields:
+begin{enumerate}</p>
+<blockquote>
+<div><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.node</span></code>: Node number(s).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field).</p>
+</div></blockquote>
+<p>end{enumerate}</p>
+</dd>
+</dl>
+<p>end{enumerate}</p>
+</div></blockquote>
+<p>paragraph{Static distributed forces}</p>
+<p>Next, we consider static distributed forces, which are defined as:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_direction</span></code>: List of directions, chosen from among (1) x-axis, (2) y-axis  or (3) moment.
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_amplitude</span></code>: List of amplitudes (linear force density).</p>
+</dd>
+</dl>
+<p>end{enumerate}</p>
+</div></blockquote>
+<p>subsubsection*{Periodic force definition}</p>
+<p>Periodic loadings can also be applied to the structure. The field <code class="xref py py-mod docutils literal notranslate"><span class="pre">force.periodic</span></code> of the <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> governs the definition of periodic forces.</p>
+<p>paragraph{Periodic point forces}</p>
+<p>As before, consider first periodic point loads, defined as:</p>
+<blockquote>
+<div><dl>
+<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}</span></code> is a structure with three fields:
+begin{enumerate}</p>
+<blockquote>
+<div><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.node</span></code>: Node number(s).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field). Each element of the list is a complex number <span class="math notranslate nohighlight">\(z\)</span>.
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.harmonic</span></code>: List of harmonics (one harmonic for each dof in the previous field).</p>
+</div></blockquote>
+<p>end{enumerate}
+For each forced dof, the force is written as: <span class="math notranslate nohighlight">\(f(t) = real(z) \cos(h t) + \real(z) \sin(h t)\)</span>.</p>
+</dd>
+</dl>
+<p>end{enumerate}</p>
+</div></blockquote>
+<p>paragraph{Periodic distributed forces}</p>
+<p>Next, consider the definition of periodic distributed forces, defined as:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>begin{enumerate}</dt><dd><p>item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_direction</span></code>: List of directions, chosen from among (1) x-axis, (2) y-axis  or (3) moment.
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_amplitude</span></code>: List of amplitudes, complex numbers (linear force density).
+item <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_harmonic</span></code>: List of harmonics.</p>
+</dd>
+</dl>
+<p>end{enumerate}</p>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">NL_2D_FEM</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="object.html">Description of the <cite>NL_2D_FEM</cite> object</a></li>
+<li class="toctree-l1"><a class="reference internal" href="useful.html">Useful functions folder</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Description of the inputs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#input-by-defining-a-model-data-base">Input by defining a model data base</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geometry-input">Geometry input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#properties-input">Properties input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualization-input">Visualization input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#boundary-conditions-input">Boundary conditions input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#force-definition">Force definition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">Code use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="walkthrough.html">Complete walkthrough of a simple example</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="useful.html" title="previous chapter">Useful functions folder</a></li>
+      <li>Next: <a href="gui.html" title="next chapter">Code use</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Marielle Debeurre, Aurélien Grolet, Olivier Thomas, Bruno Cochelin.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/inputs.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
