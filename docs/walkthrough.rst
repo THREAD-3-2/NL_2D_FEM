@@ -21,7 +21,7 @@ Then, create a new script name :mod:`run_problem` that will contain all of the o
 
 In the script, clean the state of Matlab:
 
-.. code-block::matlab
+.. code-block::
 
 	clear
 	close all
@@ -60,7 +60,7 @@ Manual input definition
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Geometry
-~~~~~~~~
+""""""""
 
 .. code-block::
 
@@ -77,7 +77,7 @@ Geometry
 	model = model.set_geom(geom_node, geom_element, discretisation);
 
 Mesh
-~~~~
+""""
 
 .. code-block::
 	
@@ -85,7 +85,7 @@ Mesh
 	model = model.auto_mesh();
 	
 Properties
-~~~~~~~~~~
+""""""""""
 
 .. code-block::
 
@@ -103,7 +103,7 @@ Properties
 	model = model.set_prop(S, I, rho, E, poisson, k, alpha);
 	
 Boundary conditions
-~~~~~~~~~~~~~~~~~~~
+"""""""""""""""""""
 
 .. code-block::
 
@@ -115,7 +115,7 @@ Boundary conditions
 
 
 Visualization
-~~~~~~~~~~~~~
+"""""""""""""
 
 .. code-block::
 	
@@ -127,7 +127,7 @@ Visualization
 
 
 Force definitions
-~~~~~~~~~~~~~~~~~
+"""""""""""""""""
 
 .. code-block::
 

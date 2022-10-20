@@ -16,105 +16,89 @@ Attributes
 
 1. :mod:`model.geom`: The geometry of the model (key points and lines of the geometry)
 
-    1.1 :mod:`model.geom.geom_node`: List of number and coordinates of the key points of the geometry. Each line is of the type `point number, x coordinate, y coordinate'.
-    1.2 :mod:`model.geom.geom_element`: List of lines in the geometry connecting the nodes. Each line is of the type `line number, point 1, point 2'.
-    1.3 :mod:`model.geom.discretisation`: List of number of elements in each line (list of integers, with size the number of lines of the geometry).
+    * :mod:`model.geom.geom_node`: List of number and coordinates of the key points of the geometry. Each line is of the type (point number, x coordinate, y coordinate).
+    * :mod:`model.geom.geom_element`: List of lines in the geometry connecting the nodes. Each line is of the type (line number, point 1, point 2).
+    * :mod:`model.geom.discretisation`: List of number of elements in each line (list of integers, with size the number of lines of the geometry).
 
 2. :mod:`model.prop`: Element cross-section and material properties (constant properties for all elements of the model)
 
-    2.1 :mod:`model.prop.area`: Area of the cross-section.
-    2.2 :mod:`model.prop.inertia`: Second moment of area of the cross-section.
-    2.3 :mod:`model.prop.shear_coeff_k`: Shear coefficient of the cross-section.
-    2.4 :mod:`model.prop.density`: Material density.
-    2.5 :mod:`model.prop.young_mod`: Material Young's modulus. 
-    2.6 :mod:`model.prop.shear_mod`: Material shear modulus.
-    2.7 :mod:`model.prop.poisson`: Material Poisson's ratio.
-    2.8 :mod:`model.prop.alpha`: Material damping coefficient (linear Rayleigh damping).
+    * :mod:`model.prop.area`: Area of the cross-section.
+    * :mod:`model.prop.inertia`: Second moment of area of the cross-section.
+    * :mod:`model.prop.shear_coeff_k`: Shear coefficient of the cross-section.
+    * :mod:`model.prop.density`: Material density.
+    * :mod:`model.prop.young_mod`: Material Young's modulus. 
+    * :mod:`model.prop.shear_mod`: Material shear modulus.
+    * :mod:`model.prop.poisson`: Material Poisson's ratio.
+    * :mod:`model.prop.alpha`: Material damping coefficient (linear Rayleigh damping).
 
 3. :mod:`model.mesh`: mesh of the FE model
 
-    3.1 :mod:`model.mesh.nodes`: List of number and coordinates of the nodes of the mesh. Each line is of the type `node number, x coordinate, y coordinate'.
-    3.2 :mod:`model.mesh.connect`: Connectivity table, \textit{i.e.} list of elements of the mesh. Each line is of the type `element number, node 1, node 2'.
-    3.3 :mod:`model.mesh.number_nodes`: Total number of nodes in the mesh.
-    3.4 :mod:`model.mesh.number_elements`: Total number of elements in the mesh.
+    * :mod:`model.mesh.nodes`: List of number and coordinates of the nodes of the mesh. Each line is of the type (node number, x coordinate, y coordinate).
+    * :mod:`model.mesh.connect`: Connectivity table, \textit{i.e.} list of elements of the mesh. Each line is of the type (element number, node 1, node 2).
+    * :mod:`model.mesh.number_nodes`: Total number of nodes in the mesh.
+    * :mod:`model.mesh.number_elements`: Total number of elements in the mesh.
 
 4. :mod:`model.visu`: Visualization information for displaying results
 
-    4.1 :mod:`model.visu.visu_node_list`: List (cell array) of observed node and degree of freedom (dof). 
+    * :mod:`model.visu.visu_node_list`: List (cell array) of observed node and degree of freedom (dof). 
 
-        * :mod:`model.visu.visu_node_list{n}` is a structure with two fields:
+        ** :mod:`model.visu.visu_node_list{n}` is a structure with two fields: a) :mod:`mds.prop.visu.visu_node_list{n}.node`: Node number, and b) :mod:`mds.prop.visu.visu_node_list{n}.dof`: List of dof number(s).
 
-            a) :mod:`mds.prop.visu.visu_node_list{n}.node`: Node number.
-            b) :mod:`mds.prop.visu.visu_node_list{n}.dof`: List of dof number(s).
-
-    4.2 :mod:`model.visu.dof`: List of indices of observed dof in the assembled vector. 
+    * :mod:`model.visu.dof`: List of indices of observed dof in the assembled vector. 
 
 5. :mod:`model.boundary`: Boundary conditions information
 
-    5.1 :mod:`model.boundary.bc_node_list`: List (cell array) of boundary condition nodes and dof.
+    * :mod:`model.boundary.bc_node_list`: List (cell array) of boundary condition nodes and dof.
 
-        * :mod:`mds.boundary.bc_node_list{n}` is a structure with two fields:
+        ** :mod:`mds.boundary.bc_node_list{n}` is a structure with two fields: a) :mod:`mds.boundary.bc_node{n}.node`: Node number, and b) :mod:`mds.boundary.bc_node{n}.dof`: List of dof number(s).
 
-            a) :mod:`mds.boundary.bc_node{n}.node`: Node number.
-            b) :mod:`mds.boundary.bc_node{n}.dof`: List of dof number(s).
-
-    5.2 :mod:`model.boundary.dof_list`: List of indices of all dof in the assembled vector. 
-    5.3 :mod:`model.boundary.prescribed_dof`: List of indices of all prescribed dof (displacement or rotation set to zero).
-    5.4 :mod:`model.boundary.active_dof`: List of indices of all non-boundary condition dof.
+    * :mod:`model.boundary.dof_list`: List of indices of all dof in the assembled vector. 
+    * :mod:`model.boundary.prescribed_dof`: List of indices of all prescribed dof (displacement or rotation set to zero).
+    * :mod:`model.boundary.active_dof`: List of indices of all non-boundary condition dof.
 
 6. :mod:`model.loads`: Loads (static and periodic, point force and distributed loads)
 
-    6.1 :mod:`model.loads.static`: Static loads.
+:mod:`model.loads.static`: Static loads.
 
-        a) :mod:`model.loads.static.static_ponctual_force_node_list`: List (cell array) of forced node(s) and dof. 
+        * :mod:`model.loads.static.static_ponctual_force_node_list`: List (cell array) of forced node(s) and dof. 
 
-            * :mod:`model.loads..static.static_ponctual_force_node_list{n}` is a structure with three fields:
+            ** :mod:`model.loads..static.static_ponctual_force_node_list{n}` is a structure with three fields: a):mod:`model.loads.static.static_ponctual_force_node_list{n}.node`: Node number, b) :mod:`model.loads.static.static_ponctual_force_node_list{n}.dof`: List of dof number(s), and c) :mod:`model.loads.static.static_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field).
 
-                * :mod:`model.loads..static.static_ponctual_force_node_list{n}.node`: Node number.
-                * :mod:`model.loads..static.static_ponctual_force_node_list{n}.dof`: List of dof number(s).
-                * :mod:`model.loads.static.static_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field).
+        * :mod:`model.loads.static.static_distributed_force_direction`: List of directions among (1) x-axis (2) y-axis  or (3) moment.
+        * :mod:`model.loads.static.static_distributed_force_amplitude`: List of amplitudes (linear force density). 
 
-        b) :mod:`model.loads.static.static_distributed_force_direction`: List of directions among (1) x-axis (2) y-axis  or (3) moment.
-        c) :mod:`model.loads.static.static_distributed_force_amplitude`: List of amplitudes (linear force density). 
+:mod:`model.loads.periodic`: Periodic loads 
 
-    6.2 :mod:`model.loads.periodic`: Periodic loads 
+        * :mod:`model.loads.periodic.periodic_ponctual_force_node_list`: List (cell array) of forced node(s) and dof. 
 
-        a) :mod:`model.loads.periodic.periodic_ponctual_force_node_list`: List (cell array) of forced node(s) and dof. 
+            ** :mod:`model.loads.periodic.periodic_ponctual_force_node_list{n}` is a structure with three fields: a) :mod:`model.loads.periodic.periodicponctual_force_node_list{n}.node`: Node number, b) :mod:`model.loads.periodic.periodic_ponctual_force_node_list{n}.dof`: List of dof number(s), and c) :mod:`model.loads.periodic.periodic_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field).
 
-            * :mod:`model.loads.periodic.periodic_ponctual_force_node_list{n}` is a structure with three fields:
-
-                * :mod:`model.loads.periodic.periodicponctual_force_node_list{n}.node`: Node number.
-                * :mod:`model.loads.periodic.periodic_ponctual_force_node_list{n}.dof`: List of dof number(s).
-                * :mod:`model.loads.periodic.periodic_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field).
-
-
-        b) :mod:`model.loads.periodic.periodic_distributed_force_direction`: List of direction among (1) x-axis (2) y-axis  or (3) moment.
-        c) :mod:`model.loads.periodic.periodic_distributed_force_amplitude`: List of amplitudes (linear force density). 
-
+        * :mod:`model.loads.periodic.periodic_distributed_force_direction`: List of direction among (1) x-axis (2) y-axis  or (3) moment.
+        * :mod:`model.loads.periodic.periodic_distributed_force_amplitude`: List of amplitudes (linear force density). 
 
 
 7. :mod:`model.matrices`: Assembled matrices of the model
 
-    7.1 :mod:`model.matrices.mass`: Mass matrix.
-    7.2 :mod:`model.matrices.damping`: Damping matrix.
-    7.3 :mod:`model.matrices.stiffness_at_origin`: Linear stiffness matrix (around undeformed (reference) configuration).
-    7.4 :mod:`model.matrices.tangent_stiffness_at_qs`: Unused.
+    * :mod:`model.matrices.mass`: Mass matrix.
+    * :mod:`model.matrices.damping`: Damping matrix.
+    * :mod:`model.matrices.stiffness_at_origin`: Linear stiffness matrix (around undeformed (reference) configuration).
+    * :mod:`model.matrices.tangent_stiffness_at_qs`: Unused.
 
 
 8. :mod:`model.vectors`: Assembled vectors of the model 
 
-    8.1 :mod:`model.vectors.null_vector`: Assembled vector of dof full of zeros.
-    8.2 :mod:`model.vectors.static_forces`: Assembled vector of static forces.
-    8.3 :mod:`model.vectors.periodic_forces`: Assembled vector (matrix) of periodic forces (each row corresponds to a harmonic).
-    8.4 :mod:`model.vectors.static_solution`: Unused.
+    * :mod:`model.vectors.null_vector`: Assembled vector of dof full of zeros.
+    * :mod:`model.vectors.static_forces`: Assembled vector of static forces.
+    * :mod:`model.vectors.periodic_forces`: Assembled vector (matrix) of periodic forces (each row corresponds to a harmonic).
+    * :mod:`model.vectors.static_solution`: Unused.
 
 
 9. :mod:`model.solver`: Solver information
 
-    9.1 :mod:`model.solver.type`: :mod:`'homemade'`: Default, solve NL system with a simple Newton method, or :mod:`'fsolve'`: solve NL system with Matlab :mod:`fsolve` from optimization toolbox). 
-    9.2 :mod:`model.solver.tol_res`: Residual tolerance.
-    9.3 :mod:`model.solver.tol_step`: Step tolerance.
-    9.4 :mod:`model.solver.n_iter_max`: Number of maximum iterations for Newton's method.
+    * :mod:`model.solver.type`: :mod:`'homemade'`: Default, solve NL system with a simple Newton method, or :mod:`'fsolve'`: solve NL system with Matlab :mod:`fsolve` from optimization toolbox). 
+    * :mod:`model.solver.tol_res`: Residual tolerance.
+    * :mod:`model.solver.tol_step`: Step tolerance.
+    * :mod:`model.solver.n_iter_max`: Number of maximum iterations for Newton's method.
 
 
 
@@ -193,6 +177,6 @@ Equation (residual)-related methods
 Display-related methods
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-* :mod:`model.plot_deformed_mesh`: Plot deformed structure from a given vector.
-* :mod:`model.plot_static_configuration`: Plot the static configuration.
-* :mod:`model.plot_mode_shape`: Plot the mode shapes from a given list. 
+1. :mod:`model.plot_deformed_mesh`: Plot deformed structure from a given vector.
+2. :mod:`model.plot_static_configuration`: Plot the static configuration.
+3. :mod:`model.plot_mode_shape`: Plot the mode shapes from a given list. 

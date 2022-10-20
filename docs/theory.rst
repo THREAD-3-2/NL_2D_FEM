@@ -55,7 +55,7 @@ and :math:`\kappa^e` the curvature.
 Mass matrix
 ~~~~~~~~~~~
 
-Next, discretization and evaluation of the different virtual work terms (recall the principle of virtual work: $\delta W_{\mathrm{inertial}} + \delta W_{\mathrm{internal}} = \delta W_{\mathrm{external}}$) leads to the definitions of the elementary vectors and matrices. Evaluation of the discretized inertial work component yields the expression for the elementary mass matrix:
+Next, discretization and evaluation of the different virtual work terms (recall the principle of virtual work: :math:`\delta W_{\mathrm{inertial}} + \delta W_{\mathrm{internal}} = \delta W_{\mathrm{external}}`) leads to the definitions of the elementary vectors and matrices. Evaluation of the discretized inertial work component yields the expression for the elementary mass matrix:
 
 .. math::
     :label: eqn_mass
@@ -75,7 +75,7 @@ The elementary internal force vector is likewise obtained by evaluating the disc
 	
     \mathbf{f}^e_\mathrm{int} = EA \bar{e} \begin{bmatrix} -\cos{\bar \theta} \\ -\sin{ \bar  \theta} \\ \bar \gamma \frac{L^e}{2} \\ \cos{\bar  \theta} \\ \sin{\bar  \theta} \\ \bar \gamma \frac{L^e}{2}\end{bmatrix} + kGA\bar \gamma \begin{bmatrix} \sin{\bar \theta} \\ -\cos{\bar \theta} \\  -\frac{L^e}{2}(1+\bar e) \\ -\sin{\bar \theta} \\ \cos{\bar \theta} \\ -\frac{L^e}{2}(1 + \bar e) \end{bmatrix} + EI \bar \kappa \begin{bmatrix} 0 \\ 0 \\ -1 \\ 0 \\ 0 \\ 1 \end{bmatrix},
 	
-where the :math:`\Bar{(\; )}` indicates a term evaluated at :math:`\Bar{\theta} = (\theta_1 + \theta_2)/2` and with :math:`E` the Young's modulus, :math:`G` the shear modulus and :math:`k` the shear correction factor. It is readily seen that the geometrical nonlinearities (the sine and cosine functions) appear in this internal force vector.
+where the :math:`\bar{(\; )}` indicates a term evaluated at :math:`\bar{\theta} = (\theta_1 + \theta_2)/2` and with :math:`E` the Young's modulus, :math:`G` the shear modulus and :math:`k` the shear correction factor. It is readily seen that the geometrical nonlinearities (the sine and cosine functions) appear in this internal force vector.
 
 
 Equation of motion
@@ -86,7 +86,7 @@ After assembly of the elemental matrices into their global counterparts accordin
 .. math::
     :label: eqn_FEM_model
 
-	\mathbf{M}\mathbf{\Ddot{q}} + \mathbf{C}\mathbf{\Dot{q}} + \mathbf{f}_{\mathrm{int}}(\mathbf{q}) = \mathbf{f}_{\mathrm{ext}},
+	\mathbf{M}\mathbf{\ddot{q}} + \mathbf{D}\mathbf{\dot{q}} + \mathbf{f}_{\mathrm{int}}(\mathbf{q}) = \mathbf{f}_{\mathrm{ext}},
 
 with :math:`\mathbf{q}`, :math:`\mathbf{M}` and :math:`\mathbf{f}_\mathrm{int}`
 the degree-of-freedom vector, the mass matrix and the internal force vector, respectively,
@@ -117,7 +117,7 @@ In this case, a harmonic force vector is applied for :math:`\mathbf{f}_\mathrm{e
 .. math::
     :label: eqn_FEMforced
 
-	\mathbf{M}\Ddot{\mathbf{q}}(t) + \mathbf{C}\Dot{\mathbf{q}}(t) + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{F} \sin{\Omega t},
+	\mathbf{M}\ddot{\mathbf{q}}(t) + \mathbf{D}\dot{\mathbf{q}}(t) + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{F} \sin{\Omega t},
 	
 with :math:`\mathbf{F}` the vector of harmonic forcing amplitudes and
 :math:`\Omega` the harmonic forcing frequency.
@@ -156,9 +156,9 @@ Therefore, Eq. :eq:`eqn_FEM_model` takes the form:
 .. math::
     :label: eqn_FEMfree
 	
-    \mathbf{M}\Ddot{\mathbf{q}}(t)  + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{0},
+    \mathbf{M}\ddot{\mathbf{q}}(t)  + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{0},
 
-where it can be seen that the damping term :math:`\mathbf{D}\mathbf{\Dot{q}}`
+where it can be seen that the damping term :math:`\mathbf{D}\mathbf{\dot{q}}`
 and the forcing term :math:`\mathbf{f}_\mathrm{ext}` have been removed.
 The backbone curve of a particular mode is traced when plotting the amplitude of
 the response as a function of the oscillation frequency
@@ -176,7 +176,7 @@ A detailed explanation is beyond the scope of this short summary,
 but, in short, it has been shown that at a phase difference of :math:`\pi/2`
 between the external forcing and the response :math:`\mathbf{u}`,
 the external forcing term :math:`\mathbf{f}_\mathrm{ext}` exactly equals and,
-therefore, cancels the damping term :math:`\mathbf{D}\mathbf{\Dot{q}}`,
+therefore, cancels the damping term :math:`\mathbf{D}\mathbf{\dot{q}}`,
 leading to a simulation mathematically equivalent to Eq. :eq:`eqn_FEMfree`
 (see e.g. `(M. Peeters, G. Kerschen and J. C. Golinval, 2011) <https://www.sciencedirect.com/science/article/pii/S0022460X10005559>`_).
 
