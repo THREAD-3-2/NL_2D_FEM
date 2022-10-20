@@ -3,17 +3,21 @@
 Complete walkthrough of a simple example
 ========================================
 
-This example outlines the step-by-step procedure to compute the benchmark reference solution of a clamped-clamped beam with a point periodic force, found in `(A. Givois et al., 2019) <https://link.springer.com/article/10.1007/s11071-019-05021-6>`_.
+This example outlines the step-by-step procedure to compute the benchmark reference solution of
+a clamped-clamped beam with a point periodic force,
+found in `(A. Givois et al., 2019) <https://link.springer.com/article/10.1007/s11071-019-05021-6>`_.
 
 Set the Matlab Path
 -------------------
 
 First run the :mod:`set_src_path` from the :mod:`NonLinearFEM` folder.
 
+
 Create a new FE model
 ---------------------
 
-First, create a new folder. Then, create a new script name :mod:`run_problem` that will contain all of the operations to be done.
+First, create a new folder.
+Then, create a new script name :mod:`run_problem` that will contain all of the operations to be done.
 
 In the script, clean the state of Matlab:
 
@@ -38,6 +42,7 @@ Input definition
 
 The best way to define the inputs is to use a model data structure. However, we also describe how to build the model manually using the initialization methods of the :mod:`NL_2D_FEM` class.
 
+
 Using a model data structure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -50,10 +55,12 @@ The model can be created by first building a model data structure. An example mo
 	% set up the model using the data structure
 	model = model.set_model_from_mds(mds);
 
+
 Manual input definition
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-\subsubsection*{Geometry}
+Geometry
+~~~~~~~~
 
 .. code-block::
 
@@ -69,14 +76,16 @@ Manual input definition
 	% set geometry (optional if a mesh is directly provided)
 	model = model.set_geom(geom_node, geom_element, discretisation);
 
-\subsubsection*{Mesh}
+Mesh
+~~~~
 
 .. code-block::
 	
 	% set compute a mesh 
 	model = model.auto_mesh();
 	
-\subsubsection*{Properties}
+Properties
+~~~~~~~~~~
 
 .. code-block::
 
@@ -93,7 +102,8 @@ Manual input definition
 	% set properties
 	model = model.set_prop(S, I, rho, E, poisson, k, alpha);
 	
-\subsubsection*{Boundary conditions}
+Boundary conditions
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block::
 
@@ -102,8 +112,10 @@ Manual input definition
 	mds.boundary.bc_node_list{2} = struct('node', 3,'dof', [1,2,3]); % node 3 is clamped
 	% set boundary condition
 	model = model.set_boundary(bc_node_list);
-	
-\subsubsection*{Visualization}
+
+
+Visualization
+~~~~~~~~~~~~~
 
 .. code-block::
 	
@@ -112,8 +124,10 @@ Manual input definition
 							'dof', [1 2]);
 	% set visualized nodes
 	model = model.set_visu(visu_node_list); 
-	
-\subsubsection*{Force definitions}
+
+
+Force definitions
+~~~~~~~~~~~~~~~~~
 
 .. code-block::
 
@@ -121,7 +135,8 @@ Manual input definition
 	periodic_ponctual_force_node_list{1} = struct('node', 2,'dof', [2],'amplitude', [0.1], 'harmonic', [1+1i] ); % complex amplitude f = re(amp) cos + im(amp) sin
 	% dynamic loads
 	model = model.set_periodic_loads('ponctual', periodic_ponctual_force_node_list);
-	
+
+
 Matrices and force vector initialization
 ----------------------------------------
 
@@ -129,7 +144,8 @@ Matrices and force vector initialization
 
 	% assemble mass matrix and force vector
 	model = model.initialise_matrices_and_vector();
-	
+
+
 Static solution
 ---------------
 
@@ -143,7 +159,8 @@ Static solution
 	model.plot_deformed_mesh(qs_full, fig, '-c') % def mesh
 	% compute stresses
 	[strain,stress] = model.strains_and_stress_at_gauss_point(qs_full);
-	
+
+
 Modal analysis
 --------------
 
@@ -158,7 +175,8 @@ Modal analysis
 	model.plot_deformed_mesh(shape(:,1), fig2, '-r')
 	model.plot_deformed_mesh(shape(:,2), fig2, '-g')
 	model.plot_deformed_mesh(shape(:,3), fig2, '-b')
-	
+
+
 Linear forced analysis
 ----------------------
 
@@ -178,7 +196,8 @@ Linear forced analysis
 	plot(Omega, bode.phase_qp_full{1}(5,:)) % phase u node 2
 	plot(Omega, bode.phase_qp_full{1}(5,:)) % phase v node 2
 	xlabel('Omega'); ylabel('Phase H1')
-	
+
+
 MANLAB analysis
 ---------------
 
@@ -203,6 +222,7 @@ Define the MANLAB input data and initialize the MAN system:
 	% Construct MANLAB system (matlab object)
 	sys = SystHBQ(nz,nz_aux,H,@equations_vector_NL_2D_FEM,@point_display,@global_display,parameters,type,'vectorial');
 
+
 Nonlinear normal modes starting point
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -218,6 +238,7 @@ Find the starting point for the nonlinear modes MANLAB computation:
 	U0 = sys.init_U0(Z0, omega0, lambda0);
 	U0 = model.solve_MAN_system_at_fixed_amplitude(U0, idx, amp, sys); 
 
+
 Forced response starting point
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -231,7 +252,8 @@ Find the starting point for the forced response MANLAB computation:
 	[Z0] = model.man_initial_point(H, omega0, qs_full, qp_full);
 	U0 = sys.init_U0(Z0, omega0, lambda0);
 	U0 = model.solve_MAN_system_at_fixed_frequency(U0, omega0, sys);
-	
+
+
 Display variables and call to MANLAB
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -262,11 +284,13 @@ Choose the display variables visualized during the computation and call MANLAB:
 		'StabilityCheck'  ,0, ...      % Stability computation on/[off]
 		'StabTol'         ,1e-6, ...   % Stability tolerance
 		'displayvariables',dispvars);     % MANLAB run
-		
+
+
 Quick launch of a computation
 -----------------------------
 
 In what follows, all of the previous elementary functions have been used to provide a quick way to start a MANLAB computation.
+
 
 Define the model
 ~~~~~~~~~~~~~~~~
@@ -286,7 +310,8 @@ Define the model
 	model = NL_2D_FEM; 
 	% set up the model using the data structure
 	model = model.set_model_from_mds(mds);
-	
+
+
 Initialize the computation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -306,7 +331,8 @@ Initialize the computation
 	sys = SystHBQ(nz,nz_aux,H,@equations_vector_NL_2D_FEM,@point_display,@global_display,parameters,type,'vectorial');
 	%% compute static equilibrium, modal analysis and the MANLAB starting point
 	[U0, omega0, lambda0] = model.initialise_MAN_computation(sys, type, target_mode);
-	
+
+
 Call to MANLAB
 ~~~~~~~~~~~~~~
 
