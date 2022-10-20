@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of animate_solution</title>
+  <meta name="keywords" content="animate_solution">
+  <meta name="description" content="Plot the time evolution of the mesh">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">NonlinearDyn_vectorialform</a> &gt; animate_solution.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>animate_solution
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Plot the time evolution of the mesh</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function animate_solution(sys,U,figure_number,nb_samples) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Plot the time evolution of the mesh</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="point_display.html" class="code" title="function [] = point_display(sys,Uf)">point_display</a>	function [] = point_display(sys,Uf)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function animate_solution(sys,U,figure_number,nb_samples)</a>
+0002 <span class="comment">% Plot the time evolution of the mesh</span>
+0003 
+0004 set(0,<span class="string">'defaultTextInterpreter'</span>,<span class="string">'latex'</span>);               <span class="comment">%LaTeX pour le titre</span>
+0005 set(0,<span class="string">'defaultAxesTickLabelInterpreter'</span>,<span class="string">'latex'</span>);      <span class="comment">%LaTeX pour les valeurs des axes</span>
+0006 set(0,<span class="string">'defaultLegendInterpreter'</span>,<span class="string">'latex'</span>);             <span class="comment">%LaTeX pour les valeurs des légendes</span>
+0007 
+0008 <span class="comment">% Defining the degrees of freedom and parameters</span>
+0009 model = sys.parameters.model;
+0010 active_dof = model.boundary.active_dof;
+0011 number_nodes = model.mesh.number_nodes;
+0012 
+0013 nb_period = 1;
+0014 <span class="comment">% nb_samples = 1.6^6;</span>
+0015 time = linspace(0,nb_period,nb_samples+1);
+0016 Utime = calcperiodHBM(sys,U,[1:sys.nz/2],time);
+0017 
+0018 
+0019 fig = figure(figure_number);
+0020 
+0021 <span class="comment">% Initialization</span>
+0022 q_global = zeros(3*number_nodes,size(Utime,1));
+0023 <span class="comment">% find mesh limits</span>
+0024 maxXYmesh = max(model.mesh.nodes(:,2:3));
+0025 minXYmesh = min(model.mesh.nodes(:,2:3));
+0026 <span class="comment">% find displacement limits</span>
+0027 q_global(active_dof,:) = Utime';
+0028 maxXdisp = max(max(abs(q_global(1:3:<span class="keyword">end</span>,:))));
+0029 maxYdisp = max(max(abs(q_global(2:3:<span class="keyword">end</span>,:))));
+0030 <span class="comment">% define axis limits</span>
+0031 axis([(minXYmesh(1)-maxXdisp)*1.1, (maxXYmesh(1)+maxXdisp)*1.1, (minXYmesh(2)-maxYdisp)*1.1, (maxXYmesh(2)+maxYdisp)*1.1])
+0032 <span class="keyword">for</span> j = 1:length(time)
+0033     q_global(active_dof) = Utime(j,:);
+0034 <span class="comment">%cla</span>
+0035     model.plot_deformed_mesh(q_global, fig,<span class="string">'-b'</span>) <span class="comment">% plot deformed mesh at time tj</span>
+0036     drawnow <span class="comment">% forces to draw all figure now</span>
+0037     pause(0.05)
+0038 <span class="keyword">end</span>
+0039 model.plot_deformed_mesh(0*q_global, fig,<span class="string">'--k'</span>) <span class="comment">% plot undeformed mesh</span>
+0040 <span class="keyword">end</span>
+0041 
+0042 
+0043</pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

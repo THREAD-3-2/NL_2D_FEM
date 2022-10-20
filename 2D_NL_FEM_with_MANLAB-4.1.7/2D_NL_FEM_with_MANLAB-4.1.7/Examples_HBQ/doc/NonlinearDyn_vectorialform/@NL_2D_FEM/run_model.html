@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of run_model</title>
+  <meta name="keywords" content="run_model">
+  <meta name="description" content="Lanch the computation by calling the MANLAB GUI">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">@NL_2D_FEM</a> &gt; run_model.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\@NL_2D_FEM&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>run_model
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Lanch the computation by calling the MANLAB GUI</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function run_model(obj,MANLAB_params) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Lanch the computation by calling the MANLAB GUI</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function run_model(obj,MANLAB_params)</a>
+0002 <span class="comment">% Lanch the computation by calling the MANLAB GUI</span>
+0003 
+0004 <span class="comment">%% Launch of Manlab with options</span>
+0005 Manlab(<span class="string">'sys'</span>       , obj.MAN_sys , <span class="keyword">...</span>
+0006     <span class="string">'U0value'</span>         ,MANLAB_params.U0, <span class="keyword">...</span>
+0007     <span class="string">'order'</span>           ,MANLAB_params.series_order, <span class="keyword">...</span><span class="comment">     % order of the series</span>
+0008     <span class="string">'ANMthreshold'</span>    ,MANLAB_params.ANMthreshold, <span class="keyword">...</span><span class="comment">   % threshold for the domain of validity of the series</span>
+0009     <span class="string">'Amax_max'</span>        ,MANLAB_params.Amax_max, <span class="keyword">...</span><span class="comment">    % maximum value of the domain of validity of the series</span>
+0010     <span class="string">'NRthreshold'</span>     ,MANLAB_params.NRthreshold, <span class="keyword">...</span><span class="comment">   % threshold for Newton-Raphson (NR) corrections</span>
+0011     <span class="string">'NRitemax'</span>        ,MANLAB_params.NRitemax, <span class="keyword">...</span><span class="comment">     % Maximum number of iteration of NR algorithm</span>
+0012     <span class="string">'NRstart'</span>         ,MANLAB_params.NRstart, <span class="keyword">...</span><span class="comment">      % NR corrections for the user-defined starting point [on]/off</span>
+0013     <span class="string">'NRmethod'</span>        ,MANLAB_params.NRmethod, <span class="keyword">...</span><span class="comment">      % NR corrections on/[off]</span>
+0014     <span class="string">'BifDetection'</span>    ,MANLAB_params.BifDetection, <span class="keyword">...</span><span class="comment">      % Detection of bifurcation [on]/off</span>
+0015     <span class="string">'PointDisplay'</span>    ,MANLAB_params.PointDisplay, <span class="keyword">...</span><span class="comment">      % Point display [on]/off</span>
+0016     <span class="string">'GlobalDisplay'</span>   ,MANLAB_params.GlobalDisplay, <span class="keyword">...</span><span class="comment">      % Global display [on]/off</span>
+0017     <span class="string">'StabilityCheck'</span>  ,MANLAB_params.StabilityCheck, <span class="keyword">...</span><span class="comment">      % Stability computation on/[off]</span>
+0018     <span class="string">'StabTol'</span>         ,MANLAB_params.StabTol, <span class="keyword">...</span><span class="comment">   % Stability tolerance</span>
+0019     <span class="string">'displayvariables'</span>,obj.dispvars);     <span class="comment">% MANLAB run</span>
+0020 
+0021 
+0022 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

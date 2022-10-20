@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of point_display</title>
+  <meta name="keywords" content="point_display">
+  <meta name="description" content="function [] = point_display(sys,Uf)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">NonlinearDyn_vectorialform</a> &gt; point_display.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>point_display
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [] = point_display(sys,Uf)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [] = point_display(sys,Uf) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function [] = point_display(sys,Uf)
+ User-defined function to display solutions along the branch.
+
+ See the repertory MANLAB-4.x/SRC/Display for more informations.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="animate_solution.html" class="code" title="function animate_solution(sys,U,figure_number,nb_samples)">animate_solution</a>	Plot the time evolution of the mesh</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [] = point_display(sys,Uf)</a>
+0002 <span class="comment">% function [] = point_display(sys,Uf)</span>
+0003 <span class="comment">% User-defined function to display solutions along the branch.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% See the repertory MANLAB-4.x/SRC/Display for more informations.</span>
+0006 
+0007 fig = figure(11); fig.Name=<span class="string">'Mesh Animation'</span>;
+0008 clf; hold on;
+0009 <span class="comment">% Plot the variable 1,2 over one period.</span>
+0010 <span class="comment">%plotperiodHBM(sys,Uf,[1 2]);</span>
+0011 
+0012 <span class="comment">%figure(12);clf; hold on;</span>
+0013 <span class="comment">% Plot the variable 1 with respect to variable 2</span>
+0014 <span class="comment">% over one period. [phase diagram]</span>
+0015 <span class="comment">%plotphasediagHBM(sys,Uf,[1 2]);</span>
+0016 
+0017 <span class="comment">%%% Plot the amplitude of the sine and the cosine coefficients of the</span>
+0018 <span class="comment">%%% first and the second variable.</span>
+0019 <span class="comment">% plotbarsincosHBM(sys,Uf,[1 2]);</span>
+0020 
+0021 <span class="comment">%%% Plot the amplitude of the harmonics of the first and the second</span>
+0022 <span class="comment">%%% variable.</span>
+0023 <span class="comment">% plotbarHBM(sys,Uf,[1 2])</span>
+0024 
+0025 <span class="comment">%%% Compute the evolution in the time domain of the first and the second</span>
+0026 <span class="comment">%%% variable over 10 periods (the time is dimensionless) with 1e4 points.</span>
+0027 <span class="comment">% nb_period = 1;</span>
+0028 <span class="comment">% nb_samples = 1e4;</span>
+0029 <span class="comment">%time = linspace(0,nb_period,nb_samples);</span>
+0030 <span class="comment">%Utime = calcperiodHBM(sys,Uf,[1:sys.nz/2],time);</span>
+0031 <span class="comment">%plot(time,Utime(:,sys.parameters.dof_info.obs_dof)) %% transverse displacement at cantilever tip</span>
+0032 
+0033 <span class="comment">% fig_number = 22;</span>
+0034 nb_samples_animate = 16;
+0035 <a href="animate_solution.html" class="code" title="function animate_solution(sys,U,figure_number,nb_samples)">animate_solution</a>(sys,Uf,fig,nb_samples_animate)
+0036 <span class="comment">%%% Compute and plot the time-dependent displacement of the beam according to Utime</span>
+0037 <span class="comment">% Defining the degrees of freedom and parameters</span>
+0038 <span class="comment">% dof = sys.parameters.dof_info.dof;</span>
+0039 <span class="comment">% bc_dof = sys.parameters.dof_info.bc.prescribed_dof;</span>
+0040 <span class="comment">% active_dof = sys.parameters.dof_info.active;</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% number_nodes = sys.parameters.mesh.number_nodes;</span>
+0043 <span class="comment">% number_elements = sys.parameters.mesh.number_elements;</span>
+0044 <span class="comment">% Le = sys.parameters.beam_params.L_beam/number_elements;</span>
+0045 
+0046 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of newton_solver</title>
+  <meta name="keywords" content="newton_solver">
+  <meta name="description" content="Homemade newton solver">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">@NL_2D_FEM</a> &gt; newton_solver.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\@NL_2D_FEM&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>newton_solver
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Homemade newton solver</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [X, res, flag, Jac] = newton_solver(obj, type, X0, solver, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Homemade newton solver
+ X0 initial guess
+ type = 'static', 'MAN_HBM_fixed_amp', 'MAN_HBM_fixed_freq'
+ varargin according to type
+ 'static': varargin empty or ramp coeff (1x1 double)
+ 'MAN_HBM_fixed_amp', vararing = {idx, amp, sys}
+ 'MAN_HBM_fixed_freq', varargin = {omega0, sys}
+
+ flag, 1: solved at initial point, 2: solved after iteration, 0: number of iteration exceded</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [X, res, flag, Jac] = newton_solver(obj, type, X0, solver, varargin)</a>
+0002 <span class="comment">% Homemade newton solver</span>
+0003 <span class="comment">% X0 initial guess</span>
+0004 <span class="comment">% type = 'static', 'MAN_HBM_fixed_amp', 'MAN_HBM_fixed_freq'</span>
+0005 <span class="comment">% varargin according to type</span>
+0006 <span class="comment">% 'static': varargin empty or ramp coeff (1x1 double)</span>
+0007 <span class="comment">% 'MAN_HBM_fixed_amp', vararing = {idx, amp, sys}</span>
+0008 <span class="comment">% 'MAN_HBM_fixed_freq', varargin = {omega0, sys}</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% flag, 1: solved at initial point, 2: solved after iteration, 0: number of iteration exceded</span>
+0011 
+0012 <span class="comment">%% set tolerances from solver parameters</span>
+0013 tol_res = solver.tol_res;
+0014 tol_step = solver.tol_step;
+0015 n_iter_max = solver.n_iter_max;
+0016 fprintf(1,<span class="string">'system solving using homemade newton (tol_res : %2.2e, tol_step : %2.2e, n_iter_max : %u) \n'</span>, tol_res, tol_step, n_iter_max)
+0017 
+0018 <span class="comment">%% retreive residual function from type = 'static', 'MAN_HBM_fixed_amp', 'MAN_HBM_fixed_freq'</span>
+0019 <span class="keyword">if</span> strcmp(type, <span class="string">'static'</span>)
+0020     <span class="keyword">if</span> isempty(varargin)
+0021         func_res = @(q)obj.static_residual(q);
+0022     <span class="keyword">else</span>
+0023         func_res = @(q)obj.static_residual(q, varargin{1}); <span class="comment">% ramp coeff</span>
+0024     <span class="keyword">end</span>
+0025 <span class="keyword">elseif</span> strcmp(type, <span class="string">'MAN_HBM_fixed_amp'</span>)
+0026     <span class="keyword">if</span> isempty(varargin)
+0027         error(<span class="string">'varargin should not be empty'</span>)
+0028     <span class="keyword">else</span>
+0029         func_res = @(U0)man_residual_fixed_amplitude(U0, varargin{1}, varargin{2}, varargin{3} ); <span class="comment">% idx, amp, sys</span>
+0030     <span class="keyword">end</span>
+0031 <span class="keyword">elseif</span> strcmp(type, <span class="string">'MAN_HBM_fixed_freq'</span>)
+0032     <span class="keyword">if</span> isempty(varargin)
+0033         error(<span class="string">'varargin should not be empty'</span>)
+0034     <span class="keyword">else</span>
+0035         func_res = @(U0)man_residual_fixed_frequency(U0, varargin{1}, varargin{2}); <span class="comment">% omega0, sys</span>
+0036     <span class="keyword">end</span>
+0037 <span class="keyword">end</span>
+0038 
+0039 <span class="comment">%% initial residual and jacobian</span>
+0040 [res, Jac] = func_res(X0);
+0041 norm_res = norm(res);
+0042 <span class="keyword">if</span> norm_res &lt; tol_res <span class="comment">% if solved at initial point, return</span>
+0043     fprintf(1,<span class="string">'system solved at initial point, norm_res : %2.2e \n'</span>, norm_res)
+0044     X=X0; flag = 1;
+0045     <span class="keyword">return</span>
+0046 <span class="keyword">end</span>
+0047 fprintf(1,<span class="string">'    Initial residual, norm_res : %2.2e \n'</span>, norm_res)
+0048 norm_step = 1;
+0049 
+0050 <span class="comment">%% Newton iterations</span>
+0051 n_iter = 0;
+0052 <span class="keyword">while</span> (norm_res &gt;= tol_res || norm_step &gt;= tol_step) &amp;&amp; n_iter &lt;=n_iter_max
+0053     n_iter = n_iter+1;
+0054     <span class="comment">% compute step</span>
+0055     delta_X = -Jac\res;
+0056     X0 = X0 + 0.9*delta_X;
+0057     <span class="comment">% residual and jacobian at new point</span>
+0058     [res, Jac] = func_res(X0);
+0059     norm_res = norm(res);
+0060     norm_step = norm(delta_X);
+0061     fprintf(1,<span class="string">'    iter %u, norm_step: %2.2e, norm_res : %2.2e \n'</span>, n_iter, norm_step, norm_res)
+0062     
+0063     <span class="comment">% check for diverging residua TODO</span>
+0064     <span class="keyword">if</span> n_iter &gt; 1 &amp;&amp; (norm_res/norm_resPrev) &gt; 10
+0065         warning(<span class="string">' increasing residual in home made fsolve \n'</span>)        
+0066     <span class="keyword">end</span>
+0067     norm_resPrev = norm_res;
+0068 <span class="keyword">end</span>
+0069 
+0070 <span class="comment">%% Outputs setings</span>
+0071 <span class="keyword">if</span> n_iter&gt;=n_iter_max <span class="comment">% too many iteration</span>
+0072     fprintf(1,<span class="string">'Error Too many newton iteration, couldnt solve problem (increase n_iter_max) \n'</span>)
+0073     flag = 0;
+0074     X = X0;
+0075 <span class="keyword">else</span> <span class="comment">% system solved</span>
+0076     fprintf(1, <span class="string">'System solved \n'</span>)
+0077     flag = 2;
+0078     X = X0;
+0079 <span class="keyword">end</span>
+0080 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

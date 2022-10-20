@@ -1,0 +1,9 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  run_beam_vertical_short_version -> vertical_beam_problem;
+  run_beam_vetical_detailled_version -> vertical_beam_problem;
+
+  run_beam_vertical_short_version [URL="run_beam_vertical_short_version.html"];
+  run_beam_vetical_detailled_version [URL="run_beam_vetical_detailled_version.html"];
+  vertical_beam_problem [URL="vertical_beam_problem.html"];
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of buckling_analysis</title>
+  <meta name="keywords" content="buckling_analysis">
+  <meta name="description" content="varargin: Lambda_list">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">@NL_2D_FEM</a> &gt; buckling_analysis.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\@NL_2D_FEM&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>buckling_analysis
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>varargin: Lambda_list</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [frq_list, Lambda_range, N_list, q_list] = buckling_analysis(obj, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> varargin: Lambda_list
+ ramp the static force until zero eigen freq appears</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [frq_list, Lambda_range, N_list, q_list] = buckling_analysis(obj, varargin)</a>
+0002 <span class="comment">% varargin: Lambda_list</span>
+0003 <span class="comment">% ramp the static force until zero eigen freq appears</span>
+0004 <span class="keyword">if</span> ~isempty(varargin)
+0005     Lambda_range = varargin{1};
+0006 <span class="keyword">else</span> <span class="comment">% increase from static vector fint = lambda*F_static</span>
+0007     Lambda_range = (1+[linspace(0.1,1,5), linspace(1,4,10)]);
+0008 <span class="keyword">end</span>
+0009 
+0010 q0_full = obj.vectors.null_vector;
+0011 fprintf(1,<span class="string">'Buckling Analysis \n'</span>)
+0012 lambda_prev = 1;
+0013 <span class="keyword">for</span> i=1:length(Lambda_range)
+0014     lambda = Lambda_range(i);
+0015     
+0016     fprintf(1,<span class="string">'  - step : %u / %u , '</span>,i,length(Lambda_range))
+0017     fprintf(1,<span class="string">'lambda : %2.2e \n, '</span>,lambda)
+0018     
+0019     [qs_full, res] = obj.solve_static_problem(q0_full, lambda, lambda_prev);
+0020     [shape, freq, imagfreq] = obj.linear_modal_analysis(qs_full);    
+0021     [strain, stress] = obj.strains_and_stress_at_gauss_point(qs_full);
+0022     
+0023     N_list(:,i) = stress.N;
+0024     frq_list(:,i) = freq;
+0025     q_list(:,i)= qs_full;
+0026     q0_full = qs_full;
+0027     lambda_prev = lambda;
+0028     
+0029     <span class="keyword">if</span> norm(imag(imagfreq))&gt;1e-4
+0030         fprintf(1,<span class="string">'Complex eigen value in buckling analysis, lambda= %2.2e, freq(1)=%2.2e'</span>,lambda, freq(1))
+0031         warning(<span class="string">'Complex eigen value in buckling analysis'</span>)
+0032         <span class="keyword">break</span>
+0033     <span class="keyword">end</span>
+0034 <span class="keyword">end</span>
+0035 fig=figure(95); fig.Name=<span class="string">'First Frequency vs Load coeff'</span>;
+0036 hold on
+0037 [Lambda_range, idx] = sort(Lambda_range(1:i),<span class="string">'ascend'</span>);
+0038 frq_list = frq_list(:,1:i);
+0039 frq_list = frq_list(:,idx);
+0040 plot(Lambda_range, frq_list(1,:));
+0041 <span class="comment">% plot(Lambda_range, frq_list(2,:));</span>
+0042 xlabel(<span class="string">'Load coefficient \lambda'</span>)
+0043 ylabel(<span class="string">'First eigen-frequency [S^{-1}]'</span>)
+0044 grid on
+0045 drawnow
+0046 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

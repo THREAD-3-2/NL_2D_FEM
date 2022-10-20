@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of NL_2D_FEM</title>
+  <meta name="keywords" content="NL_2D_FEM">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">@NL_2D_FEM</a> &gt; NL_2D_FEM.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\@NL_2D_FEM&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>NL_2D_FEM
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="NL_2D_FEM.html" class="code" title="">NL_2D_FEM</a>	</li><li><a href="assemble_constant_matrix.html" class="code" title="function [A_full] = assemble_constant_matrix(obj, type, varargin)">assemble_constant_matrix</a>	</li><li><a href="assemble_constant_vector.html" class="code" title="function [F_full] = assemble_constant_vector(obj, type, varargin)">assemble_constant_vector</a>	initialize matrix</li><li><a href="mesh_from_truss.html" class="code" title="function [mesh, mother_geometric_line] = mesh_from_truss(obj, geometricPoint, geometricElement, geometricDiscretisation)">mesh_from_truss</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="NL_2D_FEM.html" class="code" title="">NL_2D_FEM</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = set_model_from_mds(obj, mds)</a></li><li><a href="#_sub2" class="code">function obj = set_geom(obj, geom_node, geom_element, discretisation)</a></li><li><a href="#_sub3" class="code">function obj = set_visu(obj, visu_node_list)</a></li><li><a href="#_sub4" class="code">function obj = set_prop(obj, S, I, rho, E, eta, k, alpha)</a></li><li><a href="#_sub5" class="code">function obj = auto_mesh(obj)</a></li><li><a href="#_sub6" class="code">function obj = set_mesh(obj, nodes, connect)</a></li><li><a href="#_sub7" class="code">function obj = set_boundary(obj, bc_node_list)</a></li><li><a href="#_sub8" class="code">function obj = set_static_loads(obj, type, varargin)</a></li><li><a href="#_sub9" class="code">function obj = set_periodic_loads(obj, type, varargin)</a></li><li><a href="#_sub10" class="code">function obj = update_static_loads(obj, type, varargin)</a></li><li><a href="#_sub11" class="code">function obj = set_solver(obj, solver)</a></li><li><a href="#_sub12" class="code">function obj = initialise_matrices_and_vector(obj)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="NL_2D_FEM.html" class="code" title="">NL_2D_FEM</a>
+0002     
+0003     properties <span class="comment">% (SetAccess=private)</span>
+0004         <span class="comment">% FEM model Attributes</span>
+0005         geom  <span class="comment">%= struct()           % a structure containing the Current Point of continuation</span>
+0006         prop  <span class="comment">%= struct('area', [], 'inertia', [], 'density', [], 'young_mod', [] , 'poisson', [], 'shear_coeff_k', [])</span>
+0007         mesh  <span class="comment">%= struct('nodes', [1], 'connect', [], 'number_nodes', [], 'number_element', [])</span>
+0008         boundary <span class="comment">% = struct( )</span>
+0009         loads
+0010         visu
+0011         <span class="comment">% FEM Solver Attributes</span>
+0012         solver = struct(<span class="string">'type'</span>, <span class="string">'homemade'</span>, <span class="string">'tol_step'</span>, 1e-6, <span class="string">'tol_res'</span>, 1e-6, <span class="string">'n_iter_max'</span>, 500) <span class="comment">% default solver parameters</span>
+0013         <span class="comment">% FEM Equation Attributes</span>
+0014         matrices = struct(<span class="string">'mass'</span>, [], <span class="string">'damping'</span>, [], <span class="string">'stiffness_at_origin'</span>, [], <span class="string">'stiffness_at_qs'</span>, [])
+0015         vectors = struct(<span class="string">'static_forces'</span>, [], <span class="string">'periodic_forces'</span>, [], <span class="string">'static_solution'</span>,[])
+0016         
+0017     <span class="keyword">end</span>
+0018     
+0019     methods
+0020         <span class="comment">%% automatic initialisation from model data structure</span>
+0021         <a name="_sub0" href="#_subfunctions" class="code">function obj = set_model_from_mds(obj, mds)</a>
+0022             <span class="keyword">if</span> ~isempty(mds.geom)
+0023                 <span class="comment">% set geometry (optional if a mesh is directly provided)</span>
+0024                 obj = obj.set_geom(mds.geom.geom_node, mds.geom.geom_element, mds.geom.discretisation);
+0025                 <span class="comment">% create mesh</span>
+0026                 obj = obj.auto_mesh(); <span class="comment">% auto mesh if geometry is given</span>
+0027             <span class="keyword">else</span>
+0028                 obj = <a href="#_sub6" class="code" title="subfunction obj = set_mesh(obj, nodes, connect)">set_mesh</a>(obj, mds.mesh.nodes, mds.mesh.connect);
+0029             <span class="keyword">end</span>
+0030             <span class="comment">% set visualized nodes</span>
+0031             obj = obj.set_visu(mds.visu.visu_node_list);
+0032             <span class="comment">% set properties</span>
+0033             obj = obj.set_prop(mds.prop.S, mds.prop.I, mds.prop.rho, mds.prop.E, mds.prop.poisson, mds.prop.k, mds.prop.alpha); <span class="comment">% set propoerties (must be the same for all elements)</span>
+0034             <span class="comment">% set boundary condition</span>
+0035             obj = obj.set_boundary(mds.boundary.bc_node_list);
+0036             <span class="comment">% set loads (forcing)</span>
+0037             <span class="comment">%     static loads</span>
+0038             obj = obj.set_static_loads(<span class="string">'ponctual'</span>, mds.force.static.static_ponctual_force_node_list);
+0039             obj = obj.set_static_loads(<span class="string">'distributed'</span>, mds.force.static.static_distributed_force_amplitude, mds.force.static.static_distributed_force_direction);
+0040             <span class="comment">%     dynamic loads</span>
+0041             obj = obj.set_periodic_loads(<span class="string">'ponctual'</span>, mds.force.periodic.periodic_ponctual_force_node_list);
+0042             obj = obj.set_periodic_loads(<span class="string">'distributed'</span>, mds.force.periodic.periodic_distributed_force_amplitude, mds.force.periodic.periodic_distributed_force_direction, mds.force.periodic.periodic_distributed_force_harmonic);
+0043             <span class="comment">% assemble mass matrix and force vector</span>
+0044             obj = obj.initialise_matrices_and_vector();
+0045             
+0046         <span class="keyword">end</span>
+0047         
+0048         <span class="comment">%% manual initialisation methods</span>
+0049         <a name="_sub1" href="#_subfunctions" class="code">function obj = set_geom(obj, geom_node, geom_element, discretisation)</a>
+0050             obj.geom.geom_node = geom_node;
+0051             obj.geom.geom_element = geom_element;
+0052             obj.geom.discretisation = discretisation;
+0053             <span class="comment">%  obj.mesh = obj.automatic_mesh();</span>
+0054         <span class="keyword">end</span>
+0055         
+0056         <a name="_sub2" href="#_subfunctions" class="code">function obj = set_visu(obj, visu_node_list)</a>
+0057             obj.visu.node_list = visu_node_list;
+0058             index = [];
+0059             <span class="keyword">for</span> ii=1:length(visu_node_list)
+0060                 node = visu_node_list{ii}.node;   <span class="comment">% integer</span>
+0061                 dof = visu_node_list{ii}.dof; <span class="comment">% subset of  {1,2,3}: list of variable size [1 2 3] or [2] or [2 3].</span>
+0062                 <span class="comment">% update list of global index</span>
+0063                 index = [index 3*(node-1)+dof];
+0064             <span class="keyword">end</span>
+0065             obj.visu.dof = index; <span class="comment">% index of all visualized dof</span>
+0066         <span class="keyword">end</span>
+0067         
+0068         <a name="_sub3" href="#_subfunctions" class="code">function obj = set_prop(obj, S, I, rho, E, eta, k, alpha) </a><span class="comment">% all the same for every beam</span>
+0069             obj.prop.area = S;
+0070             obj.prop.inertia = I;
+0071             obj.prop.density = rho;
+0072             obj.prop.young_mod = E;
+0073             obj.prop.poisson = eta;
+0074             obj.prop.shear_coeff_k = k;
+0075             obj.prop.alpha = alpha;
+0076             
+0077             <span class="comment">% compute shear modulus from E and poisson</span>
+0078             obj.prop.shear_mod = E/(2*(1 + eta));
+0079         <span class="keyword">end</span>
+0080         
+0081         <span class="comment">%%      % meshing methods</span>
+0082         <a name="_sub4" href="#_subfunctions" class="code">function obj = auto_mesh(obj)</a>
+0083             [obj.mesh, mother_geometric_line] = <a href="mesh_from_truss.html" class="code" title="function [mesh, mother_geometric_line] = mesh_from_truss(obj, geometricPoint, geometricElement, geometricDiscretisation)">mesh_from_truss</a>(obj, obj.geom.geom_node, obj.geom.geom_element, obj.geom.discretisation);
+0084         <span class="keyword">end</span>
+0085         
+0086         <a name="_sub5" href="#_subfunctions" class="code">function obj = set_mesh(obj, nodes, connect)</a>
+0087             obj.mesh.nodes = nodes ;
+0088             obj.mesh.connect = connect ;
+0089             obj.mesh.number_nodes = size(nodes,1) ;
+0090             obj.mesh.number_element = size(connect,1) ;
+0091             <span class="comment">% obj.mesh.mother_geometric_line = 1; % TODO</span>
+0092         <span class="keyword">end</span>
+0093         
+0094         <span class="comment">%% boundary condition methods</span>
+0095         <a name="_sub6" href="#_subfunctions" class="code">function obj = set_boundary(obj, bc_node_list)</a>
+0096             obj.boundary.bc_node_list = bc_node_list;
+0097             <span class="comment">% construct index vector base on node / dof of bc condition</span>
+0098             prescribed_dof = [];
+0099             <span class="keyword">for</span> ii=1:length(bc_node_list)
+0100                 node = bc_node_list{ii}.node;   <span class="comment">% integer</span>
+0101                 dof = bc_node_list{ii}.dof; <span class="comment">% subset of  {1,2,3}: list of variable size [1 2 3] or [2] or [2 3].</span>
+0102                 <span class="comment">% update list of global index</span>
+0103                 prescribed_dof = [prescribed_dof, 3*(node-1) + dof]; <span class="comment">% ndof_per_node * (node_number-1) + dof_number</span>
+0104             <span class="keyword">end</span>
+0105             dof_list = [1:3*obj.mesh.number_nodes];
+0106             obj.boundary.dof_list = dof_list; <span class="comment">% list of all dof number in the model</span>
+0107             obj.boundary.prescribed_dof = prescribed_dof; <span class="comment">% list of prescribed dof number from b.c.</span>
+0108             obj.boundary.active_dof = setdiff(dof_list,prescribed_dof); <span class="comment">% list of active dof number in the model</span>
+0109         <span class="keyword">end</span>
+0110         
+0111         <span class="comment">%% Loads methods</span>
+0112         <a name="_sub7" href="#_subfunctions" class="code">function obj = set_static_loads(obj, type, varargin)</a>
+0113             
+0114             <span class="keyword">if</span> ~isempty(varargin)
+0115                 <span class="keyword">if</span> strcmp(type,<span class="string">'ponctual'</span>)
+0116                     obj.loads.static.ponctual.node_list = varargin{1};
+0117                 <span class="keyword">elseif</span> strcmp(type,<span class="string">'distributed'</span>)
+0118                     obj.loads.static.distributed.amplitude = varargin{1}; <span class="comment">% ex: 10 or [10 10]</span>
+0119                     obj.loads.static.distributed.direction = varargin{2}; <span class="comment">% ex: 1  or [1  2]</span>
+0120                 <span class="keyword">else</span>
+0121                     error(<span class="string">'undefined force type'</span>)
+0122                 <span class="keyword">end</span>
+0123             <span class="keyword">else</span>
+0124                 <span class="keyword">if</span> strcmp(type,<span class="string">'ponctual'</span>)
+0125                     fprintf(1, <span class="string">'No static point loads in the model \n'</span>)
+0126                 <span class="keyword">elseif</span> strcmp(type,<span class="string">'distributed'</span>)
+0127                     fprintf(1, <span class="string">'No static distributed loads in the model \n'</span>)
+0128                 <span class="keyword">end</span>
+0129                 
+0130             <span class="keyword">end</span>
+0131         <span class="keyword">end</span>
+0132         
+0133         <a name="_sub8" href="#_subfunctions" class="code">function obj = set_periodic_loads(obj, type, varargin)</a>
+0134             <span class="keyword">if</span> ~isempty(varargin)
+0135                 <span class="keyword">if</span> strcmp(type,<span class="string">'ponctual'</span>)
+0136                     obj.loads.periodic.ponctual.node_list = varargin{1};
+0137                 <span class="keyword">elseif</span> strcmp(type,<span class="string">'distributed'</span>)
+0138                     obj.loads.periodic.distributed.amplitude = varargin{1}; <span class="comment">% ex: 10 or [10 10]</span>
+0139                     obj.loads.periodic.distributed.direction = varargin{2}; <span class="comment">% ex: 1  or [1  2]</span>
+0140                     obj.loads.periodic.distributed.harmonic = varargin{3};    <span class="comment">% ex: 1  or [2  5]</span>
+0141                 <span class="keyword">else</span>
+0142                     error(<span class="string">'undefined load type'</span>)
+0143                 <span class="keyword">end</span>
+0144             <span class="keyword">else</span>
+0145                 <span class="keyword">if</span> strcmp(type,<span class="string">'ponctual'</span>)
+0146                     fprintf(1, <span class="string">'No periodic point loads in the model \n'</span>)
+0147                 <span class="keyword">elseif</span> strcmp(type,<span class="string">'distributed'</span>)
+0148                     fprintf(1, <span class="string">'No periodic distributed loads in the model \n'</span>)
+0149                 <span class="keyword">end</span>
+0150             <span class="keyword">end</span>
+0151         <span class="keyword">end</span>
+0152         
+0153         <a name="_sub9" href="#_subfunctions" class="code">function obj = update_static_loads(obj, type, varargin)</a>
+0154             <span class="keyword">if</span> ~isempty(varargin)
+0155                 <span class="keyword">if</span> strcmp(type,<span class="string">'ponctual'</span>)
+0156                     obj.loads.static.ponctual.node_list = varargin{1};
+0157                 <span class="keyword">elseif</span> strcmp(type,<span class="string">'distributed'</span>)
+0158                     obj.loads.static.distributed.amplitude = varargin{1}; <span class="comment">% ex: 10 or [10 10]</span>
+0159                     obj.loads.static.distributed.direction = varargin{2}; <span class="comment">% ex: 1  or [1  2]</span>
+0160                 <span class="keyword">else</span>
+0161                     error(<span class="string">'undefined force type'</span>)
+0162                 <span class="keyword">end</span>
+0163             <span class="keyword">else</span>
+0164                 warning(<span class="string">'no static force to update'</span>)
+0165             <span class="keyword">end</span>
+0166             
+0167             F_static_full  = <a href="assemble_constant_vector.html" class="code" title="function [F_full] = assemble_constant_vector(obj, type, varargin)">assemble_constant_vector</a>(obj, <span class="string">'static_force_vector'</span>);
+0168             obj.vectors.static_forces = F_static_full;
+0169         <span class="keyword">end</span>
+0170         
+0171         <a name="_sub10" href="#_subfunctions" class="code">function obj = set_solver(obj, solver)</a>
+0172                   obj.solver = solver;
+0173         <span class="keyword">end</span>
+0174         
+0175         
+0176         <span class="comment">%% FEM Initialisation methods</span>
+0177         <a name="_sub11" href="#_subfunctions" class="code">function obj = initialise_matrices_and_vector(obj)</a>
+0178             M_full = <a href="assemble_constant_matrix.html" class="code" title="function [A_full] = assemble_constant_matrix(obj, type, varargin)">assemble_constant_matrix</a>(obj, <span class="string">'mass'</span>);
+0179             K_full = <a href="assemble_constant_matrix.html" class="code" title="function [A_full] = assemble_constant_matrix(obj, type, varargin)">assemble_constant_matrix</a>(obj, <span class="string">'stiffness_at_origin'</span>);
+0180             F_static_full  = <a href="assemble_constant_vector.html" class="code" title="function [F_full] = assemble_constant_vector(obj, type, varargin)">assemble_constant_vector</a>(obj, <span class="string">'static_force_vector'</span>);
+0181             F_periodic_full  = <a href="assemble_constant_vector.html" class="code" title="function [F_full] = assemble_constant_vector(obj, type, varargin)">assemble_constant_vector</a>(obj, <span class="string">'periodic_force_vector'</span>);
+0182             <span class="comment">% Matrices</span>
+0183             obj.matrices.mass = M_full;
+0184             obj.matrices.damping = obj.prop.alpha*M_full;
+0185             obj.matrices.stiffness_at_origin = K_full;
+0186             <span class="comment">% Vectors</span>
+0187             obj.vectors.static_forces = F_static_full;
+0188             obj.vectors.periodic_forces = F_periodic_full;
+0189             obj.vectors.null_vector = zeros(3*obj.mesh.number_nodes,1);
+0190         <span class="keyword">end</span>
+0191         
+0192         <span class="comment">%%</span>
+0193         
+0194     <span class="keyword">end</span>
+0195 <span class="keyword">end</span>
+0196</pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of create_empty_mds</title>
+  <meta name="keywords" content="create_empty_mds">
+  <meta name="description" content="mds : model data structure for automatic initialisation of the FEM model">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">NonlinearDyn_vectorialform</a> &gt; create_empty_mds.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>create_empty_mds
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>mds : model data structure for automatic initialisation of the FEM model</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mds = create_empty_mds() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> mds : model data structure for automatic initialisation of the FEM model</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mds = create_empty_mds()</a>
+0002 <span class="comment">% mds : model data structure for automatic initialisation of the FEM model</span>
+0003 mds.geom.geom_node = [ ];
+0004 mds.geom.geom_element = [];
+0005 mds.geom.discretisation = [];
+0006 <span class="comment">%% for user defined mesh only</span>
+0007 mds.mesh.nodes = [];
+0008 mds.mesh.connect = [];
+0009 <span class="comment">%% material inputs + adimentionalization</span>
+0010 mds.prop.S = []; 
+0011 mds.prop.I = []; 
+0012 mds.prop.k = [];           <span class="comment">% shear area coeff</span>
+0013 mds.prop.rho = [];
+0014 mds.prop.E = [];
+0015 mds.prop.poisson =[];  <span class="comment">% material Poisson ratio</span>
+0016 mds.prop.alpha = [];   <span class="comment">% Raileight damping coeff (C = alpha M)</span>
+0017 <span class="comment">%% Boundary condition input (Dirichlet condition only)</span>
+0018 mds.boundary.bc_node_list = {}; <span class="comment">% node 1 is clamped</span>
+0019 <span class="comment">%% Visualisation node for results</span>
+0020 mds.visu.visu_node_list = {};   <span class="comment">% ux and uy of node 2 are observed</span>
+0021 <span class="comment">%% Forcing condition input (static and periodic)</span>
+0022 <span class="comment">% ponctual static forces</span>
+0023 mds.force.static.static_ponctual_force_node_list = {};
+0024 <span class="comment">% distrubuted static forces</span>
+0025 mds.force.static.static_distributed_force_amplitude = [];
+0026 mds.force.static.static_distributed_force_direction = [];
+0027 <span class="comment">% ponctual periodic forces</span>
+0028 mds.force.periodic.periodic_ponctual_force_node_list = {};
+0029 <span class="comment">% distrubuted periodic forces</span>
+0030 mds.force.periodic.periodic_distributed_force_amplitude = []; <span class="comment">% complex amplitude f = re(amp) cos + im(amp) sin</span>
+0031 mds.force.periodic.periodic_distributed_force_direction = [];
+0032 mds.force.periodic.periodic_distributed_force_harmonic = [];</pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

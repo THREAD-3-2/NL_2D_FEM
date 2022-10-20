@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of man_auxiliary_variables_vector</title>
+  <meta name="keywords" content="man_auxiliary_variables_vector">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">@NL_2D_FEM</a> &gt; man_auxiliary_variables_vector.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\@NL_2D_FEM&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>man_auxiliary_variables_vector
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [aux] = man_auxiliary_variables_vector(obj, q_full) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="strains_and_stress_at_gauss_point.html" class="code" title="function [strain, stress] = strains_and_stress_at_gauss_point(obj, q_full)">strains_and_stress_at_gauss_point</a>	element material properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [aux] = man_auxiliary_variables_vector(obj, q_full)</a>
+0002 [strain, stress] = <a href="strains_and_stress_at_gauss_point.html" class="code" title="function [strain, stress] = strains_and_stress_at_gauss_point(obj, q_full)">strains_and_stress_at_gauss_point</a>(obj, q_full);
+0003 number_elements = obj.mesh.number_elements;
+0004 <span class="comment">% decomposition of aux:</span>
+0005 aux(              1:   number_elements,:) = strain.grad.up;
+0006 aux(   number_elements + 1: 2*number_elements,:) = strain.grad.wp;
+0007 aux( 2*number_elements + 1: 3*number_elements,:) = strain.grad.thetap;
+0008 aux( 3*number_elements + 1: 4*number_elements,:) = strain.meanrot;  
+0009 aux( 4*number_elements + 1: 5*number_elements,:) = strain.c;      
+0010 aux( 5*number_elements + 1: 6*number_elements,:) = strain.s;      
+0011 aux( 6*number_elements + 1: 7*number_elements,:) = strain.eps;
+0012 aux( 7*number_elements + 1: 8*number_elements,:) = strain.gam;
+0013 aux( 8*number_elements + 1: 9*number_elements,:) = stress.Fx;
+0014 aux( 9*number_elements + 1:10*number_elements,:) = stress.Fy;
+0015 aux(10*number_elements + 1:11*number_elements,:) = stress.M;
+0016 aux(11*number_elements + 1:12*number_elements,:) = stress.T2;
+0017 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

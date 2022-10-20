@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of test_mesher_triangle</title>
+  <meta name="keywords" content="test_mesher_triangle">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">tests</a> &gt; test_mesher_triangle.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>test_mesher_triangle
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 clear
+0002 close all
+0003 clc
+0004 
+0005 <span class="comment">%% Input definition</span>
+0006 <span class="comment">% geometric inputs (optional if mesh if directly provided)</span>
+0007 <span class="comment">% geometry for a triangle (length in mm)</span>
+0008 geom_node = 1000* [1 1  0 0;              <span class="comment">% Point 1 coord (1,0)</span>
+0009                    2 -1/2 sqrt(3/2) 0;    <span class="comment">% Point 2 coord (-1/2,sqrt(3/2))</span>
+0010                    3 -1/2 -sqrt(3/2) 0 ;];<span class="comment">% Point 3 coord (-1/2,-sqrt(3/2))</span>
+0011 
+0012 geom_element = [1 1 2;  <span class="comment">% line 1 between point 1 and 2</span>
+0013                 2 2 3;  <span class="comment">% line 2 between point 2 and 3</span>
+0014                 3 3 1]; <span class="comment">% line 3 between point 3 and 1</span>
+0015 discretisation = [4,<span class="keyword">...</span><span class="comment"> % line 1 discretized with 5 elements</span>
+0016                   4,<span class="keyword">...</span><span class="comment"> % line 2 discretized with 6 elements</span>
+0017                   4];   <span class="comment">% line 3 discretized with 7 elements</span>
+0018 
+0019 <span class="comment">% % mesh inputs (optional if geometry is provided)</span>
+0020 <span class="comment">% mesh for a 2 elem beam</span>
+0021 <span class="comment">% nodes = [1 0  0 0;    % Node 1 coord (0,0)</span>
+0022 <span class="comment">%          2 0  1 0;    % Node 2 coord (0,1)</span>
+0023 <span class="comment">%          3 0  2 0 ;];%  Node 3 coord (0,2))</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% connect = [1 1  2 ;  % element 1 between node 1 and 2</span>
+0026 <span class="comment">%            2 2 3;];  % element 3 between node 2 and 3</span>
+0027 
+0028 <span class="comment">% material inputs + library of materials</span>
+0029 b = 10; h = 10;
+0030 S = b*h; I = b*h^3/12; rho = 7.8e-9; E = 210e3; eta =0.3; k=5/6;
+0031 <span class="comment">% Boundary condition input (Dirichlet condition only)</span>
+0032 bc_node_list{1} = struct(<span class="string">'node'</span>, 1,<span class="string">'dof'</span>, [1,2,3]);
+0033 
+0034 <span class="comment">% Forcing condition input (Dirichlet condition only)</span>
+0035 <span class="comment">% ponctual static forces</span>
+0036 static_ponctual_force_node_list{1} = struct(<span class="string">'node'</span>,10,<span class="keyword">...</span>
+0037                                      <span class="string">'dof'</span>, [1 2],<span class="keyword">...</span>
+0038                                      <span class="string">'amplitude'</span>, [0 0] );
+0039 <span class="comment">% distrubuted static forces</span>
+0040 static_distributed_force_amplitude = [0  0];
+0041 static_distributed_force_direction = [1  2];
+0042 
+0043 <span class="comment">% ponctual periodic forces</span>
+0044 periodic_ponctual_force_node_list{1} = struct(<span class="string">'node'</span>,2,<span class="keyword">...</span>
+0045                                      <span class="string">'dof'</span>, [1 2],<span class="keyword">...</span>
+0046                                      <span class="string">'amplitude'</span>, [1+1i 1+2*1i],<span class="keyword">...</span><span class="comment"> % complex amplitude re cos + im sin </span>
+0047                                      <span class="string">'harmonic'</span>, [1 1] );
+0048 <span class="comment">% distrubuted periodic forces</span>
+0049 periodic_distributed_force_amplitude = [10+2*1i 10]; <span class="comment">% complex amplitude</span>
+0050 periodic_distributed_force_direction = [1  2];
+0051 periodic_distributed_force_harmonic = [1  1];
+0052 
+0053 <span class="comment">%% FEM model definition</span>
+0054 model = NL_2D_FEM; <span class="comment">% create a new NL_2D_FEM model</span>
+0055 <span class="comment">% set geometry (optional if a mesh is directly provided)</span>
+0056 model = model.set_geom(geom_node, geom_element, discretisation); <span class="comment">% set geometry</span>
+0057 <span class="comment">% set mesh</span>
+0058 model = model.auto_mesh(); <span class="comment">% auto mesh if geometry is given</span>
+0059 <span class="comment">% model = model.set_mesh(nodes, connect; % user defined mesh otherwise: needs nodes coordiantes and connectivity table</span>
+0060 <span class="comment">% set properties</span>
+0061 model = model.set_prop(S, I, rho, E, eta, k); <span class="comment">% set propoerties (must be the same for all elements)</span>
+0062 <span class="comment">% set boundary condition</span>
+0063 model = model.set_boundary(bc_node_list);
+0064 <span class="comment">% set loads (forcing)</span>
+0065 <span class="comment">% static loads</span>
+0066 model = model.set_static_loads(<span class="string">'ponctual'</span>, static_ponctual_force_node_list);
+0067 model = model.set_static_loads(<span class="string">'distributed'</span>, static_distributed_force_amplitude, static_distributed_force_direction);
+0068 <span class="comment">% dynamic loads</span>
+0069 model = model.set_periodic_loads(<span class="string">'ponctual'</span>, periodic_ponctual_force_node_list);
+0070 model = model.set_periodic_loads(<span class="string">'distributed'</span>, periodic_distributed_force_amplitude, periodic_distributed_force_direction, periodic_distributed_force_harmonic);
+0071 <span class="comment">% assemble mass matrix and force vector</span>
+0072 model = model.initialise_matrices_and_vector();
+0073 <span class="comment">% static solution</span>
+0074 q0 = zeros(length(model.boundary.active_dof),1);
+0075 [res, fint] = model.static_residual(q0);
+0076 q0_full = zeros(3*model.mesh.number_nodes,1);
+0077 [qs_full, res] = model.solve_static_problem(q0_full);
+0078 fig = figure;
+0079 model.plot_deformed_mesh(q0_full, fig, <span class="string">'-k'</span>)
+0080 model.plot_deformed_mesh(qs_full, fig, <span class="string">'-b'</span>)
+0081 [strain,stress] = model.strains_and_stress_at_gauss_point(qs_full);
+0082 
+0083 <span class="comment">% modal analysis</span>
+0084 [shape, freq] = model.linear_modal_analysis(qs_full);
+0085 <span class="comment">% [shape, freq] = model.linear_modal_analysis();</span>
+0086 fig3 = figure;
+0087 <span class="comment">% model.plot_deformed_mesh(q0_full, fig3, '--k')</span>
+0088 model.plot_deformed_mesh(qs_full, fig3, <span class="string">'--k'</span>)
+0089 model.plot_deformed_mesh(shape(:,1)*200, fig3, <span class="string">'-b'</span>)
+0090 model.plot_deformed_mesh(shape(:,2)*200, fig3, <span class="string">'-g'</span>)
+0091 model.plot_deformed_mesh(shape(:,3)*200, fig3, <span class="string">'-r'</span>)
+0092 <span class="comment">% %buckling analysis</span>
+0093 <span class="comment">% [frq_list, lambda, N_list, q_list] = model.buckling_analysis();</span>
+0094 <span class="comment">% figure; plot(lambda, frq_list(1,:))</span>
+0095 <span class="comment">% figure; hold on; plot(lambda, q_list(4,:)); plot(lambda, q_list(5,:))</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

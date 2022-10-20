@@ -1,0 +1,322 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of test_beam_horizontal</title>
+  <meta name="keywords" content="test_beam_horizontal">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">tests</a> &gt; test_beam_horizontal.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>test_beam_horizontal
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 clear
+0002 close all
+0003 clc
+0004 
+0005 <span class="comment">%% Input definition</span>
+0006 <span class="comment">%% geometry for a vertical beaam</span>
+0007 L = 1000; <span class="comment">% beam length</span>
+0008 <span class="comment">% key nodes of the geometry</span>
+0009 geom_node = [1 0 0 0;  <span class="comment">% Point 1 coord (0,0)</span>
+0010              2 L 0 0;];<span class="comment">% Point 2 coord (0,1000)</span>
+0011 <span class="comment">% line of the geometry</span>
+0012 geom_element = [1 1 2];<span class="comment">% line 1 between point 1 and 2</span>
+0013 discretisation = [5]; <span class="comment">% line 1 discretized with 5 elements</span>
+0014 <span class="comment">%% material inputs</span>
+0015 b = 10; h = 10;
+0016 S = b*h; I = b*h^3/12; rho = 7.8e-9; E = 210e3; poisson =0.3; k=5/6;
+0017 alpha = 0.1; <span class="comment">% Raileight damping coeff C = alpha M</span>
+0018 <span class="comment">% non dimensional beam material</span>
+0019 epsi = I/(S*L^2);
+0020 S = 1; I = epsi; rho = 1; E = 1/epsi; poisson =0.3; k=1;
+0021 geom_node(:,2:3) = geom_node(:,2:3)/L; <span class="comment">% adimentionalize geometry</span>
+0022 <span class="comment">%% Boundary condition input (Dirichlet condition only)</span>
+0023 bc_node_list{1} = struct(<span class="string">'node'</span>, 1,<span class="string">'dof'</span>, [1,2,3]);
+0024 <span class="comment">% bc_node_list{2} = struct('node_number',2,'prescribed_dof',[1,2,3]); % uncomment for clamped clamped beam</span>
+0025 <span class="comment">%% Visualisation node Input (for results display)</span>
+0026 visu_node_list{1} = struct(<span class="string">'node'</span>, 2 ,<span class="keyword">...</span>
+0027                             <span class="string">'dof'</span>, [1 2]);
+0028 <span class="comment">%% Forcing Definition condition input (Dirichlet condition only)</span>
+0029 <span class="comment">% ponctual static forces</span>
+0030 static_ponctual_force_node_list{1} = struct(<span class="string">'node'</span>,2,<span class="keyword">...</span>
+0031                                      <span class="string">'dof'</span>, [1 2],<span class="keyword">...</span>
+0032                                      <span class="string">'amplitude'</span>, [-1 0] );
+0033 <span class="comment">% distrubuted static forces</span>
+0034 static_distributed_force_amplitude = [0  0];
+0035 static_distributed_force_direction = [1  2];
+0036 <span class="comment">% ponctual periodic forces</span>
+0037 periodic_ponctual_force_node_list{1} = struct(<span class="string">'node'</span>,2,<span class="keyword">...</span>
+0038                                         <span class="string">'dof'</span>, [2],<span class="keyword">...</span>
+0039                                         <span class="string">'amplitude'</span>, [0.001],<span class="keyword">...</span><span class="comment"> % complex amplitude re cos + im sin </span>
+0040                                         <span class="string">'harmonic'</span>, [1] );
+0041 <span class="comment">% distrubuted periodic forces</span>
+0042 periodic_distributed_force_amplitude = [0 0]; <span class="comment">% complex amplitude</span>
+0043 periodic_distributed_force_direction = [1  2];
+0044 periodic_distributed_force_harmonic = [1  1];
+0045 <span class="comment">%% FEM model construction</span>
+0046 model = NL_2D_FEM; <span class="comment">% create a new NL_2D_FEM model</span>
+0047 <span class="comment">% set geometry (optional if a mesh is directly provided)</span>
+0048 model = model.set_geom(geom_node, geom_element, discretisation);
+0049 <span class="comment">% set visualized nodes</span>
+0050 model = model.set_visu(visu_node_list); 
+0051 <span class="comment">% set mesh</span>
+0052 model = model.auto_mesh(); <span class="comment">% auto mesh if geometry is given</span>
+0053 <span class="comment">% model = model.set_mesh(nodes, connect; % user defined mesh otherwise: needs nodes coordiantes and connectivity table</span>
+0054 <span class="comment">% set properties</span>
+0055 model = model.set_prop(S, I, rho, E, poisson, k, alpha); <span class="comment">% set propoerties (must be the same for all elements)</span>
+0056 <span class="comment">% set boundary condition</span>
+0057 model = model.set_boundary(bc_node_list);
+0058 <span class="comment">% set loads (forcing)</span>
+0059 <span class="comment">% static loads</span>
+0060 model = model.set_static_loads(<span class="string">'ponctual'</span>, static_ponctual_force_node_list);
+0061 model = model.set_static_loads(<span class="string">'distributed'</span>, static_distributed_force_amplitude, static_distributed_force_direction);
+0062 <span class="comment">% dynamic loads</span>
+0063 model = model.set_periodic_loads(<span class="string">'ponctual'</span>, periodic_ponctual_force_node_list);
+0064 model = model.set_periodic_loads(<span class="string">'distributed'</span>, periodic_distributed_force_amplitude, periodic_distributed_force_direction, periodic_distributed_force_harmonic);
+0065 <span class="comment">% assemble mass matrix and force vector</span>
+0066 model = model.initialise_matrices_and_vector();
+0067 <span class="comment">% static solution</span>
+0068 
+0069 [qs_full, res] = model.solve_static_problem();
+0070 q0_full = model.vectors.null_vector;
+0071 fig = figure(99);
+0072 model.plot_deformed_mesh(q0_full, fig, <span class="string">'-k'</span>)
+0073 model.plot_deformed_mesh(qs_full, fig, <span class="string">'-b'</span>)
+0074 [strain,stress] = model.strains_and_stress_at_gauss_point(qs_full);
+0075 keyboard
+0076 <span class="comment">% modal analysis</span>
+0077 [shape, freq] = model.linear_modal_analysis(qs_full);
+0078 <span class="comment">% analytical frequencies</span>
+0079 fax = sqrt(E/rho)*pi/2/L*[1, 3, 5]/2/pi
+0080 fflex = sqrt(E*I/rho/S/L^4)*[1.87^2, 4.69^2 7.85^2 10.99^2]/2/pi
+0081 
+0082 <span class="comment">% [shape, freq] = model.linear_modal_analysis();</span>
+0083 fig3 = figure(98);
+0084 model.plot_deformed_mesh(q0_full, fig3, <span class="string">'--k'</span>)
+0085 model.plot_deformed_mesh(qs_full, fig3, <span class="string">'--b'</span>)
+0086 model.plot_deformed_mesh(shape(:,1), fig3, <span class="string">'-b'</span>)
+0087 model.plot_deformed_mesh(shape(:,2), fig3, <span class="string">'-g'</span>)
+0088 model.plot_deformed_mesh(shape(:,3), fig3, <span class="string">'-g'</span>)
+0089 <span class="comment">% buckling analysis</span>
+0090 <span class="comment">% [frq_list, lambda, N_list, q_list] = model.buckling_analysis();</span>
+0091 <span class="comment">% figure; plot(lambda, frq_list(1,:))</span>
+0092 <span class="comment">% figure; hold on; plot(lambda, q_list(4,:)); plot(lambda, q_list(5,:))</span>
+0093 <span class="comment">% fig44 = figure(44)</span>
+0094 <span class="comment">% hold on</span>
+0095 <span class="comment">% model.plot_deformed_mesh(q_list(:,1), fig44, '-b')</span>
+0096 <span class="comment">% model.plot_deformed_mesh(q_list(:,floor(end/2)), fig44, '-k')</span>
+0097 <span class="comment">% model.plot_deformed_mesh(q_list(:,end), fig44, '-g')</span>
+0098 <span class="comment">%</span>
+0099 <span class="comment">% K_tan = model.assemble_constant_matrix('stiffness_at_qs', qs_full);</span>
+0100 <span class="comment">% K_lin = model.assemble_constant_matrix('stiffness_at_qs', 0*qs_full);</span>
+0101 <span class="comment">%</span>
+0102 <span class="comment">% keyboard</span>
+0103 <span class="comment">%%</span>
+0104 
+0105 <span class="keyword">global</span> U Section Diagram   <span class="comment">% Global variables to export point from the diagram.</span>
+0106 
+0107 <span class="comment">% Path of the SRC file.</span>
+0108 addpath(genpath(<span class="string">'..\..\NonlinearDyn_vectorialform'</span>));
+0109 addpath(genpath(<span class="string">'..\..\..\SRC'</span>));
+0110 
+0111 <span class="comment">%% Parameters of the system</span>
+0112 
+0113 neq = length(model.boundary.active_dof); <span class="comment">%% number of variables: [u,w,theta] per node</span>
+0114 neq_aux = 12*model.mesh.number_elements; <span class="comment">%% number of auxiliary variables: in this case, 12 per element</span>
+0115 
+0116 <span class="comment">%% initialization of the system</span>
+0117 H = 15;             <span class="comment">% number of harmonics used to compute the solution-branch</span>
+0118 nz = 2*neq;         <span class="comment">% number of main equations of the system of the differential-algebraic system (DAE)</span>
+0119 nz_aux = neq_aux;   <span class="comment">% number of auxiliary equations of the system of the DAE</span>
+0120 
+0121 
+0122 Omega = linspace(freq(1)*0.8, freq(1)*1.2, 500)*2*pi;
+0123 <span class="comment">% linear analysis</span>
+0124 [qp_full, bode] = model.linear_analysis(H, Omega, qs_full);
+0125 figure
+0126 subplot(2,1,1)
+0127 hold on
+0128 plot(Omega, bode.amp_qp_full{1}(4,:)) <span class="comment">% u</span>
+0129 plot(Omega, bode.amp_qp_full{1}(5,:)) <span class="comment">% v</span>
+0130 plot(Omega, bode.amp_qp_full{1}(6,:)) <span class="comment">% theta</span>
+0131 xlabel(<span class="string">'Omega'</span>); ylabel(<span class="string">'Amp H1'</span>)
+0132 subplot(2,1,2)
+0133 hold on
+0134 plot(Omega, bode.phase_qp_full{1}(4,:)) <span class="comment">% u</span>
+0135 plot(Omega, bode.phase_qp_full{1}(5,:)) <span class="comment">% v</span>
+0136 plot(Omega, bode.phase_qp_full{1}(6,:)) <span class="comment">% theta</span>
+0137 xlabel(<span class="string">'Omega'</span>); ylabel(<span class="string">'Phase H1'</span>)
+0138 <span class="comment">% figure</span>
+0139 <span class="comment">% subplot(2,1,1)</span>
+0140 <span class="comment">% hold on</span>
+0141 <span class="comment">% plot(Omega, bode.amp_qp_full{2}(4,:)) % u</span>
+0142 <span class="comment">% plot(Omega, bode.amp_qp_full{2}(5,:)) % v</span>
+0143 <span class="comment">% plot(Omega, bode.amp_qp_full{2}(6,:)) % theta</span>
+0144 <span class="comment">% xlabel('Omega'); ylabel('Amp H2')</span>
+0145 <span class="comment">% subplot(2,1,2)</span>
+0146 <span class="comment">% hold on</span>
+0147 <span class="comment">% plot(Omega, bode.phase_qp_full{2}(4,:)) % u</span>
+0148 <span class="comment">% plot(Omega, bode.phase_qp_full{2}(5,:)) % v</span>
+0149 <span class="comment">% plot(Omega, bode.phase_qp_full{2}(6,:)) % theta</span>
+0150 <span class="comment">% xlabel('Omega'); ylabel('Phase H2')</span>
+0151 
+0152 <span class="comment">% MANLAB structure of parameters for equation.m</span>
+0153 parameters.H = H;
+0154 parameters.angfreq = <span class="string">'omega'</span>; <span class="comment">% if the system is forced at a fixed angular frequency, parameters.angfreq</span>
+0155                               <span class="comment">% contains its value. Otherwise, parameters.angfreq = 'omega'.</span>
+0156 type = <span class="string">'autonomous'</span>; <span class="comment">% type of system (can be 'forced' or 'autonomous')</span>
+0157 <span class="comment">%type = 'forced'; % type of system (can be 'forced' or 'autonomous')</span>
+0158 writing = <span class="string">'vectorial'</span>; <span class="comment">% way the equations have been written (can be 'standard' or 'vectorial')</span>
+0159 parameters.type = type;
+0160 parameters.model = model;
+0161 sys = SystHBQ(nz,nz_aux,H,@equations_vector_NL_2D_FEM,@point_display,@global_display,parameters,type,writing);
+0162 
+0163 omega0 = (freq(1)*2*pi);
+0164 <span class="comment">% lambda0 = omega0; % continuation parameter initial value</span>
+0165 lambda0 = 0; <span class="comment">% continuation parameter initial value</span>
+0166 epsilon = 0.01; <span class="comment">% amplitude of the linear mode</span>
+0167 
+0168 <span class="comment">%% starting point</span>
+0169 [qp0_full, bode] = model.linear_analysis(H, omega0);
+0170 qpH1c = bode.qcos(:,1);
+0171 qpH1s = bode.qsin(:,1);
+0172 
+0173 <span class="comment">% [Z0] = model.man_initial_point(H, omega0, qs_full, -qp0_full);</span>
+0174 [Z0] = model.man_initial_point(H, omega0, qs_full, epsilon*shape(:,1));
+0175 
+0176 fig55=figure(55);
+0177 hold on
+0178 model.plot_deformed_mesh(qs_full, fig55, <span class="string">'--k'</span>)
+0179 model.plot_deformed_mesh([0;0;0;Z0(2,1:length(model.boundary.active_dof))'], fig55, <span class="string">'--ro'</span>)
+0180 model.plot_deformed_mesh([0;0;0;Z0(2+H,1:length(model.boundary.active_dof))'], fig55, <span class="string">'--bo'</span>)
+0181 U0z = sys.init_U0(Z0, omega0, lambda0);
+0182 
+0183 <span class="comment">% % solve system at stating frequency</span>
+0184 <span class="comment">% options = optimoptions('fsolve','SpecifyObjectiveGradient',true,'display','iter','maxiter',30,'FunctionTolerance',1e-8,'StepTolerance',1e-12, 'Algorith','levenberg-marquardt');% trust-region-dogleg</span>
+0185 <span class="comment">% U0 = fsolve(@(U)man_residual_fixed_frequency(U, omega0, sys), U0z, options);</span>
+0186 <span class="comment">% U01 = fsolve(@(U)man_residual_fixed_frequency(U, omega0, sys), U0, options);</span>
+0187 <span class="comment">% Res = man_residual_fixed_frequency(U0, omega0, sys);</span>
+0188 <span class="comment">% fprintf(1,'HBM system at initial frequency solved, residual %2.2e \n', norm(Res))</span>
+0189 <span class="comment">% [Ztot,omega,lambda,omega2,lambdaomega] = get_Ztot(sys,U01);</span>
+0190 <span class="comment">% model.plot_deformed_mesh([0;0;0;Ztot(2,1:length(model.boundary.active_dof))'], fig55, '-m*')</span>
+0191 <span class="comment">% model.plot_deformed_mesh([0;0;0;Ztot(2+H,1:length(model.boundary.active_dof))'], fig55, '-c*')</span>
+0192 
+0193 amp = 1e-2;
+0194 idx = sys.getcoord(<span class="string">'cos'</span>,2,1);
+0195 <span class="comment">% solve system at stating amplitude</span>
+0196 options = optimoptions(<span class="string">'fsolve'</span>,<span class="string">'SpecifyObjectiveGradient'</span>,true,<span class="string">'display'</span>,<span class="string">'iter'</span>,<span class="string">'maxiter'</span>,30,<span class="string">'FunctionTolerance'</span>,1e-8,<span class="string">'StepTolerance'</span>,1e-12, <span class="string">'Algorith'</span>,<span class="string">'levenberg-marquardt'</span>);<span class="comment">% trust-region-dogleg</span>
+0197 U0 = fsolve(@(U)man_residual_fixed_amplitude(U, idx, amp, sys), U0z, options);
+0198 U01 = fsolve(@(U)man_residual_fixed_amplitude(U, idx, amp, sys), U0, options);
+0199 Res = man_residual_fixed_amplitude(U0, idx, amp, sys);
+0200 fprintf(1,<span class="string">'HBM system at initial amplitude solved, residual %2.2e \n'</span>, norm(Res))
+0201 [Ztot,omega,lambda,omega2,lambdaomega] = get_Ztot(sys,U01);
+0202 model.plot_deformed_mesh([0;0;0;Ztot(2,1:length(model.boundary.active_dof))'], fig55, <span class="string">'-m*'</span>)
+0203 model.plot_deformed_mesh([0;0;0;Ztot(2+H,1:length(model.boundary.active_dof))'], fig55, <span class="string">'-c*'</span>)
+0204 
+0205 
+0206 <span class="comment">% model.plot_deformed_mesh(qpH1c,fig55,'-*')</span>
+0207 <span class="comment">% model.plot_deformed_mesh(qpH1s,fig55,'-*')</span>
+0208 
+0209 U0 = sys.init_U0(Ztot, omega0, lambda0);
+0210 max(abs(U0-U01))
+0211 
+0212 <span class="comment">% model.plot_deformed_mesh([0;0;0;Ztot(2,1:length(model.boundary.active_dof))'], fig, '-r')</span>
+0213 <span class="comment">% model.plot_deformed_mesh([0;0;0;Ztot(2+H,1:length(model.boundary.active_dof))'], fig, '-r')</span>
+0214 <span class="comment">% model.plot_deformed_mesh(qpH1c, fig, '-b')</span>
+0215 <span class="comment">% model.plot_deformed_mesh(qpH1s, fig, '-k')</span>
+0216 
+0217 <span class="comment">% u_full = real(qp0_full(:,1))-imag(qp0_full(:,1));</span>
+0218 <span class="comment">% v_full = -omega0*u_full;</span>
+0219 <span class="comment">% u = u_full(model.boundary.active_dof);</span>
+0220 <span class="comment">% v = v_full(model.boundary.active_dof);</span>
+0221 <span class="comment">% aux = model.man_auxiliary_variables_vector(u_full);</span>
+0222 <span class="comment">% zf=[u; v; aux; omega0];</span>
+0223 <span class="comment">% Res = sys.equations(sys, 0, zf, 0*zf, 0*zf)</span>
+0224 
+0225 <span class="comment">%%% Phase initialization for nonlinear modes</span>
+0226 <span class="comment">% sys.zi_phase = nz/2 - 1;</span>
+0227 <span class="comment">% sys.zi_phase = n_var2;</span>
+0228 <span class="comment">%%% Variable displayed in the projected bifurcation diagram.</span>
+0229 <span class="comment">% To plot the coefficient of cos(h omega t) of variable number i with</span>
+0230 <span class="comment">% respect to lambda you should write as follows:</span>
+0231 dispvars = [sys.getcoord(<span class="string">'omega'</span>) sys.getcoord(<span class="string">'cos'</span>,1,1);
+0232             sys.getcoord(<span class="string">'omega'</span>) sys.getcoord(<span class="string">'sin'</span>,1,1);
+0233             sys.getcoord(<span class="string">'omega'</span>) sys.getcoord(<span class="string">'cos'</span>,2,1);
+0234             sys.getcoord(<span class="string">'omega'</span>) sys.getcoord(<span class="string">'sin'</span>,2,1)];
+0235 <span class="comment">%             sys.getcoord('omega') sys.getcoord('cos',dof_info.obs_dof,3);</span>
+0236 <span class="comment">%             sys.getcoord('omega') sys.getcoord('sin',dof_info.obs_dof,3)];</span>
+0237 <span class="comment">%             sys.getcoord('omega') sys.getcoord('cos',dof_info.obs_dof,5);</span>
+0238 <span class="comment">%             sys.getcoord('omega') sys.getcoord('sin',dof_info.obs_dof,5)];</span>
+0239 
+0240 <span class="comment">%% Launch of Manlab with options</span>
+0241 Manlab(<span class="string">'sys'</span>       ,sys , <span class="keyword">...</span>
+0242     <span class="string">'U0value'</span>         ,U0, <span class="keyword">...</span>
+0243     <span class="string">'order'</span>           ,20, <span class="keyword">...</span><span class="comment">     % order of the series</span>
+0244      <span class="string">'ANMthreshold'</span>    ,1e-10, <span class="keyword">...</span><span class="comment">   % threshold for the domain of validity of the series</span>
+0245      <span class="string">'Amax_max'</span>        ,1e2, <span class="keyword">...</span><span class="comment">    % maximum value of the domain of validity of the series</span>
+0246      <span class="string">'NRthreshold'</span>     ,1e-12, <span class="keyword">...</span><span class="comment">   % threshold for Newton-Raphson (NR) corrections</span>
+0247      <span class="string">'NRitemax'</span>        ,50, <span class="keyword">...</span><span class="comment">     % Maximum number of iteration of NR algorithm</span>
+0248      <span class="string">'NRstart'</span>         ,1, <span class="keyword">...</span><span class="comment">      % NR corrections for the user-defined starting point [on]/off</span>
+0249      <span class="string">'NRmethod'</span>        ,0, <span class="keyword">...</span><span class="comment">      % NR corrections on/[off]</span>
+0250      <span class="string">'BifDetection'</span>    ,1, <span class="keyword">...</span><span class="comment">      % Detection of bifurcation [on]/off</span>
+0251      <span class="string">'PointDisplay'</span>    ,0, <span class="keyword">...</span><span class="comment">      % Point display [on]/off</span>
+0252      <span class="string">'GlobalDisplay'</span>   ,0, <span class="keyword">...</span><span class="comment">      % Global display [on]/off</span>
+0253      <span class="string">'StabilityCheck'</span>  ,0, <span class="keyword">...</span><span class="comment">      % Stability computation on/[off]</span>
+0254      <span class="string">'StabTol'</span>         ,1e-6, <span class="keyword">...</span><span class="comment">   % Stability tolerance</span>
+0255     <span class="string">'displayvariables'</span>,dispvars);     <span class="comment">% MANLAB run</span>
+0256 
+0257 
+0258 <span class="comment">%% Optional arguments of Manlab launching function with their default values :</span>
+0259 <span class="comment">%          'order'           ,20, ...     % order of the series</span>
+0260 <span class="comment">%          'ANMthreshold'    ,1e-6, ...   % threshold for the domain of validity of the series</span>
+0261 <span class="comment">%          'Amax_max'        ,1e6, ...    % maximum value of the domain of validity of the series</span>
+0262 <span class="comment">%          'NRthreshold'     ,2e-5, ...   % threshold for Newton-Raphson (NR) corrections</span>
+0263 <span class="comment">%          'NRitemax'        ,10, ...     % Maximum number of iteration of NR algorithm</span>
+0264 <span class="comment">%          'NRstart'         ,1, ...      % NR corrections for the user-defined starting point [on]/off</span>
+0265 <span class="comment">%          'NRmethod'        ,0, ...      % NR corrections on/[off]</span>
+0266 <span class="comment">%          'BifDetection'    ,1, ...      % Detection of bifurcation [on]/off</span>
+0267 <span class="comment">%          'PointDisplay'    ,1, ...      % Point display [on]/off</span>
+0268 <span class="comment">%          'GlobalDisplay'   ,1, ...      % Global display [on]/off</span>
+0269 <span class="comment">%          'StabilityCheck'  ,0, ...      % Stability computation on/[off]</span>
+0270 <span class="comment">%          'StabTol'         ,1e-6, ...   % Stability tolerance</span>
+0271 <span class="comment">%</span>
+0272 <span class="comment">%               The stability requires to write the system of equations in</span>
+0273 <span class="comment">%               the explicit ODE form X' = f(X).</span>
+0274 <span class="comment">%               The residue function is then R(X) = f(X) = 0.</span>
+0275 <span class="comment">%               In all other cases, it gives wrong results.</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

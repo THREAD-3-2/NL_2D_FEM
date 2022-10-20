@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of toy_house_problem</title>
+  <meta name="keywords" content="toy_house_problem">
+  <meta name="description" content="% Input definition">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">Toy_house</a> &gt; toy_house_problem.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\Toy_house&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>toy_house_problem
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>% Input definition</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function mds = toy_house_problem() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Input definition
+ mds : model data structure for automatic initialisation of the FEM model</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="run_toy_house_detailled_version.html" class="code" title="">run_toy_house_detailled_version</a>	</li><li><a href="run_toy_house_short_version.html" class="code" title="">run_toy_house_short_version</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mds = toy_house_problem()</a>
+0002 <span class="comment">%% Input definition</span>
+0003 <span class="comment">% mds : model data structure for automatic initialisation of the FEM model</span>
+0004 mds = create_empty_mds();
+0005 <span class="comment">%% geometry for a toy house frame</span>
+0006 <span class="comment">%   ^         (5)</span>
+0007 <span class="comment">%   |        / | \</span>
+0008 <span class="comment">%   |       /  |  \            % [l]: line numbers</span>
+0009 <span class="comment">%   | [4]  /   |[6]\  [5]      % (p): point Numbers</span>
+0010 <span class="comment">%   |     /   (6)   \</span>
+0011 <span class="comment">% H |    /           \</span>
+0012 <span class="comment">%   |  (4)----------(3)</span>
+0013 <span class="comment">%   |   |     [2]    |</span>
+0014 <span class="comment">%   |   | [3]        | [1]</span>
+0015 <span class="comment">%   |   |            |</span>
+0016 <span class="comment">%   v  (1)          (2)</span>
+0017 <span class="comment">%       &lt;-------------&gt;</span>
+0018 <span class="comment">%              L</span>
+0019 <span class="comment">%</span>
+0020 L = 1000; <span class="comment">% length</span>
+0021 H = 1000; <span class="comment">% height</span>
+0022 <span class="comment">% Key nodes</span>
+0023 mds.geom.geom_node = [
+0024     1  0   0 0;
+0025     2  L   0 0;
+0026     3  L    H/2 0;
+0027     4  0    H/2 0;
+0028     5  L/2  H 0;
+0029     6  L/2  3*H/4 0];
+0030 <span class="comment">% Lines of the geometry</span>
+0031 mds.geom.geom_element = [1 2 3;
+0032     2 3 4;
+0033     3 4 1 ;
+0034     4 4 5;
+0035     5 5 3 ;
+0036     6 5 6;];
+0037 <span class="comment">% Discretisation for each line</span>
+0038 mds.geom.discretisation = [3, 3, 3, 3, 3, 2];
+0039 
+0040 <span class="comment">%% material inputs + adimentionalization</span>
+0041 b = 10; h = 10;  <span class="comment">% constant relative to the beam section</span>
+0042 S = b*h;       <span class="comment">% section area</span>
+0043 I = b*h^3/12;  <span class="comment">% section second moment of area</span>
+0044 rho = 7.8e-9;  <span class="comment">% material density</span>
+0045 E = 210e3;     <span class="comment">% material Young Modulus</span>
+0046 mds.prop.poisson =0.3;  <span class="comment">% material Poisson ratio</span>
+0047 mds.prop.k = 1;           <span class="comment">% shear area coeff</span>
+0048 mds.prop.alpha = 0.1;   <span class="comment">% Rayleigh damping coeff (C = alpha M)</span>
+0049 <span class="comment">% non dimensional beam material inputs + library of materials</span>
+0050 epsi = I/(S*L^2);
+0051 mds.prop.S = 1; mds.prop.I = epsi; mds.prop.rho = 1; mds.prop.E = 1/epsi;
+0052 mds.geom.geom_node(:,2:3) = mds.geom.geom_node(:,2:3)/L; <span class="comment">% rescale geometry if adim</span>
+0053 <span class="comment">%% Boundary condition input (Dirichlet condition only)</span>
+0054 mds.boundary.bc_node_list{1} = struct(<span class="string">'node'</span>, 1,<span class="string">'dof'</span>, [1,2,3]); <span class="comment">% node 1 is clamped</span>
+0055 mds.boundary.bc_node_list{2} = struct(<span class="string">'node'</span>, 2,<span class="string">'dof'</span>, [1,2,3]); <span class="comment">% node 2 is clamped</span>
+0056 <span class="comment">%% Visualisation node for results</span>
+0057 mds.visu.visu_node_list{1} = struct(<span class="string">'node'</span>, 5 , <span class="string">'dof'</span>, [1 2]);   <span class="comment">% ux and uy of node 2 are observed</span>
+0058 <span class="comment">%% Forcing condition input (static and periodic)</span>
+0059 <span class="comment">% ponctual static forces</span>
+0060 mds.force.static.static_ponctual_force_node_list{1} = struct(<span class="string">'node'</span>, [6],<span class="string">'dof'</span>, [2],<span class="string">'amplitude'</span>, [0] ); <span class="comment">% Fx = -1 and Fy = 0 at node 2</span>
+0061 <span class="comment">% distrubuted static forces</span>
+0062 <span class="comment">% mds.force.static.static_distributed_force_amplitude = [-4];</span>
+0063 <span class="comment">% mds.force.static.static_distributed_force_direction = [2];</span>
+0064 <span class="comment">% ponctual periodic forces</span>
+0065 <span class="comment">% mds.force.periodic.periodic_ponctual_force_node_list{1} = struct('node', 2,'dof', [1],'amplitude', [0.1], 'harmonic', [1] ); % complex amplitude f = re(amp) cos + im(amp) sin</span>
+0066 <span class="comment">% distrubuted periodic forces</span>
+0067 mds.force.periodic.periodic_distributed_force_amplitude = [0.01]; <span class="comment">% complex amplitude f = re(amp) cos + im(amp) sin</span>
+0068 mds.force.periodic.periodic_distributed_force_direction = [1];
+0069 mds.force.periodic.periodic_distributed_force_harmonic = [1];
+0070 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

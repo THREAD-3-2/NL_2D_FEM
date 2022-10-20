@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plotbranchHBM_MPD</title>
+  <meta name="keywords" content="plotbranchHBM_MPD">
+  <meta name="description" content="function Hand = plotbranchHBM(sys,Section,Idisp,Hdisp,bifpara_str)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">NonlinearDyn_vectorialform</a> &gt; plotbranchHBM_MPD.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>plotbranchHBM_MPD
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function Hand = plotbranchHBM(sys,Section,Idisp,Hdisp,bifpara_str)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function Hand = plotbranchHBM_MPD(sys,Sec_Diag,Idisp,Hdisp,bifpara_str,LineWidth,Color) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function Hand = plotbranchHBM(sys,Section,Idisp,Hdisp,bifpara_str)
+    plots the amplitude of the harmonics Hdisp of the variables Idisp computed
+    by the Manlab/HBM method as a function of the bifurcation parameter
+    specified by bifpara_str ( = 'omega' or 'lambda').
+
+    It also displays the bifurcation points:
+    - B for a simple bifurcation (saddle-node, pitchfork...)
+    - PD for period doubling bifurcation
+    - NS for Neimark-Sacker bifurcation
+
+
+    By L. Guillot and O. Thomas / Nov. 2018 - Mars 2019</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="visualize_FRF.html" class="code" title="function h = visualize_FRF(sys,fig,FRFs,LegendNames)">visualize_FRF</a>	UNTITLED3 Summary of this function goes here</li><li><a href="visualize_NNM.html" class="code" title="function h = visualize_NNM(sys,fig,Diagram_NNM)">visualize_NNM</a>	UNTITLED3 Summary of this function goes here</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [Hand,Handleg,Leg] = plotsectionHBM(sys,Section,Idisp,Hdisp)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% function Hand = plotbranchHBM(sys,Section,Idisp,Hdisp,bifpara_str)</span>
+0002 <span class="comment">%    plots the amplitude of the harmonics Hdisp of the variables Idisp computed</span>
+0003 <span class="comment">%    by the Manlab/HBM method as a function of the bifurcation parameter</span>
+0004 <span class="comment">%    specified by bifpara_str ( = 'omega' or 'lambda').</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    It also displays the bifurcation points:</span>
+0007 <span class="comment">%    - B for a simple bifurcation (saddle-node, pitchfork...)</span>
+0008 <span class="comment">%    - PD for period doubling bifurcation</span>
+0009 <span class="comment">%    - NS for Neimark-Sacker bifurcation</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    By L. Guillot and O. Thomas / Nov. 2018 - Mars 2019</span>
+0013 
+0014 
+0015 <a name="_sub0" href="#_subfunctions" class="code">function Hand = plotbranchHBM_MPD(sys,Sec_Diag,Idisp,Hdisp,bifpara_str,LineWidth,Color)</a>
+0016 
+0017 Nb=length(Idisp);
+0018 
+0019 <span class="comment">% Color for successive plots.</span>
+0020 Col = dispcolorML;
+0021 
+0022 <span class="keyword">switch</span> bifpara_str
+0023     <span class="keyword">case</span> <span class="string">'omega'</span>
+0024         ind_bifpara = sys.neq;
+0025     <span class="keyword">case</span> <span class="string">'lambda'</span>
+0026         ind_bifpara = sys.neq+1;
+0027 <span class="keyword">end</span>
+0028 
+0029 
+0030 <span class="keyword">if</span> isa(Sec_Diag,<span class="string">'CheckPoint'</span>)
+0031     [Hand,Handleg,Leg] = <a href="#_sub1" class="code" title="subfunction [Hand,Handleg,Leg] = plotsectionHBM(sys,Section,Idisp,Hdisp)">plotsectionHBM</a>(sys,Sec_Diag,Idisp,Hdisp);
+0032 <span class="keyword">else</span>
+0033     cellfun(@(sec)<a href="#_sub1" class="code" title="subfunction [Hand,Handleg,Leg] = plotsectionHBM(sys,Section,Idisp,Hdisp)">plotsectionHBM</a>(sys,sec,Idisp,Hdisp),Sec_Diag(1:end-1),<span class="string">'uniformoutput'</span>,0);
+0034     [Hand,Handleg,Leg] = <a href="#_sub1" class="code" title="subfunction [Hand,Handleg,Leg] = plotsectionHBM(sys,Section,Idisp,Hdisp)">plotsectionHBM</a>(sys,Sec_Diag{end},Idisp,Hdisp);
+0035 <span class="keyword">end</span>
+0036 
+0037 
+0038 legend(Handleg,Leg,<span class="string">'location'</span>,<span class="string">'best'</span>); <span class="comment">% Slows the plotting procedure</span>
+0039 
+0040 ylabel(<span class="string">'Harmonics amplitude'</span>)
+0041 xlabel([<span class="string">'\'</span> bifpara_str])
+0042 
+0043 
+0044 
+0045     <a name="_sub1" href="#_subfunctions" class="code">function [Hand,Handleg,Leg] = plotsectionHBM(sys,Section,Idisp,Hdisp)</a>
+0046         
+0047         Hand=[];
+0048         Handleg=[];
+0049         
+0050         st1 = Section.drawtype_init;
+0051         st2 = Section.drawtype_end;
+0052         
+0053 <span class="comment">%         bifpara = Section.Upp(ind_bifpara,:)</span>
+0054         bifpara = Section.Upp(ind_bifpara,:)/sys.parameters.natural_puls(sys.parameters.mode);
+0055         
+0056         H = sys.H;
+0057         DHp1 = 2*H+1;
+0058         
+0059         
+0060         <span class="comment">%%% Test if there is a bifurcation in the Section</span>
+0061         <span class="keyword">if</span> ~strcmp(Section.Eigen.type,<span class="string">'nothing'</span>)
+0062             ind_change = Section.ind_change-1;
+0063             
+0064             bifparastab = Section.Ustab(ind_bifpara);
+0065             
+0066             bifpara = [bifpara(1:ind_change-1),bifparastab,bifpara(ind_change:end)];
+0067         <span class="keyword">end</span>
+0068         
+0069         <span class="keyword">for</span> ii=1:Nb
+0070             idisp = Idisp(ii);
+0071             hdisp = Hdisp(ii);
+0072             
+0073             cdisp = Col(ii,:);
+0074             
+0075             <span class="keyword">if</span> idisp &lt;= sys.nz
+0076                 I0   = (idisp-1)*DHp1+1;
+0077                 Icos = (idisp-1)*DHp1+1+hdisp;
+0078                 Isin = (idisp-1)*DHp1+1+H+hdisp;
+0079             <span class="keyword">else</span>
+0080                 I0   = sys.neq+1+ (idisp-1-sys.nz)*DHp1+1;
+0081                 Icos = sys.neq+1+ (idisp-1-sys.nz)*DHp1+1+hdisp;
+0082                 Isin = sys.neq+1+ (idisp-1-sys.nz)*DHp1+1+H+hdisp;
+0083             <span class="keyword">end</span>
+0084             
+0085             Hampl   = sqrt(Section.Upp(Icos,:).^2+Section.Upp(Isin,:).^2);
+0086             
+0087             <span class="comment">%%% Test if there is a bifurcation in the Section</span>
+0088             <span class="keyword">if</span> strcmp(Section.Eigen.type,<span class="string">'nothing'</span>)
+0089                 hand = plot(bifpara,Hampl,st1,<span class="string">'Color'</span>,Color,<span class="string">'linewidth'</span>,LineWidth);
+0090                 Hand = [Hand;hand];
+0091             <span class="keyword">else</span>
+0092                 Hampl_stab   = sqrt(Section.Ustab(Icos,:).^2+Section.Ustab(Isin,:).^2);
+0093                 Hampl = [Hampl(1:ind_change-1),Hampl_stab,Hampl(ind_change:end)];
+0094                 
+0095                 hand = plot(bifpara(1:ind_change),Hampl(1:ind_change),st1,<span class="string">'Color'</span>,Color,<span class="string">'linewidth'</span>,LineWidth);
+0096                 Hand = [Hand;hand];
+0097                 hand = plot(bifpara(ind_change:end),Hampl(ind_change:end),st2,<span class="string">'Color'</span>,Color,<span class="string">'linewidth'</span>,LineWidth);
+0098                 Hand = [Hand;hand];
+0099                 hand = plot(bifpara(ind_change),Hampl(ind_change),<span class="string">'.'</span>,<span class="string">'Color'</span>,Color,<span class="string">'linewidth'</span>,LineWidth);
+0100                 Hand = [Hand;hand];
+0101                 
+0102             <span class="keyword">end</span>
+0103             
+0104             Handleg(ii) = plot(NaN,NaN,<span class="string">'-'</span>,<span class="string">'Color'</span>,Color,<span class="string">'linewidth'</span>,LineWidth);
+0105             Leg{ii}=[<span class="string">'z_{'</span>,num2str(idisp),<span class="string">'}H'</span>,num2str(hdisp)];
+0106 <span class="comment">%             Leg{ii}=[DisplayName];</span>
+0107         <span class="keyword">end</span>
+0108         
+0109     <span class="keyword">end</span>
+0110 
+0111 
+0112 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

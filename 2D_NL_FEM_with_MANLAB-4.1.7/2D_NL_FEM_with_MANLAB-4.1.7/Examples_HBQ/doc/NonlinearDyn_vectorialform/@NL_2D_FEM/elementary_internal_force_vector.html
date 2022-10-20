@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of elementary_internal_force_vector</title>
+  <meta name="keywords" content="elementary_internal_force_vector">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">@NL_2D_FEM</a> &gt; elementary_internal_force_vector.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\@NL_2D_FEM&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>elementary_internal_force_vector
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function Fe = elementary_internal_force_vector(obj, qe, L_element) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Fe = elementary_internal_force_vector(obj, qe, L_element)</a>
+0002 
+0003 A = obj.prop.area;
+0004 I = obj.prop.inertia;
+0005 E = obj.prop.young_mod;
+0006 G = obj.prop.shear_mod;
+0007 k = obj.prop.shear_coeff_k;
+0008 
+0009 <span class="comment">% gather dof from the vector qe (6x1 vector)</span>
+0010 u1 = qe(1,:); w1 = qe(2,:); theta1 = qe(3,:);
+0011 u2 = qe(4,:); w2 = qe(5,:); theta2 = qe(6,:);
+0012 
+0013 <span class="comment">% usefull quantities</span>
+0014 theta = (theta1 + theta2)/2;   <span class="comment">% mean theta</span>
+0015 up = (u2 - u1)/L_element;       <span class="comment">% mean axial stain</span>
+0016 wp = (w2 - w1)/L_element; <span class="comment">% mean shear strain</span>
+0017 thetap = (theta2 - theta1)/L_element; <span class="comment">% mean curvature</span>
+0018 
+0019 <span class="comment">% Remaining auxiliary variable residuals</span>
+0020 c = cos(theta);                 
+0021 s = sin(theta);
+0022 eps = (1 + up).*c + wp.*s - 1;   
+0023 gam = wp.*c - (1 + up).*s;
+0024 
+0025 N = E*A.*eps;
+0026 T = k*G*A.*gam;
+0027 
+0028 Fx = N.*c - T.*s;               
+0029 Fy = N.*s + T.*c;
+0030 M = E*I*thetap;                 
+0031 T2 = N.*gam - (1 + eps).*T;
+0032 
+0033 Fe = [-Fx;
+0034       -Fy;
+0035         -M + T2*L_element/2;
+0036        Fx;
+0037        Fy;
+0038         M + T2*L_element/2];
+0039 
+0040 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

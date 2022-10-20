@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of visualization</title>
+  <meta name="keywords" content="visualization">
+  <meta name="description" content="UNTITLED Summary of this function goes here">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">NonlinearDyn_vectorialform</a> &gt; visualization.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>visualization
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>UNTITLED Summary of this function goes here</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function visualization(matFileName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">UNTITLED Summary of this function goes here
+ The order of the .mat file MUST be (the name in ' ' is what is exported
+ from MANLAB window):
+ FRFs 'Diagram' (1:n)
+ NNM 'Diagram' (n+1)
+ Legend names (saved in a vector) (n+2)
+ High amplitude 'Point' (n+3)
+ Low amplitude 'Point' (n+4)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="visualize_FRF.html" class="code" title="function h = visualize_FRF(sys,fig,FRFs,LegendNames)">visualize_FRF</a>	UNTITLED3 Summary of this function goes here</li><li><a href="visualize_NNM.html" class="code" title="function h = visualize_NNM(sys,fig,Diagram_NNM)">visualize_NNM</a>	UNTITLED3 Summary of this function goes here</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function visualization(matFileName)</a>
+0002 <span class="comment">%UNTITLED Summary of this function goes here</span>
+0003 <span class="comment">% The order of the .mat file MUST be (the name in ' ' is what is exported</span>
+0004 <span class="comment">% from MANLAB window):</span>
+0005 <span class="comment">% FRFs 'Diagram' (1:n)</span>
+0006 <span class="comment">% NNM 'Diagram' (n+1)</span>
+0007 <span class="comment">% Legend names (saved in a vector) (n+2)</span>
+0008 <span class="comment">% High amplitude 'Point' (n+3)</span>
+0009 <span class="comment">% Low amplitude 'Point' (n+4)</span>
+0010 set(0,<span class="string">'defaultTextInterpreter'</span>,<span class="string">'latex'</span>);               <span class="comment">%LaTeX pour le titre</span>
+0011 set(0,<span class="string">'defaultAxesTickLabelInterpreter'</span>,<span class="string">'latex'</span>);      <span class="comment">%LaTeX pour les valeurs des axes</span>
+0012 set(0,<span class="string">'defaultLegendInterpreter'</span>,<span class="string">'latex'</span>);             <span class="comment">%LaTeX pour les valeurs des légendes</span>
+0013 
+0014 <span class="comment">% Diagrams = load(matFileName);</span>
+0015 load(matFileName)
+0016 
+0017 fig = figure(24);
+0018 <span class="comment">%% Forced response curves and backbone</span>
+0019 h1 = <a href="visualize_FRF.html" class="code" title="function h = visualize_FRF(sys,fig,FRFs,LegendNames)">visualize_FRF</a>(sys,fig,FRFs,LegendNames); <span class="comment">% returns h1 and h2 for the legend</span>
+0020 h2 = <a href="visualize_NNM.html" class="code" title="function h = visualize_NNM(sys,fig,Diagram_NNM)">visualize_NNM</a>(sys,fig,Diagram_NNM);
+0021 
+0022 axis square
+0023 xlabel(<span class="string">'$\Omega / \omega_N$'</span>)
+0024 xlim([0.75,1.1])
+0025 <span class="comment">%% Deformed shape (low amplitude &amp; high amplitude)</span>
+0026 <span class="comment">% visualize_point(sys,fig,Defs)</span>
+0027 
+0028 h = [h1 h2];
+0029 legend(h,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>)
+0030 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

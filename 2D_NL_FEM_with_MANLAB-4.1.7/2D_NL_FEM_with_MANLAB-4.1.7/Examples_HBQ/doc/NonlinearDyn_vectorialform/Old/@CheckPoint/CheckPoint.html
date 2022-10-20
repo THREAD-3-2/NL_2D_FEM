@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of CheckPoint</title>
+  <meta name="keywords" content="CheckPoint">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="../index.html">Old</a> &gt; <a href="index.html">@CheckPoint</a> &gt; CheckPoint.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\Old\@CheckPoint&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>CheckPoint
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="CheckPoint.html" class="code" title="">CheckPoint</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="CheckPoint.html" class="code" title="">CheckPoint</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = CheckPoint(U0,Ut,Amax,params,BifData,StabData)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 
+0002 classdef <a href="CheckPoint.html" class="code" title="">CheckPoint</a>
+0003     <span class="comment">% These objects are created along the continuation process,</span>
+0004     <span class="comment">% each time a new series is computed and stored.</span>
+0005     <span class="comment">% The main property is the series U0(a=0) stored in U0 and its range of utility [0, Amax].</span>
+0006     <span class="comment">% Other properties may be deduced from these two main properties</span>
+0007     properties
+0008         
+0009         <span class="comment">% for storing the section</span>
+0010         U0   =0;    <span class="comment">% the start point + series      (taylor type)</span>
+0011         Ut   =0;    <span class="comment">% traveling direction at start point   (vector)</span>
+0012         Amax =0;    <span class="comment">% range of utility of series</span>
+0013         Uend =0;    <span class="comment">% the end point of the section  (vector)</span>
+0014         Utend=0;    <span class="comment">% traveling direction at end      (vector)</span>
+0015         Upp  =0;    <span class="comment">% U0 UI UII  ...  Uend, point by point representation of the section</span>
+0016         <span class="comment">%  Upp(ninc,nbpts)  nbpts: number of point per section</span>
+0017         
+0018         
+0019         BifStatus={<span class="string">'nothing'</span>};  <span class="comment">% 'nothing' or 'simplebif' or 'Hopf' or 'Pitchfork' or 'NS' or 'PD' or 'Fold',...</span>
+0020         <span class="comment">% for storing geometrical series and bifurcation data (when found)</span>
+0021         Ubif=0;       <span class="comment">% bifurcation point</span>
+0022         Utf =0;       <span class="comment">% tangent to the fondamental path</span>
+0023         Utb =0;       <span class="comment">% tangent to the bifurcated path</span>
+0024         alpha=0;      <span class="comment">% common ratio of the emerging geometrical series</span>
+0025         Uscale=0;     <span class="comment">% scale vector of emerging geometrical series</span>
+0026         
+0027         <span class="comment">% for storing change of stability informations</span>
+0028         StabStatus={<span class="string">'stable'</span>,<span class="string">'stable'</span>};  <span class="comment">% 'stable' or 'unstable' | beginning and end of the branch.</span>
+0029         ind_change;   <span class="comment">% index of the point representation where the solution changes stability</span>
+0030         Ustab=0;      <span class="comment">% change of stability point</span>
+0031         Astab=0;      <span class="comment">% change of stability pseudo arc-length parameter</span>
+0032         Eigen;        <span class="comment">% Stability analysis eigen values and eigen vectors</span>
+0033         Eigen_init;   <span class="comment">% Eigen values/vectors at the beginning of the branch</span>
+0034         Eigen_end;    <span class="comment">% Eigen values/vectors at the end of the branch</span>
+0035         drawtype_init=<span class="string">'-'</span>;
+0036         drawtype_end=<span class="string">'-'</span>;
+0037         
+0038         <span class="comment">% for displaying the projected bifurcation diagram</span>
+0039         dispcolors=<span class="string">''</span>;
+0040         dispvars=0;
+0041         <span class="comment">%drawtype={'-',':'};</span>
+0042         <span class="comment">%drawtype_pert = {'--','-.'};</span>
+0043         markers=<span class="string">''</span>
+0044         nbpts=0;
+0045         ncurve=0;
+0046         X=[];     <span class="comment">% X coordinate of the point to be plotted on Proj Bif Diag</span>
+0047         Y=[];     <span class="comment">% Y coordinate of the point to be plotted on Proj Bif Diag</span>
+0048         A=0;     <span class="comment">% values a of the path variable of the point to be plotted</span>
+0049         Xbif=[];  <span class="comment">% X coordinate of the bifurcation point (if one)</span>
+0050         Ybif=[];  <span class="comment">% Y coordinate of the bifurcation point (if one)</span>
+0051         Xstab=[];  <span class="comment">% X coordinate of the change of stability point (if one)</span>
+0052         Ystab=[];  <span class="comment">% Y coordinate of the change of stability point (if one)</span>
+0053         
+0054     <span class="keyword">end</span>
+0055     
+0056     methods
+0057         
+0058         <a name="_sub0" href="#_subfunctions" class="code">function obj = CheckPoint(U0,Ut,Amax,params,BifData,StabData)</a>
+0059             <span class="comment">% construct  CheckPoint object from the two main properties U0, Amax</span>
+0060             <span class="comment">% and BifData</span>
+0061             <span class="keyword">global</span> Ck
+0062             
+0063             <span class="comment">% parameters</span>
+0064             obj.dispcolors  = params.dispcolors;
+0065             obj.dispvars    = params.dispvars;
+0066             obj.markers     = params.markers;
+0067             obj.nbpts       = params.nbpts;
+0068             obj.ncurve      = size(obj.dispvars,1);
+0069             
+0070             <span class="comment">%  Section definition</span>
+0071             obj.U0    = U0;         <span class="comment">% the start point + series      (taylor type)</span>
+0072             obj.Ut    = Ut;         <span class="comment">% traveling direction at start    (vector)</span>
+0073             obj.Amax  = Amax;       <span class="comment">% range of utility of series</span>
+0074             obj.A     = zeros(obj.nbpts,1);
+0075             obj.Upp   = zeros(size(Ut,1),obj.nbpts) ;
+0076             <span class="keyword">for</span> p=1:obj.nbpts
+0077                 a = (p-1)/(obj.nbpts-1)*Amax;
+0078                 obj.A(p) = a;                           <span class="comment">% store values a of the path variable</span>
+0079                 obj.Upp(:,p) = evalseries(U0,a,Ck); <span class="comment">%  Upp = [U0 UI UII  ...  Uend]</span>
+0080             <span class="keyword">end</span>
+0081             
+0082             obj.Uend  = obj.Upp(:,obj.nbpts) ;             <span class="comment">% the end point                  (vector)</span>
+0083             obj.Utend = evalderiv(U0,obj.Amax,Ck) ;    <span class="comment">% traveling direction at end      (vector)</span>
+0084             
+0085             <span class="comment">% store data  stability</span>
+0086             <span class="keyword">switch</span> StabData.status{1}
+0087                 <span class="keyword">case</span> <span class="string">'stable'</span>
+0088                     obj.drawtype_init   = params.drawtype{1};
+0089                 <span class="keyword">case</span> <span class="string">'unstable'</span>
+0090                     obj.drawtype_init   = params.drawtype{2};
+0091             <span class="keyword">end</span>
+0092             <span class="keyword">switch</span> StabData.status{2}
+0093                 <span class="keyword">case</span> <span class="string">'stable'</span>
+0094                     obj.drawtype_end    = params.drawtype{1};
+0095                 <span class="keyword">case</span> <span class="string">'unstable'</span>
+0096                     obj.drawtype_end    = params.drawtype{2};
+0097             <span class="keyword">end</span>
+0098             
+0099             obj.BifStatus{1} = StabData.Eigen.type;
+0100             obj.StabStatus = StabData.status;
+0101             obj.Eigen = StabData.Eigen;
+0102             obj.Eigen_init = StabData.Eigen_init;
+0103             obj.Eigen_end = StabData.Eigen_end;
+0104             obj.Ustab = StabData.Uchange;
+0105             obj.Astab = StabData.Achange;
+0106             
+0107             [~,obj.ind_change] = find( (obj.A &gt; obj.Astab)',1);
+0108             
+0109             <span class="comment">% store data  bifurcation</span>
+0110             <span class="keyword">switch</span> BifData.status
+0111                 <span class="keyword">case</span> <span class="string">'simplebif'</span>
+0112                     <span class="keyword">if</span> strcmp(obj.BifStatus{1},<span class="string">'nothing'</span>) == 1
+0113                         obj.BifStatus{1}=BifData.status;
+0114                     <span class="keyword">else</span>
+0115                         obj.BifStatus{2}=BifData.status;
+0116                     <span class="keyword">end</span>
+0117                     obj.alpha    =BifData.alpha;
+0118                     obj.Uscale   =BifData.Uscale;
+0119                     
+0120                     obj.Ubif     =BifData.Ubif;
+0121                     obj.Utf      =BifData.Utf;
+0122                     obj.Utb      =BifData.Utb;
+0123                     obj.Xbif=obj.Ubif(obj.dispvars(:,1));
+0124                     obj.Ybif=obj.Ubif(obj.dispvars(:,2));
+0125             <span class="keyword">end</span>
+0126             
+0127             <span class="comment">% data for the projected bifurcation diagram</span>
+0128             obj.X = obj.Upp(obj.dispvars(:,1),:)';   <span class="comment">% X coordinate of the point to be plotted on Proj Bif Diag</span>
+0129             obj.Y = obj.Upp(obj.dispvars(:,2),:)';   <span class="comment">% Y coordinate of the point to be plotted on Proj Bif Diag</span>
+0130             
+0131             <span class="keyword">if</span> obj.Astab &gt; 0
+0132                 obj.Xstab=obj.Ustab(obj.dispvars(:,1));
+0133                 obj.Ystab=obj.Ustab(obj.dispvars(:,2));
+0134             <span class="keyword">end</span>
+0135             
+0136         <span class="keyword">end</span>
+0137     <span class="keyword">end</span>
+0138 <span class="keyword">end</span>
+0139</pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of equations_vector_NL_2D_FEM</title>
+  <meta name="keywords" content="equations_vector_NL_2D_FEM">
+  <meta name="description" content="Equations of the system of the form">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">NonlinearDyn_vectorialform</a> &gt; equations_vector_NL_2D_FEM.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>equations_vector_NL_2D_FEM
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Equations of the system of the form</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [Rf,dRa,Forcing] = equations_vector_NL_2D_FEM(sys, t, zf, dzf, d2zf) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Equations of the system of the form 
+ Rf(zf) = C + L0(zf) + lambda L1(zf) + D0(dzf) + lambda D1(dzf) + DD(d2zf) + Q(zf,zf) + f(zf).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Rf,dRa,Forcing] = equations_vector_NL_2D_FEM(sys, t, zf, dzf, d2zf)</a>
+0002 <span class="comment">% Equations of the system of the form</span>
+0003 <span class="comment">% Rf(zf) = C + L0(zf) + lambda L1(zf) + D0(dzf) + lambda D1(dzf) + DD(d2zf) + Q(zf,zf) + f(zf).</span>
+0004 
+0005 sizing = size(zf,2);
+0006 
+0007 <span class="keyword">if</span> strcmp(sys.parameters.type,<span class="string">'autonomous'</span>)
+0008     NNM=1;
+0009     FRF=0;
+0010 <span class="keyword">elseif</span> strcmp(sys.parameters.type,<span class="string">'forced'</span>)
+0011     NNM=0;
+0012     FRF=1;
+0013 <span class="keyword">else</span>
+0014     
+0015 <span class="keyword">end</span>
+0016 model = sys.parameters.model;
+0017 <span class="comment">%keyboard</span>
+0018 R     = zeros(sys.nz,sizing);      <span class="comment">% Main residue</span>
+0019 Ra    = zeros(sys.nz_aux,sizing);  <span class="comment">% Auxiliary residue</span>
+0020 dRa   = zeros(sys.nz_aux,sizing);  <span class="comment">% Differential form of non-quadratic part of the auxiliary residue</span>
+0021 active_dof = sys.parameters.model.boundary.active_dof;
+0022 
+0023 <span class="comment">%%% parameters of the system</span>
+0024 number_nodes = sys.parameters.model.mesh.number_nodes;
+0025 number_elements = sys.parameters.model.mesh.number_elements;
+0026 n_var = sys.nz/2; <span class="comment">% location of first variable u</span>
+0027 
+0028 <span class="comment">%% Variables :</span>
+0029 u      = zf(1:n_var,:);           du     = dzf(1:n_var,:);             <span class="comment">% Main variable: u = position</span>
+0030 v      = zf(n_var + 1:2*n_var,:); dv     = dzf(n_var + 1:2*n_var,:);   <span class="comment">% Main variable: v = velocity</span>
+0031 aux    = zf(2*n_var + 1:end-1,:); daux   = dzf(2*n_var + 1:<span class="keyword">end</span>,:);     <span class="comment">% Auxiliary variables</span>
+0032 lambda = zf(<span class="keyword">end</span>,:);                                                  <span class="comment">% Continuation parameter</span>
+0033 <span class="comment">% auxiliary variable used for diffeential equation</span>
+0034 theta  = aux( 3*number_elements + 1: 4*number_elements,:);  dtheta = daux(3*number_elements + 1:4*number_elements,:);
+0035 c      = aux( 4*number_elements + 1: 5*number_elements,:);      dc = daux(4*number_elements + 1:5*number_elements,:);
+0036 s      = aux( 5*number_elements + 1: 6*number_elements,:);      ds = daux(5*number_elements + 1:6*number_elements,:);
+0037 
+0038 <span class="comment">% constructing displacement vector q from Main variable u:</span>
+0039 q_full = zeros(3*number_nodes,sizing);
+0040 q_full(active_dof,:) = u;
+0041 <span class="comment">% constructing velicity vector v from Main variable v:</span>
+0042 v_full = zeros(3*number_nodes,sizing); <span class="comment">% needed to calculate the residual</span>
+0043 v_full(active_dof,:) = v;
+0044 <span class="comment">% constructing acceleration vector dv from Main variable dv:</span>
+0045 dv_full = zeros(3*number_nodes,sizing); <span class="comment">% needed to calculate the residual</span>
+0046 dv_full(active_dof,:) = dv;
+0047 
+0048 <span class="comment">% matrices</span>
+0049 M_full =  model.matrices.mass;
+0050 C_full =  model.matrices.damping;
+0051 <span class="comment">%static forces</span>
+0052 f_stat_full = model.vectors.static_forces;
+0053 <span class="comment">% internal force vector (constructed from aux var)</span>
+0054 f_int_full = model.assemble_constant_vector(<span class="string">'internal_force_vector_from_aux_var'</span>, aux);
+0055 
+0056 <span class="comment">% equation of motion</span>
+0057 <span class="keyword">if</span> NNM <span class="comment">% NNM equation</span>
+0058     Residual = f_stat_full -f_int_full - M_full*dv_full - lambda.*v_full;
+0059 <span class="keyword">else</span> <span class="comment">% forced response equation</span>
+0060     Residual = f_stat_full -f_int_full - M_full*dv_full - C_full*v_full;
+0061 <span class="keyword">end</span>
+0062 <span class="comment">% auxiliary residual</span>
+0063 aux_expression = model.auxiliary_variable_expression(q_full, aux);
+0064 Ra = aux-aux_expression;
+0065 <span class="comment">% Differential equation for cosine and sine</span>
+0066 dRa(4*number_elements + 1: 5*number_elements,:) = dc + s.*dtheta;
+0067 dRa(5*number_elements + 1: 6*number_elements,:) = ds - c.*dtheta;
+0068 <span class="comment">%% Final Residal</span>
+0069 <span class="comment">% Equations of the main system</span>
+0070 R(1:n_var,:) = v - du;
+0071 R(n_var + 1:2*n_var,:) = Residual(active_dof,:);
+0072 <span class="comment">% Concatenation of the two residues</span>
+0073 Rf = [ R ; Ra ];
+0074 
+0075 <span class="comment">%% Forcing terms</span>
+0076 Forcing = zeros(2*sys.H+1,sys.nz_tot); <span class="comment">% DO NOT CHANGE this line.</span>
+0077 <span class="comment">% Should be written as if the forcing angular frequency value is 1</span>
+0078 <span class="comment">% i.e. the forcing period is 2*pi</span>
+0079 <span class="keyword">if</span> FRF
+0080     f_dyn_full = model.vectors.periodic_forces;
+0081     f_dyn = f_dyn_full(active_dof,:);
+0082     <span class="keyword">for</span> h=1:size(f_dyn_full,2)
+0083         Forcing(:,n_var + 1:2*n_var) = Forcing(:,n_var + 1:2*n_var) + cos(h*t')*real(f_dyn(:,h)') + sin(h*t')* imag(f_dyn(:,h)');
+0084     <span class="keyword">end</span>
+0085 <span class="keyword">end</span>
+0086 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,18 @@
+/* Created by mdot for Matlab */
+digraph m2html {
+  equations_linear_vector -> global_to_active;
+  equations_vector -> global_to_active;
+  linearEigenAnalysis -> linear_matrix_assembly;
+  linear_solution -> global_to_active;
+
+  dynamicMass [URL="dynamicMass.html"];
+  equations_linear_vector [URL="equations_linear_vector.html"];
+  equations_vector [URL="equations_vector.html"];
+  equations_vector_nnm [URL="equations_vector_nnm.html"];
+  global_to_active [URL="global_to_active.html"];
+  internal [URL="internal.html"];
+  linearEigenAnalysis [URL="linearEigenAnalysis.html"];
+  linear_matrix_assembly [URL="linear_matrix_assembly.html"];
+  linear_solution [URL="linear_solution.html"];
+  nnmInitialization [URL="nnmInitialization.html"];
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of man_initial_point</title>
+  <meta name="keywords" content="man_initial_point">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">@NL_2D_FEM</a> &gt; man_initial_point.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\@NL_2D_FEM&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>man_initial_point
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [Z0] = man_initial_point(obj, H, omega0, qs_full, qp_full) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Z0] = man_initial_point(obj, H, omega0, qs_full, qp_full)</a>
+0002 A = obj.prop.area;
+0003 I = obj.prop.inertia;
+0004 E = obj.prop.young_mod;
+0005 G = obj.prop.shear_mod;
+0006 k = obj.prop.shear_coeff_k;
+0007 
+0008 qs =qs_full(obj.boundary.active_dof);
+0009 qp =qp_full(obj.boundary.active_dof,:);
+0010 
+0011 [auxs] = obj.man_auxiliary_variables_vector(qs_full);
+0012 
+0013 <span class="comment">% [auxp] = obj.man_auxiliary_variables_vector(qp_full);</span>
+0014 <span class="comment">% [strain0, stress0] = obj.strains_and_stress_at_gauss_point(qs_full);</span>
+0015 <span class="comment">% [strainp, stressp] = obj.strains_and_stress_at_gauss_point(qp_full);</span>
+0016 
+0017 nz = 2*length(obj.boundary.active_dof);
+0018 nzaux = 12*obj.mesh.number_elements;
+0019 nz_tot = nz+nzaux;
+0020 number_elements = obj.mesh.number_elements;
+0021 
+0022 Z0 = zeros(2*H+1, nz_tot);
+0023 <span class="comment">% static part</span>
+0024 Z0(1, 1:nz/2) = qs; <span class="comment">% initial position</span>
+0025 Z0(1, nz + (1:12*number_elements)) = auxs; <span class="comment">% equations_vector.m</span>
+0026 <span class="comment">% cosine</span>
+0027 <span class="keyword">for</span> hh=1:size(qp,2)
+0028     Z0(hh+1,1:nz/2) = real(qp(:,hh))'; <span class="comment">% initial position</span>
+0029     Z0(hh+1+H,1:nz/2) = -imag(qp(:,hh))'; <span class="comment">% initial position</span>
+0030     Z0(hh+1+H,nz/2+1:nz) = -omega0*real(qp(:,hh))'; <span class="comment">% initial position</span>
+0031     Z0(hh+1,nz/2+1:nz) = omega0*imag(qp(:,hh))'; <span class="comment">% initial position</span>
+0032 <span class="comment">%    Z0(hh+1, nz + (1:4*number_elements)) = auxp(1:4*number_elements)  ; % up, wp, thp theta</span>
+0033 <span class="comment">%    Z0(hh+1+H, nz + (1:4*number_elements)) = -omega0*auxp(1:4*number_elements)  ; % up, wp, thp theta</span>
+0034 <span class="keyword">end</span>
+0035 <span class="comment">% Z0(2,nz + (4*number_elements + 1:5*number_elements))   = 0;      % theta at gauss point</span>
+0036 <span class="comment">% Z0(2,nz + (5*number_elements + 1:6*number_elements))   = strainp.meanrot;      % theta at gauss point</span>
+0037 <span class="comment">% Z0(2,nz + (6*number_elements + 1:7*number_elements))   = strainp.grad.up;    % theta at gauss point</span>
+0038 <span class="comment">% Z0(2,nz + (7*number_elements + 1:8*number_elements))   = strainp.grad.wp-strainp.meanrot;    % theta at gauss point</span>
+0039 <span class="comment">% Z0(2,nz + (8*number_elements + 1:9*number_elements))   = E*A*strainp.grad.up;     % theta at gauss point</span>
+0040 <span class="comment">% Z0(2,nz + (9*number_elements + 1:10*number_elements))  = k*G*A*(strainp.grad.wp-strainp.meanrot);     % theta at gauss point</span>
+0041 <span class="comment">% Z0(2,nz + (10*number_elements + 1:11*number_elements)) = E*I*strainp.grad.thetap;      % theta at gauss point</span>
+0042 <span class="comment">% Z0(2,nz + (11*number_elements + 1:12*number_elements)) = k*G*A*(strainp.grad.wp-strainp.meanrot);     % theta at gauss point</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% Z0(2+H,nz + (4*number_elements + 1:5*number_elements))   = 0;      % theta at gauss point</span>
+0045 <span class="comment">% Z0(2+H,nz + (5*number_elements + 1:6*number_elements))   = -omega0*strainp.meanrot;      % theta at gauss point</span>
+0046 <span class="comment">% Z0(2+H,nz + (6*number_elements + 1:7*number_elements))   = -omega0*strainp.grad.up;    % theta at gauss point</span>
+0047 <span class="comment">% Z0(2+H,nz + (7*number_elements + 1:8*number_elements))   = -omega0*strainp.grad.wp-strainp.meanrot;    % theta at gauss point</span>
+0048 <span class="comment">% Z0(2+H,nz + (8*number_elements + 1:9*number_elements))   = -omega0*E*A*strainp.grad.up;     % theta at gauss point</span>
+0049 <span class="comment">% Z0(2+H,nz + (9*number_elements + 1:10*number_elements))  = -omega0*k*G*A*(strainp.grad.wp-strainp.meanrot);     % theta at gauss point</span>
+0050 <span class="comment">% Z0(2+H,nz + (10*number_elements + 1:11*number_elements)) = -omega0*E*I*strainp.grad.thetap;      % theta at gauss point</span>
+0051 <span class="comment">% Z0(2+H,nz + (11*number_elements + 1:12*number_elements)) = -omega0*k*G*A*(strainp.grad.wp-strainp.meanrot);     % theta at gauss point</span>
+0052 
+0053 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

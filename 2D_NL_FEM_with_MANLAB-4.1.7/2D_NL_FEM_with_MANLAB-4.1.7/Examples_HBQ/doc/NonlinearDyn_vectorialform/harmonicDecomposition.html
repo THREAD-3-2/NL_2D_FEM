@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of harmonicDecomposition</title>
+  <meta name="keywords" content="harmonicDecomposition">
+  <meta name="description" content="Fourier coefficients of selected variables at point U">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">NonlinearDyn_vectorialform</a> &gt; harmonicDecomposition.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>harmonicDecomposition
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Fourier coefficients of selected variables at point U</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function harmonicDecomposition(sys,U) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Fourier coefficients of selected variables at point U
+ Currently plots harmonic decomposition of auxiliary variables c, s, eps
+ and gam at selected node (List of aux variables: [up wp thetap theta c s
+ eps gam Fx Fy M T2]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function harmonicDecomposition(sys,U)</a>
+0002 <span class="comment">% Fourier coefficients of selected variables at point U</span>
+0003 <span class="comment">% Currently plots harmonic decomposition of auxiliary variables c, s, eps</span>
+0004 <span class="comment">% and gam at selected node (List of aux variables: [up wp thetap theta c s</span>
+0005 <span class="comment">% eps gam Fx Fy M T2]</span>
+0006 number_elements = sys.parameters.mesh.number_elements;
+0007 obs_dof = sys.parameters.dof_info.obs_dof; <span class="comment">% observed dof in FRF/NNM calculation</span>
+0008 obs_node = ceil(obs_dof/3); <span class="comment">% node at which harmonic decomposition is plotted</span>
+0009 H = sys.parameters.H; <span class="comment">% number of harmonics kept in Fourier decomposition</span>
+0010 vars = sys.nz + (4:7)*number_elements + obs_node; <span class="comment">% c, s, eps, gam aux variables at obs_node</span>
+0011 
+0012 amps = zeros(4*(H + 1)); <span class="comment">% initializing vector of coefficient amplitudes</span>
+0013 harmonics = 0:H;
+0014 <span class="keyword">for</span> jj = 1:length(vars)
+0015     I0 = (vars(jj) - 1)*(2*H + 1) + 1 + 2;
+0016     amps((H + 1)*(jj - 1) + 1) = U(I0);
+0017     
+0018     Icos = (vars(jj) - 1)*(2*H + 1) + 1 + (1:H); 
+0019     Isin = (vars(jj) - 1)*(2*H + 1) + 1 + H + (1:H);
+0020     amps(((H + 1)*(jj - 1) + 2):((H + 1)*jj)) = sqrt(U(Icos).^2 + U(Isin).^2);
+0021 <span class="keyword">end</span>
+0022 c_amp = amps(1:(H+1));
+0023 s_amp = amps((H+1)+1:2*(H+1));
+0024 eps_amp = amps(2*(H+1)+1:3*(H+1));
+0025 gam_amp = amps(3*(H+1)+1:4*(H+1));
+0026 
+0027 <span class="comment">% plot_amp = [c_amp; s_amp; eps_amp; gam_amp]';</span>
+0028 
+0029 figure
+0030 bar(harmonics,[c_amp; s_amp]')
+0031 xlabel(<span class="string">'Harmonic'</span>)
+0032 ylabel(<span class="string">'Amplitude'</span>)
+0033 legend(<span class="string">'$c = \cos(\theta)$'</span>,<span class="string">'$s = \sin(\theta)$'</span>)
+0034 
+0035 figure
+0036 bar(harmonics,[eps_amp; gam_amp]')
+0037 xlabel(<span class="string">'Harmonic'</span>)
+0038 ylabel(<span class="string">'Amplitude'</span>)
+0039 legend(<span class="string">'$e$'</span>,<span class="string">'$\gamma$'</span>)
+0040 
+0041 figure
+0042 bar(harmonics,[eps_amp.*gam_amp]')
+0043 xlabel(<span class="string">'Harmonic'</span>)
+0044 ylabel(<span class="string">'Amplitude'</span>)
+0045 legend(<span class="string">'$e*\gamma$'</span>)
+0046 <span class="keyword">end</span>
+0047</pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

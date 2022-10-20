@@ -1,0 +1,7 @@
+\contentsline {section}{\numberline {1}Considered Example}{1}% 
+\contentsline {section}{\numberline {2}Description of the Homemade Newton Solver}{1}% 
+\contentsline {section}{\numberline {3}Illustration of non convergence}{2}% 
+\contentsline {subsection}{\numberline {3.1}Initial guess}{2}% 
+\contentsline {subsection}{\numberline {3.2}Case 1: Direct use of the initial guess into MANLAB}{3}% 
+\contentsline {subsection}{\numberline {3.3}Case 2: Homemade solving before input into MANLAB}{3}% 
+\contentsline {section}{\numberline {4}Analysis}{4}% 

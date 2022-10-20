@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of solve_MAN_system_at_fixed_amplitude</title>
+  <meta name="keywords" content="solve_MAN_system_at_fixed_amplitude">
+  <meta name="description" content="solve system at stating amplitude">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">@NL_2D_FEM</a> &gt; solve_MAN_system_at_fixed_amplitude.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\@NL_2D_FEM&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>solve_MAN_system_at_fixed_amplitude
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>solve system at stating amplitude</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function U02 = solve_MAN_system_at_fixed_amplitude(obj, U0, idx, amp, sys) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> solve system at stating amplitude</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function U02 = solve_MAN_system_at_fixed_amplitude(obj, U0, idx, amp, sys)</a>
+0002 <span class="comment">% solve system at stating amplitude</span>
+0003 fprintf(1, <span class="string">'Solving MAN system at fixed amplitude, idx:%u, amp:%2.2e \n '</span>,idx,amp)
+0004 <span class="comment">% solver used (fsolve or home made newton)</span>
+0005 solver = obj.solver; <span class="comment">% 'homemade', 'fsolve'</span>
+0006 
+0007 <span class="comment">% fsolve option</span>
+0008 options = optimoptions(<span class="string">'fsolve'</span>,<span class="string">'SpecifyObjectiveGradient'</span>,true,<span class="keyword">...</span>
+0009       <span class="string">'display'</span>,<span class="string">'off'</span>,<span class="keyword">...</span>
+0010       <span class="string">'maxiter'</span>, solver.n_iter_max,<span class="keyword">...</span>
+0011       <span class="string">'FunctionTolerance'</span>, solver.tol_res,<span class="keyword">...</span>
+0012       <span class="string">'StepTolerance'</span>, solver.tol_step,<span class="keyword">...</span>
+0013       <span class="string">'Algorithm'</span>,<span class="string">'levenberg-marquardt'</span>);<span class="comment">% trust-region-dogleg</span>
+0014 
+0015 ok_res=1;
+0016 niter=0;
+0017 Nmax=10; <span class="comment">% number of restart</span>
+0018 <span class="keyword">while</span> ok_res
+0019     niter=niter+1;
+0020     <span class="keyword">if</span> strcmp(solver.type,<span class="string">'homemade'</span>)
+0021         [U02, res2, flag2, Jac] = obj.newton_solver(<span class="string">'MAN_HBM_fixed_amp'</span>, U0, solver, idx, amp, sys);
+0022     <span class="keyword">elseif</span> strcmp(solver.type,<span class="string">'fsolve'</span>)        
+0023         [U02, res2, flag2] = fsolve(@(U)man_residual_fixed_amplitude(U, idx, amp, sys), U0, options);
+0024     <span class="keyword">end</span>
+0025     fprintf(1, <span class="string">'    res: %2.2e, flag: %u \n'</span>, norm(res2), flag2)
+0026     <span class="keyword">if</span> flag2&gt;0
+0027         ok_res=0;
+0028         fprintf(1,<span class="string">'HBM system at initial amplitude solved, residual %2.2e \n'</span>, norm(res2))
+0029     <span class="keyword">else</span>
+0030         U0=U02;
+0031         fprintf(1,<span class="string">'    restarting, '</span>)
+0032     <span class="keyword">end</span>
+0033     <span class="keyword">if</span> niter&gt;Nmax
+0034         warning(<span class="string">'couldnt solve initial systemn too many restarts (10)'</span>)
+0035         <span class="keyword">break</span>
+0036     <span class="keyword">end</span>
+0037     
+0038 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

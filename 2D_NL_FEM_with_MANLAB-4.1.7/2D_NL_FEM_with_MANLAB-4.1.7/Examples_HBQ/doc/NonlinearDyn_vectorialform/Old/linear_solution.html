@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of linear_solution</title>
+  <meta name="keywords" content="linear_solution">
+  <meta name="description" content="Real(Xhat) = XcosH1">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">NonlinearDyn_vectorialform</a> &gt; <a href="index.html">Old</a> &gt; linear_solution.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform\Old&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>linear_solution
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Real(Xhat) = XcosH1</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function [Xhat, AmpH1, PhaseH1] = linear_solution(M, C, K, Omega, parameters, obs_dof) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Real(Xhat) = XcosH1
+ Imag(Xhat) = XsinH1
+ obs_dof = observed dof (discarding BC dof)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="global_to_active.html" class="code" title="function idof = global_to_active(iglob, active)">global_to_active</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Xhat, AmpH1, PhaseH1] = linear_solution(M, C, K, Omega, parameters, obs_dof)</a>
+0002 <span class="comment">% Real(Xhat) = XcosH1</span>
+0003 <span class="comment">% Imag(Xhat) = XsinH1</span>
+0004 <span class="comment">% obs_dof = observed dof (discarding BC dof)</span>
+0005 ndof = size(M,1);
+0006 Nw = length(Omega);
+0007 
+0008 Xhat = zeros(ndof,Nw);
+0009 AmpH1 = zeros(ndof,Nw);
+0010 PhaseH1 = zeros(ndof,Nw);
+0011 
+0012 <span class="comment">% create force vector</span>
+0013 loads = parameters.loads;
+0014 dof_loc = <a href="global_to_active.html" class="code" title="function idof = global_to_active(iglob, active)">global_to_active</a>(loads.dof, parameters.dof_info.active);
+0015 Fhat = zeros(ndof,1);
+0016 <span class="keyword">if</span> strcmp(loads.type, <span class="string">'Point force'</span>) <span class="comment">% point force at specific nodes</span>
+0017     Fhat(dof_loc) = loads.amplitude_cos + 1i*loads.amplitude_sin;
+0018 <span class="keyword">elseif</span> strcmp(loads.type, <span class="string">'Distributed force'</span>) <span class="comment">% distributed force due to imposed acceleration</span>
+0019     Fhat(dof_loc) = parameters.beam_params.density * parameters.beam_params.area * parameters.f_ext_glob *(loads.amplitude_cos + 1i*loads.amplitude_sin);
+0020 <span class="keyword">end</span>
+0021 
+0022 <span class="keyword">for</span> i=1:Nw
+0023    Xhat(:,i) = (K-Omega(i)^2*M+1i*C*Omega(i))\Fhat;
+0024    AmpH1(:,i) = abs(Xhat(:,i));
+0025    PhaseH1(:,i) = angle(Xhat(:,i));
+0026 <span class="keyword">end</span>
+0027 
+0028 figure(666)
+0029 subplot(2,1,1)
+0030 plot(Omega, AmpH1(obs_dof,:))
+0031 grid on
+0032 xlabel(<span class="string">'omega'</span>)
+0033 ylabel(<span class="string">'Amplitude'</span>)
+0034 subplot(2,1,2)
+0035 plot(Omega, unwrap(PhaseH1(obs_dof,:)))
+0036 grid on
+0037 xlabel(<span class="string">'omega'</span>)
+0038 ylabel(<span class="string">'Phase'</span>)
+0039 
+0040 figure(5)
+0041 plot(Omega, AmpH1(obs_dof,:))
+0042 grid on
+0043 xlabel(<span class="string">'omega'</span>)
+0044 ylabel(<span class="string">'Amplitude'</span>)
+0045 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

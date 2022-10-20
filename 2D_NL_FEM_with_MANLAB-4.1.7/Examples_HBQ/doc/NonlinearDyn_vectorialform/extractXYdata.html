@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of extractXYdata</title>
+  <meta name="keywords" content="extractXYdata">
+  <meta name="description" content="%To unplot data from a matlab figure (.fig) files generated">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">NonlinearDyn_vectorialform</a> &gt; extractXYdata.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for NonlinearDyn_vectorialform&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>extractXYdata
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>%To unplot data from a matlab figure (.fig) files generated</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [X,Y,Z] = extractXYdata(filename) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">%To unplot data from a matlab figure (.fig) files generated
+ using version 7 or later. It can be used for both 2D and 3D plots
+ Example usage:
+ To unplot 2D graphs 
+ [x,y] = unplot('example2D.fig')
+ To unplot 3D graphs 
+ [x,y,z] = unplot('example3D.fig') 
+ Pradyumna
+ January 2012</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [X,Y,Z] = extractXYdata(filename)</a>
+0002 <span class="comment">%%To unplot data from a matlab figure (.fig) files generated</span>
+0003 <span class="comment">% using version 7 or later. It can be used for both 2D and 3D plots</span>
+0004 <span class="comment">% Example usage:</span>
+0005 <span class="comment">% To unplot 2D graphs</span>
+0006 <span class="comment">% [x,y] = unplot('example2D.fig')</span>
+0007 <span class="comment">% To unplot 3D graphs</span>
+0008 <span class="comment">% [x,y,z] = unplot('example3D.fig')</span>
+0009 <span class="comment">% Pradyumna</span>
+0010 <span class="comment">% January 2012</span>
+0011 <span class="keyword">if</span> nargin==1
+0012     fig1 = load (filename,<span class="string">'-mat'</span>);
+0013     a = fig1.hgS_070000.children(1).children(1).properties;
+0014     index = length(fig1.hgS_070000.children(1).children(1).properties.XData);
+0015     j = 1; <span class="comment">% odd indexing parameter</span>
+0016     <span class="keyword">for</span> i = 1:floor(length(fig1.hgS_070000.children(1).children)/2)
+0017         <span class="keyword">if</span> fig1.hgS_070000.children(1).children(j).type(1) == <span class="string">'t'</span>
+0018             <span class="keyword">break</span>
+0019         <span class="keyword">end</span>
+0020         <span class="keyword">if</span> isfield(a,<span class="string">'ZData'</span>)
+0021             <span class="comment">% unploting 3D plot</span>
+0022             Y(index*(i-1)+1:index*i) = fig1.hgS_070000.children(1).children(j).properties.YData;
+0023             X(index*(i-1)+1:index*i) = fig1.hgS_070000.children(1).children(j).properties.XData;
+0024             Z(index*(i-1)+1:index*i) = fig1.hgS_070000.children(1).children(j).properties.ZData;
+0025         <span class="keyword">else</span>
+0026             <span class="comment">% unploting 2D plot</span>
+0027             Y(index*(i-1)+1:index*i) = fig1.hgS_070000.children(1).children(j).properties.YData;
+0028             X(index*(i-1)+1:index*i) = fig1.hgS_070000.children(1).children(j).properties.XData;
+0029         <span class="keyword">end</span>
+0030         j = j + 2;
+0031     <span class="keyword">end</span> 
+0032 <span class="keyword">else</span>
+0033     disp(<span class="string">'Usage unplot(''filename.fig''). See ''help unplot'' for more details'</span>);
+0034 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Mon 17-Oct-2022 20:14:50 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
