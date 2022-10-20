@@ -16,12 +16,12 @@ First run the :mod:`set_src_path` from the :mod:`NonLinearFEM` folder.
 Create a new FE model
 ---------------------
 
-First, create a new folder.
+Next, create a new folder.
 Then, create a new script name :mod:`run_problem` that will contain all of the operations to be done.
 
 In the script, clean the state of Matlab:
 
-.. code-block::
+.. code-block::matlab
 
 	clear
 	close all
