@@ -8,7 +8,7 @@ Input by defining a model data base
 
 The easiest way to define the data of a :mod:`NL_2D_FEM` object is
 to fill the field of a Matlab structure called
-the {\bf model data structure} (:mod:`mds`).
+the **model data structure** (:mod:`mds`).
 An empty :mod:`mds` can be created as :mod:`mds = create_empty_mds()`.
 Otherwise, an existing :mod:`mds` can be simply copied and edited.
 
@@ -32,9 +32,9 @@ The field :mod:`geom` of the :mod:`mds` governs the global geometry input.
 There are three sub-fields to be defined:
 
 * :mod:`mds.geom.geom_node`: List of number and coordinates of the key points of the geometry.
-  Each line is of the type `point number, x coordinate, y coordinate`.
+  Each line is of the type (point number, x coordinate, y coordinate).
 * :mod:`mds.geom.geom_element`: List of lines of the geometry.
-  Each line is of the type `line number, point 1, point 2`.
+  Each line is of the type (line number, point 1, point 2).
 * :mod:`mds.geom.discretisation`: List of number of elements in each line
   (list of integers, with size the number of lines of the geometry).
 	
@@ -49,9 +49,9 @@ The field :mod:`mesh` of the :mod:`mds` governs the mesh.
 There are two sub-field to be defined:
 
 * :mod:`mds.mesh.nodes`: List of number and coordinates of the nodes of the mesh.
-  Each line is of the type `node number, x coordinate, y coordinate`.
+  Each line is of the type (node number, x coordinate, y coordinate).
 * :mod:`mds.mesh.connect`: Connectivity table; list of elements of the mesh.
-  Each line is of the type `element number, node 1, node 2`.
+  Each line is of the type (element number, node 1, node 2).
 
 
 Properties input
@@ -110,12 +110,12 @@ Static point forces
 
 The first forces to consider are static point loads, which are defined as:
 
-1. :mod:`mds.force.static.static_ponctual_force_node_list`: List (cell array) of forced node(s) and dof. 
-2. :mod:`mds.force.static.static_ponctual_force_node_list{n}` is a structure with three fields:
+* :mod:`mds.force.static.static_ponctual_force_node_list`: List (cell array) of forced node(s) and dof. 
+* :mod:`mds.force.static.static_ponctual_force_node_list{n}` is a structure with three fields:
 
-    2.1 :mod:`mds.force.static.static_ponctual_force_node_list{n}.node`: Node number(s).
-    2.2 :mod:`mds.force.static.static_ponctual_force_node_list{n}.dof`: List of dof number(s).
-    2.3 :mod:`mds.force.static.static_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field).
+    * :mod:`mds.force.static.static_ponctual_force_node_list{n}.node`: Node number(s).
+    * :mod:`mds.force.static.static_ponctual_force_node_list{n}.dof`: List of dof number(s).
+    * :mod:`mds.force.static.static_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field).
 
 
 Static distributed forces
@@ -123,8 +123,8 @@ Static distributed forces
 
 Next, we consider static distributed forces, which are defined as:
 
-1. :mod:`mds.force.static.static_distributed_force_direction`: List of directions, chosen from among (1) x-axis, (2) y-axis  or (3) moment.
-2. :mod:`mds.force.static.static_distributed_force_amplitude`: List of amplitudes (linear force density). 
+* :mod:`mds.force.static.static_distributed_force_direction`: List of directions, chosen from among (1) x-axis, (2) y-axis  or (3) moment.
+* :mod:`mds.force.static.static_distributed_force_amplitude`: List of amplitudes (linear force density). 
 
 
 Periodic force definition
@@ -139,15 +139,15 @@ Periodic point forces
 
 As before, consider first periodic point loads, defined as:
 
-1. :mod:`mds.force.periodic.periodic_ponctual_force_node_list`: List (cell array) of forced node(s) and dof. 
-2. :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}` is a structure with three fields:
+* :mod:`mds.force.periodic.periodic_ponctual_force_node_list`: List (cell array) of forced node(s) and dof. 
+* :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}` is a structure with three fields:
 
-    2.1 :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}.node`: Node number(s).
-    2.2 :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}.dof`: List of dof number(s).
-    2.3 :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field). Each element of the list is a complex number :math:`z`.
-    2.4 :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}.harmonic`: List of harmonics (one harmonic for each dof in the previous field). 
+    * :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}.node`: Node number(s).
+    * :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}.dof`: List of dof number(s).
+    * :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field). Each element of the list is a complex number :math:`z`.
+    * :mod:`mds.force.periodic.periodic_ponctual_force_node_list{n}.harmonic`: List of harmonics (one harmonic for each dof in the previous field). 
 
-    For each forced dof, the force is written as: :math:`f(t) = real(z) \cos(h t) + \real(z) \sin(h t)`.
+    For each forced dof, the force is written as: :math:`f(t) = \mathrm{Re}(z) \cos(h t) + \mathrm{Re}(z) \sin(h t)`.
 
 
 Periodic distributed forces

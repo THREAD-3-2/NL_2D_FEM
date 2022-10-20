@@ -76,7 +76,7 @@ and <span class="math notranslate nohighlight">\(\kappa^e\)</span> the curvature
 </section>
 <section id="mass-matrix">
 <h3>Mass matrix<a class="headerlink" href="#mass-matrix" title="Permalink to this heading">¶</a></h3>
-<p>Next, discretization and evaluation of the different virtual work terms (recall the principle of virtual work: $delta W_{mathrm{inertial}} + delta W_{mathrm{internal}} = delta W_{mathrm{external}}$) leads to the definitions of the elementary vectors and matrices. Evaluation of the discretized inertial work component yields the expression for the elementary mass matrix:</p>
+<p>Next, discretization and evaluation of the different virtual work terms (recall the principle of virtual work: <span class="math notranslate nohighlight">\(\delta W_{\mathrm{inertial}} + \delta W_{\mathrm{internal}} = \delta W_{\mathrm{external}}\)</span>) leads to the definitions of the elementary vectors and matrices. Evaluation of the discretized inertial work component yields the expression for the elementary mass matrix:</p>
 <div class="math notranslate nohighlight" id="equation-eqn-mass">
 <span class="eqno">(3)<a class="headerlink" href="#equation-eqn-mass" title="Permalink to this equation">¶</a></span>\[\begin{split}\mathbf{M}^e = \dfrac{\rho L^e}{6}\begin{bmatrix} 2A &amp; 0 &amp; 0 &amp; A &amp; 0 &amp; 0 \\ 0 &amp; 2A &amp; 0 &amp; 0 &amp; A &amp; 0\\ 0 &amp; 0 &amp; 2I &amp; 0 &amp; 0 &amp; I \\ A &amp; 0 &amp; 0 &amp; 2A &amp; 0 &amp; 0 \\ 0 &amp; A &amp; 0 &amp; 0 &amp; 2A &amp; 0 \\ 0 &amp; 0 &amp; I &amp; 0 &amp; 0 &amp; 2I\end{bmatrix},\end{split}\]</div>
 <p>with <span class="math notranslate nohighlight">\(A\)</span> the cross-sectional area, <span class="math notranslate nohighlight">\(\rho\)</span> the density, and <span class="math notranslate nohighlight">\(I\)</span> the second moment of area.</p>
@@ -86,13 +86,13 @@ and <span class="math notranslate nohighlight">\(\kappa^e\)</span> the curvature
 <p>The elementary internal force vector is likewise obtained by evaluating the discretized internal work component:</p>
 <div class="math notranslate nohighlight" id="equation-eqn-internal-force-vec">
 <span class="eqno">(4)<a class="headerlink" href="#equation-eqn-internal-force-vec" title="Permalink to this equation">¶</a></span>\[\begin{split}\mathbf{f}^e_\mathrm{int} = EA \bar{e} \begin{bmatrix} -\cos{\bar \theta} \\ -\sin{ \bar  \theta} \\ \bar \gamma \frac{L^e}{2} \\ \cos{\bar  \theta} \\ \sin{\bar  \theta} \\ \bar \gamma \frac{L^e}{2}\end{bmatrix} + kGA\bar \gamma \begin{bmatrix} \sin{\bar \theta} \\ -\cos{\bar \theta} \\  -\frac{L^e}{2}(1+\bar e) \\ -\sin{\bar \theta} \\ \cos{\bar \theta} \\ -\frac{L^e}{2}(1 + \bar e) \end{bmatrix} + EI \bar \kappa \begin{bmatrix} 0 \\ 0 \\ -1 \\ 0 \\ 0 \\ 1 \end{bmatrix},\end{split}\]</div>
-<p>where the <span class="math notranslate nohighlight">\(\Bar{(\; )}\)</span> indicates a term evaluated at <span class="math notranslate nohighlight">\(\Bar{\theta} = (\theta_1 + \theta_2)/2\)</span> and with <span class="math notranslate nohighlight">\(E\)</span> the Young’s modulus, <span class="math notranslate nohighlight">\(G\)</span> the shear modulus and <span class="math notranslate nohighlight">\(k\)</span> the shear correction factor. It is readily seen that the geometrical nonlinearities (the sine and cosine functions) appear in this internal force vector.</p>
+<p>where the <span class="math notranslate nohighlight">\(\bar{(\; )}\)</span> indicates a term evaluated at <span class="math notranslate nohighlight">\(\bar{\theta} = (\theta_1 + \theta_2)/2\)</span> and with <span class="math notranslate nohighlight">\(E\)</span> the Young’s modulus, <span class="math notranslate nohighlight">\(G\)</span> the shear modulus and <span class="math notranslate nohighlight">\(k\)</span> the shear correction factor. It is readily seen that the geometrical nonlinearities (the sine and cosine functions) appear in this internal force vector.</p>
 </section>
 <section id="equation-of-motion">
 <h3>Equation of motion<a class="headerlink" href="#equation-of-motion" title="Permalink to this heading">¶</a></h3>
 <p>After assembly of the elemental matrices into their global counterparts according to traditional finite element procedures, the discretized nonlinear finite element model can be written in the general form:</p>
 <div class="math notranslate nohighlight" id="equation-eqn-fem-model">
-<span class="eqno">(5)<a class="headerlink" href="#equation-eqn-fem-model" title="Permalink to this equation">¶</a></span>\[    \mathbf{M}\mathbf{\Ddot{q}} + \mathbf{C}\mathbf{\Dot{q}} + \mathbf{f}_{\mathrm{int}}(\mathbf{q}) = \mathbf{f}_{\mathrm{ext}},\]</div>
+<span class="eqno">(5)<a class="headerlink" href="#equation-eqn-fem-model" title="Permalink to this equation">¶</a></span>\[    \mathbf{M}\mathbf{\ddot{q}} + \mathbf{D}\mathbf{\dot{q}} + \mathbf{f}_{\mathrm{int}}(\mathbf{q}) = \mathbf{f}_{\mathrm{ext}},\]</div>
 <p>with <span class="math notranslate nohighlight">\(\mathbf{q}\)</span>, <span class="math notranslate nohighlight">\(\mathbf{M}\)</span> and <span class="math notranslate nohighlight">\(\mathbf{f}_\mathrm{int}\)</span>
 the degree-of-freedom vector, the mass matrix and the internal force vector, respectively,
 for the entire structure, all expressed in a global reference frame.
@@ -116,7 +116,7 @@ and the periodic response of the free and undamped system (nonlinear modes).</p>
 <p>Consider first the periodic response of the system under harmonic forcing.
 In this case, a harmonic force vector is applied for <span class="math notranslate nohighlight">\(\mathbf{f}_\mathrm{ext}\)</span>:</p>
 <div class="math notranslate nohighlight" id="equation-eqn-femforced">
-<span class="eqno">(6)<a class="headerlink" href="#equation-eqn-femforced" title="Permalink to this equation">¶</a></span>\[    \mathbf{M}\Ddot{\mathbf{q}}(t) + \mathbf{C}\Dot{\mathbf{q}}(t) + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{F} \sin{\Omega t},\]</div>
+<span class="eqno">(6)<a class="headerlink" href="#equation-eqn-femforced" title="Permalink to this equation">¶</a></span>\[    \mathbf{M}\ddot{\mathbf{q}}(t) + \mathbf{D}\dot{\mathbf{q}}(t) + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{F} \sin{\Omega t},\]</div>
 <p>with <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> the vector of harmonic forcing amplitudes and
 <span class="math notranslate nohighlight">\(\Omega\)</span> the harmonic forcing frequency.
 The amplitude of the response
@@ -145,8 +145,8 @@ The second method makes use of a concept known as phase resonance to compute the
 the periodic response of the free and undamped nonlinear system.
 Therefore, Eq. <a class="reference internal" href="#equation-eqn-fem-model">(5)</a> takes the form:</p>
 <div class="math notranslate nohighlight" id="equation-eqn-femfree">
-<span class="eqno">(7)<a class="headerlink" href="#equation-eqn-femfree" title="Permalink to this equation">¶</a></span>\[\mathbf{M}\Ddot{\mathbf{q}}(t)  + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{0},\]</div>
-<p>where it can be seen that the damping term <span class="math notranslate nohighlight">\(\mathbf{D}\mathbf{\Dot{q}}\)</span>
+<span class="eqno">(7)<a class="headerlink" href="#equation-eqn-femfree" title="Permalink to this equation">¶</a></span>\[\mathbf{M}\ddot{\mathbf{q}}(t)  + \mathbf{f}_\mathrm{int}[\mathbf{q}(t)] = \mathbf{0},\]</div>
+<p>where it can be seen that the damping term <span class="math notranslate nohighlight">\(\mathbf{D}\mathbf{\dot{q}}\)</span>
 and the forcing term <span class="math notranslate nohighlight">\(\mathbf{f}_\mathrm{ext}\)</span> have been removed.
 The backbone curve of a particular mode is traced when plotting the amplitude of
 the response as a function of the oscillation frequency
@@ -162,7 +162,7 @@ A detailed explanation is beyond the scope of this short summary,
 but, in short, it has been shown that at a phase difference of <span class="math notranslate nohighlight">\(\pi/2\)</span>
 between the external forcing and the response <span class="math notranslate nohighlight">\(\mathbf{u}\)</span>,
 the external forcing term <span class="math notranslate nohighlight">\(\mathbf{f}_\mathrm{ext}\)</span> exactly equals and,
-therefore, cancels the damping term <span class="math notranslate nohighlight">\(\mathbf{D}\mathbf{\Dot{q}}\)</span>,
+therefore, cancels the damping term <span class="math notranslate nohighlight">\(\mathbf{D}\mathbf{\dot{q}}\)</span>,
 leading to a simulation mathematically equivalent to Eq. <a class="reference internal" href="#equation-eqn-femfree">(7)</a>
 (see e.g. <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0022460X10005559">(M. Peeters, G. Kerschen and J. C. Golinval, 2011)</a>).</p>
 </section>

@@ -42,7 +42,7 @@
 <h2>Input by defining a model data base<a class="headerlink" href="#input-by-defining-a-model-data-base" title="Permalink to this heading">¶</a></h2>
 <p>The easiest way to define the data of a <code class="xref py py-mod docutils literal notranslate"><span class="pre">NL_2D_FEM</span></code> object is
 to fill the field of a Matlab structure called
-the {bf model data structure} (<code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code>).
+the <strong>model data structure</strong> (<code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code>).
 An empty <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> can be created as <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span> <span class="pre">=</span> <span class="pre">create_empty_mds()</span></code>.
 Otherwise, an existing <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds</span></code> can be simply copied and edited.</p>
 <p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">NL_2D_FEM</span></code> model <code class="xref py py-mod docutils literal notranslate"><span class="pre">model</span></code> can be initialized automatically
@@ -60,9 +60,9 @@ with the method <code class="xref py py-mod docutils literal notranslate"><span 
 There are three sub-fields to be defined:</p>
 <ul class="simple">
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.geom.geom_node</span></code>: List of number and coordinates of the key points of the geometry.
-Each line is of the type <cite>point number, x coordinate, y coordinate</cite>.</p></li>
+Each line is of the type (point number, x coordinate, y coordinate).</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.geom.geom_element</span></code>: List of lines of the geometry.
-Each line is of the type <cite>line number, point 1, point 2</cite>.</p></li>
+Each line is of the type (line number, point 1, point 2).</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.geom.discretisation</span></code>: List of number of elements in each line
 (list of integers, with size the number of lines of the geometry).</p></li>
 </ul>
@@ -75,9 +75,9 @@ The field <code class="xref py py-mod docutils literal notranslate"><span class=
 There are two sub-field to be defined:</p>
 <ul class="simple">
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.mesh.nodes</span></code>: List of number and coordinates of the nodes of the mesh.
-Each line is of the type <cite>node number, x coordinate, y coordinate</cite>.</p></li>
+Each line is of the type (node number, x coordinate, y coordinate).</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.mesh.connect</span></code>: Connectivity table; list of elements of the mesh.
-Each line is of the type <cite>element number, node 1, node 2</cite>.</p></li>
+Each line is of the type (element number, node 1, node 2).</p></li>
 </ul>
 </section>
 </section>
@@ -137,24 +137,26 @@ There is only a single field, representative of a cell of structures:</p>
 <section id="static-point-forces">
 <h4>Static point forces<a class="headerlink" href="#static-point-forces" title="Permalink to this heading">¶</a></h4>
 <p>The first forces to consider are static point loads, which are defined as:</p>
-<ol class="arabic">
+<ul>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}</span></code> is a structure with three fields:</p>
 <blockquote>
-<div><p>2.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.node</span></code>: Node number(s).
-2.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).
-2.3 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field).</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.node</span></code>: Node number(s).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field).</p></li>
+</ul>
 </div></blockquote>
 </li>
-</ol>
+</ul>
 </section>
 <section id="static-distributed-forces">
 <h4>Static distributed forces<a class="headerlink" href="#static-distributed-forces" title="Permalink to this heading">¶</a></h4>
 <p>Next, we consider static distributed forces, which are defined as:</p>
-<ol class="arabic simple">
+<ul class="simple">
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_direction</span></code>: List of directions, chosen from among (1) x-axis, (2) y-axis  or (3) moment.</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.static.static_distributed_force_amplitude</span></code>: List of amplitudes (linear force density).</p></li>
-</ol>
+</ul>
 </section>
 </section>
 <section id="periodic-force-definition">
@@ -164,18 +166,20 @@ The field <code class="xref py py-mod docutils literal notranslate"><span class=
 <section id="periodic-point-forces">
 <h4>Periodic point forces<a class="headerlink" href="#periodic-point-forces" title="Permalink to this heading">¶</a></h4>
 <p>As before, consider first periodic point loads, defined as:</p>
-<ol class="arabic">
+<ul>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}</span></code> is a structure with three fields:</p>
 <blockquote>
-<div><p>2.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.node</span></code>: Node number(s).
-2.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).
-2.3 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field). Each element of the list is a complex number <span class="math notranslate nohighlight">\(z\)</span>.
-2.4 <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.harmonic</span></code>: List of harmonics (one harmonic for each dof in the previous field).</p>
-<p>For each forced dof, the force is written as: <span class="math notranslate nohighlight">\(f(t) = real(z) \cos(h t) + \real(z) \sin(h t)\)</span>.</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.node</span></code>: Node number(s).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field). Each element of the list is a complex number <span class="math notranslate nohighlight">\(z\)</span>.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.force.periodic.periodic_ponctual_force_node_list{n}.harmonic</span></code>: List of harmonics (one harmonic for each dof in the previous field).</p></li>
+</ul>
+<p>For each forced dof, the force is written as: <span class="math notranslate nohighlight">\(f(t) = \mathrm{Re}(z) \cos(h t) + \mathrm{Re}(z) \sin(h t)\)</span>.</p>
 </div></blockquote>
 </li>
-</ol>
+</ul>
 </section>
 <section id="periodic-distributed-forces">
 <h4>Periodic distributed forces<a class="headerlink" href="#periodic-distributed-forces" title="Permalink to this heading">¶</a></h4>

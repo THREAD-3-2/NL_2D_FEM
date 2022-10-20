@@ -48,139 +48,118 @@ a given problem and methods to perform the data analysis.</p>
 <ol class="arabic">
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.geom</span></code>: The geometry of the model (key points and lines of the geometry)</p>
 <blockquote>
-<div><p>1.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.geom.geom_node</span></code>: List of number and coordinates of the key points of the geometry. Each line is of the type <cite>point number, x coordinate, y coordinate’.
-1.2 :mod:`model.geom.geom_element</cite>: List of lines in the geometry connecting the nodes. Each line is of the type <cite>line number, point 1, point 2’.
-1.3 :mod:`model.geom.discretisation</cite>: List of number of elements in each line (list of integers, with size the number of lines of the geometry).</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.geom.geom_node</span></code>: List of number and coordinates of the key points of the geometry. Each line is of the type (point number, x coordinate, y coordinate).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.geom.geom_element</span></code>: List of lines in the geometry connecting the nodes. Each line is of the type (line number, point 1, point 2).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.geom.discretisation</span></code>: List of number of elements in each line (list of integers, with size the number of lines of the geometry).</p></li>
+</ul>
 </div></blockquote>
 </li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop</span></code>: Element cross-section and material properties (constant properties for all elements of the model)</p>
 <blockquote>
-<div><p>2.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.area</span></code>: Area of the cross-section.
-2.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.inertia</span></code>: Second moment of area of the cross-section.
-2.3 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.shear_coeff_k</span></code>: Shear coefficient of the cross-section.
-2.4 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.density</span></code>: Material density.
-2.5 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.young_mod</span></code>: Material Young’s modulus.
-2.6 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.shear_mod</span></code>: Material shear modulus.
-2.7 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.poisson</span></code>: Material Poisson’s ratio.
-2.8 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.alpha</span></code>: Material damping coefficient (linear Rayleigh damping).</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.area</span></code>: Area of the cross-section.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.inertia</span></code>: Second moment of area of the cross-section.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.shear_coeff_k</span></code>: Shear coefficient of the cross-section.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.density</span></code>: Material density.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.young_mod</span></code>: Material Young’s modulus.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.shear_mod</span></code>: Material shear modulus.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.poisson</span></code>: Material Poisson’s ratio.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.prop.alpha</span></code>: Material damping coefficient (linear Rayleigh damping).</p></li>
+</ul>
 </div></blockquote>
 </li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.mesh</span></code>: mesh of the FE model</p>
 <blockquote>
-<div><p>3.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.mesh.nodes</span></code>: List of number and coordinates of the nodes of the mesh. Each line is of the type <cite>node number, x coordinate, y coordinate’.
-3.2 :mod:`model.mesh.connect</cite>: Connectivity table, textit{i.e.} list of elements of the mesh. Each line is of the type <cite>element number, node 1, node 2’.
-3.3 :mod:`model.mesh.number_nodes</cite>: Total number of nodes in the mesh.
-3.4 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.mesh.number_elements</span></code>: Total number of elements in the mesh.</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.mesh.nodes</span></code>: List of number and coordinates of the nodes of the mesh. Each line is of the type (node number, x coordinate, y coordinate).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.mesh.connect</span></code>: Connectivity table, textit{i.e.} list of elements of the mesh. Each line is of the type (element number, node 1, node 2).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.mesh.number_nodes</span></code>: Total number of nodes in the mesh.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.mesh.number_elements</span></code>: Total number of elements in the mesh.</p></li>
+</ul>
 </div></blockquote>
 </li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.visu</span></code>: Visualization information for displaying results</p>
 <blockquote>
-<div><p>4.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.visu.visu_node_list</span></code>: List (cell array) of observed node and degree of freedom (dof).</p>
-<blockquote>
 <div><ul>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.visu.visu_node_list{n}</span></code> is a structure with two fields:</p>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.visu.visu_node_list</span></code>: List (cell array) of observed node and degree of freedom (dof).</p>
 <blockquote>
-<div><ol class="loweralpha simple">
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.node</span></code>: Node number.</p></li>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.dof</span></code>: List of dof number(s).</p></li>
-</ol>
+<div><p>** <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.visu.visu_node_list{n}</span></code> is a structure with two fields: a) <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.node</span></code>: Node number, and b) <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.prop.visu.visu_node_list{n}.dof</span></code>: List of dof number(s).</p>
 </div></blockquote>
 </li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.visu.dof</span></code>: List of indices of observed dof in the assembled vector.</p></li>
 </ul>
-</div></blockquote>
-<p>4.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.visu.dof</span></code>: List of indices of observed dof in the assembled vector.</p>
 </div></blockquote>
 </li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.boundary</span></code>: Boundary conditions information</p>
 <blockquote>
-<div><p>5.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.boundary.bc_node_list</span></code>: List (cell array) of boundary condition nodes and dof.</p>
-<blockquote>
 <div><ul>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node_list{n}</span></code> is a structure with two fields:</p>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.boundary.bc_node_list</span></code>: List (cell array) of boundary condition nodes and dof.</p>
 <blockquote>
-<div><ol class="loweralpha simple">
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.node</span></code>: Node number.</p></li>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.dof</span></code>: List of dof number(s).</p></li>
-</ol>
+<div><p>** <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node_list{n}</span></code> is a structure with two fields: a) <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.node</span></code>: Node number, and b) <code class="xref py py-mod docutils literal notranslate"><span class="pre">mds.boundary.bc_node{n}.dof</span></code>: List of dof number(s).</p>
 </div></blockquote>
 </li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.boundary.dof_list</span></code>: List of indices of all dof in the assembled vector.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.boundary.prescribed_dof</span></code>: List of indices of all prescribed dof (displacement or rotation set to zero).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.boundary.active_dof</span></code>: List of indices of all non-boundary condition dof.</p></li>
 </ul>
 </div></blockquote>
-<p>5.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.boundary.dof_list</span></code>: List of indices of all dof in the assembled vector.
-5.3 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.boundary.prescribed_dof</span></code>: List of indices of all prescribed dof (displacement or rotation set to zero).
-5.4 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.boundary.active_dof</span></code>: List of indices of all non-boundary condition dof.</p>
-</div></blockquote>
 </li>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads</span></code>: Loads (static and periodic, point force and distributed loads)</p>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads</span></code>: Loads (static and periodic, point force and distributed loads)</p></li>
+</ol>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.static</span></code>: Static loads.</p>
 <blockquote>
-<div><p>6.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.static</span></code>: Static loads.</p>
-<blockquote>
-<div><ol class="loweralpha">
+<div><ul>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.static.static_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.</p>
 <blockquote>
-<div><ul>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads..static.static_ponctual_force_node_list{n}</span></code> is a structure with three fields:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads..static.static_ponctual_force_node_list{n}.node</span></code>: Node number.</p></li>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads..static.static_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).</p></li>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.static.static_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field).</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
+<div><p>** <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads..static.static_ponctual_force_node_list{n}</span></code> is a structure with three fields: a):mod:<cite>model.loads.static.static_ponctual_force_node_list{n}.node</cite>: Node number, b) <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.static.static_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s), and c) <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.static.static_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field).</p>
 </div></blockquote>
 </li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.static.static_distributed_force_direction</span></code>: List of directions among (1) x-axis (2) y-axis  or (3) moment.</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.static.static_distributed_force_amplitude</span></code>: List of amplitudes (linear force density).</p></li>
-</ol>
+</ul>
 </div></blockquote>
-<p>6.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic</span></code>: Periodic loads</p>
-<blockquote>
-<div><ol class="loweralpha">
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic</span></code>: Periodic loads</p>
 <blockquote>
 <div><ul>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_ponctual_force_node_list{n}</span></code> is a structure with three fields:</p>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_ponctual_force_node_list</span></code>: List (cell array) of forced node(s) and dof.</p>
 <blockquote>
-<div><ul class="simple">
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodicponctual_force_node_list{n}.node</span></code>: Node number.</p></li>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s).</p></li>
-<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field).</p></li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
+<div><p>** <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_ponctual_force_node_list{n}</span></code> is a structure with three fields: a) <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodicponctual_force_node_list{n}.node</span></code>: Node number, b) <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_ponctual_force_node_list{n}.dof</span></code>: List of dof number(s), and c) <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_ponctual_force_node_list{n}.amplitude</span></code>: List of force amplitudes (one amplitude for each dof in the previous field).</p>
 </div></blockquote>
 </li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_distributed_force_direction</span></code>: List of direction among (1) x-axis (2) y-axis  or (3) moment.</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.loads.periodic.periodic_distributed_force_amplitude</span></code>: List of amplitudes (linear force density).</p></li>
-</ol>
+</ul>
 </div></blockquote>
-</div></blockquote>
-</li>
+<ol class="arabic" start="7">
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.matrices</span></code>: Assembled matrices of the model</p>
 <blockquote>
-<div><p>7.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.matrices.mass</span></code>: Mass matrix.
-7.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.matrices.damping</span></code>: Damping matrix.
-7.3 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.matrices.stiffness_at_origin</span></code>: Linear stiffness matrix (around undeformed (reference) configuration).
-7.4 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.matrices.tangent_stiffness_at_qs</span></code>: Unused.</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.matrices.mass</span></code>: Mass matrix.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.matrices.damping</span></code>: Damping matrix.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.matrices.stiffness_at_origin</span></code>: Linear stiffness matrix (around undeformed (reference) configuration).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.matrices.tangent_stiffness_at_qs</span></code>: Unused.</p></li>
+</ul>
 </div></blockquote>
 </li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.vectors</span></code>: Assembled vectors of the model</p>
 <blockquote>
-<div><p>8.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.vectors.null_vector</span></code>: Assembled vector of dof full of zeros.
-8.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.vectors.static_forces</span></code>: Assembled vector of static forces.
-8.3 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.vectors.periodic_forces</span></code>: Assembled vector (matrix) of periodic forces (each row corresponds to a harmonic).
-8.4 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.vectors.static_solution</span></code>: Unused.</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.vectors.null_vector</span></code>: Assembled vector of dof full of zeros.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.vectors.static_forces</span></code>: Assembled vector of static forces.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.vectors.periodic_forces</span></code>: Assembled vector (matrix) of periodic forces (each row corresponds to a harmonic).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.vectors.static_solution</span></code>: Unused.</p></li>
+</ul>
 </div></blockquote>
 </li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.solver</span></code>: Solver information</p>
 <blockquote>
-<div><p>9.1 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.solver.type</span></code>: <code class="xref py py-mod docutils literal notranslate"><span class="pre">'homemade'</span></code>: Default, solve NL system with a simple Newton method, or <code class="xref py py-mod docutils literal notranslate"><span class="pre">'fsolve'</span></code>: solve NL system with Matlab <code class="xref py py-mod docutils literal notranslate"><span class="pre">fsolve</span></code> from optimization toolbox).
-9.2 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.solver.tol_res</span></code>: Residual tolerance.
-9.3 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.solver.tol_step</span></code>: Step tolerance.
-9.4 <code class="xref py py-mod docutils literal notranslate"><span class="pre">model.solver.n_iter_max</span></code>: Number of maximum iterations for Newton’s method.</p>
+<div><ul class="simple">
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.solver.type</span></code>: <code class="xref py py-mod docutils literal notranslate"><span class="pre">'homemade'</span></code>: Default, solve NL system with a simple Newton method, or <code class="xref py py-mod docutils literal notranslate"><span class="pre">'fsolve'</span></code>: solve NL system with Matlab <code class="xref py py-mod docutils literal notranslate"><span class="pre">fsolve</span></code> from optimization toolbox).</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.solver.tol_res</span></code>: Residual tolerance.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.solver.tol_step</span></code>: Step tolerance.</p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.solver.n_iter_max</span></code>: Number of maximum iterations for Newton’s method.</p></li>
+</ul>
 </div></blockquote>
 </li>
 </ol>
@@ -259,11 +238,11 @@ a given problem and methods to perform the data analysis.</p>
 </section>
 <section id="display-related-methods">
 <h3>Display-related methods<a class="headerlink" href="#display-related-methods" title="Permalink to this heading">¶</a></h3>
-<ul class="simple">
+<ol class="arabic simple">
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.plot_deformed_mesh</span></code>: Plot deformed structure from a given vector.</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.plot_static_configuration</span></code>: Plot the static configuration.</p></li>
 <li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">model.plot_mode_shape</span></code>: Plot the mode shapes from a given list.</p></li>
-</ul>
+</ol>
 </section>
 </section>
 </section>
