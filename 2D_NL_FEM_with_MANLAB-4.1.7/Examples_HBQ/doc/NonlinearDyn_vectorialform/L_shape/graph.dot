@@ -1,9 +1,0 @@
-/* Created by mdot for Matlab */
-digraph m2html {
-  run_L_shape__short_version -> L_shape_problem;
-  run_L_shaped_detailled_version -> L_shape_problem;
-
-  L_shape_problem [URL="L_shape_problem.html"];
-  run_L_shape__short_version [URL="run_L_shape__short_version.html"];
-  run_L_shaped_detailled_version [URL="run_L_shaped_detailled_version.html"];
-}

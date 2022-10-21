@@ -1,7 +1,0 @@
-/* Created by mdot for Matlab */
-digraph m2html {
-  run_beam_horizontal_torque_short_version -> horizontal_beam_torque_problem;
-
-  horizontal_beam_torque_problem [URL="horizontal_beam_torque_problem.html"];
-  run_beam_horizontal_torque_short_version [URL="run_beam_horizontal_torque_short_version.html"];
-}

@@ -1,9 +1,0 @@
-/* Created by mdot for Matlab */
-digraph m2html {
-
-  test_beam_horizontal [URL="test_beam_horizontal.html"];
-  test_house [URL="test_house.html"];
-  test_mesher_triangle [URL="test_mesher_triangle.html"];
-  test_mesher_triangle_v2 [URL="test_mesher_triangle_v2.html"];
-  test_model_beam [URL="test_model_beam.html"];
-}
