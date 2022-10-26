@@ -77,11 +77,11 @@ Visualization input
 The field :mod:`visu` of the :mod:`mds` governs the visualization input.
 There is only a single field, representative of a cell of structures:
 
-* :mod:`mds.prop.visu.visu_node_list`: List (cell array) of observed node(s) and dof. 
-* :mod:`mds.prop.visu.visu_node_list{n}` is a structure with two fields:
+* :mod:`mds.visu.visu_node_list`: List (cell array) of observed node(s) and dof. 
+* :mod:`mds.visu.visu_node_list{n}` is a structure with two fields:
 
-    * :mod:`mds.prop.visu.visu_node_list{n}.node`: Node number.
-    * :mod:`mds.prop.visu.visu_node_list{n}.dof`: List of dof number(s).
+    * :mod:`mds.visu.visu_node_list{n}.node`: Node number.
+    * :mod:`mds.visu.visu_node_list{n}.dof`: List of dof number(s).
 
 
 Boundary conditions input

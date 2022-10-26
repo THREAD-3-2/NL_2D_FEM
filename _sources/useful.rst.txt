@@ -6,6 +6,7 @@ Useful functions folder
 The folder :mod:`USEFUL_FUNCTIONS` contains several functions used in the computation:
 
 * :mod:`create_empty_mds`: Define an empty :mod:`mds`.
+* :mod:`harmonicDecomposition`: Used in the point display method to visualize the harmonic content at a given point of the MANLAB diagram.
 * :mod:`animate_solution`: Used in the point display method to animate the mesh at a given point of the MANLAB diagram.
 * :mod:`man_residual_fixed_amplitude`: Residual used in the initialization.
 * :mod:`man_residual_fixed_frequency`: Residual used in the initialization.

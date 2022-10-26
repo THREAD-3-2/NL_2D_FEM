@@ -10,13 +10,13 @@ found in `(A. Givois et al., 2019) <https://link.springer.com/article/10.1007/s1
 Set the Matlab Path
 -------------------
 
-First run the :mod:`set_src_path` from the :mod:`NonLinearFEM` folder.
+First run the :mod:`set_src_path_for_NL_2D_FEM` from the :mod:`NonlinearFEM` folder.
 
 
 Create a new FE model
 ---------------------
 
-Next, create a new folder.
+Next, create a new folder (or see example :mod:`run_walkthrough_detailed`).
 Then, create a new script name :mod:`run_problem` that will contain all of the operations to be done.
 
 In the script, clean the state of Matlab:
@@ -26,7 +26,7 @@ In the script, clean the state of Matlab:
 	clear
 	close all
 	clc
-	% dont forget to set the path (run set_src_path from the NonLinearFEM folder)
+	% dont forget to set the path (run set_src_path from the NonlinearFEM folder)
 	
 Then create a new FE model:
 
@@ -46,7 +46,7 @@ The best way to define the inputs is to use a model data structure. However, we 
 Using a model data structure
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The model can be created by first building a model data structure. An example model is shown in the file :mod:`arthur_beam_problem`. Then the FE model is directly set up.
+The model can be created by first building a model data structure. An example model is shown in the file :mod:`arthur_beam_problem`. Then, the FE model is directly set up.
 
 .. code-block::
 
@@ -59,20 +59,23 @@ The model can be created by first building a model data structure. An example mo
 Manual input definition
 ~~~~~~~~~~~~~~~~~~~~~~~
 
+The following steps should be taken if the model is not directly created using a model data structure (shown above).
+
 Geometry
 """"""""
 
 .. code-block::
 
+	L = 1;
 	% Key nodes
 	geom_node = [1 0 0 0;   % Point 1 coord (0,0)
-				 2 L/pi 0 0; % Point 2 coord (L/pi,0) % for force 
-				 3  L  0 0;];% Point 3 coord (L, 0)
+    	2 L/pi 0 0; % Point 2 coord (L/pi,0) % for force
+    	3  L  0 0;];% Point 3 coord (L, 0)
 	% Lines of the geometry
 	geom_element = [1 1 2    % line 1 between point 1 and 2
-					2 2 3];  % line 2 between point 2 and 3
+    	2 2 3];  % line 2 between point 2 and 3
 	% Discretisation for each line
-	discretisation = [15, 30]; % line 1 discretized with 15 elements
+	discretisation = [5, 10]; % line 1 discretized with 15 elements
 	% set geometry (optional if a mesh is directly provided)
 	model = model.set_geom(geom_node, geom_element, discretisation);
 
@@ -89,18 +92,23 @@ Properties
 
 .. code-block::
 
-	% Key nodes
 	%% material inputs + adimentionalization
 	b = 50; h = 1;  % constant relative to the beam section
 	S = b*h;       % section area
 	I = b*h^3/12;  % section second moment of area
-	rho = 7.8e-9;  % material density
-	E = 210e3;     % material Young Modulus
-	poisson = 0.3;  % material Poisson ratio
+	% non dimensional parameters
+	poisson = 0.3;   % material Poisson ratio
 	k = 1;           % shear area coeff
-	alpha = 0.1;   % Raileight damping coeff (C = alpha M)
+	alpha = 0.1;     % Raileight damping coeff (C = alpha M)
+	epsi = I/(S*L^2);% slenderness ratio
+	S = 1;           % nd area
+	I = epsi;        % nd 2nd moment
+	rho = 1;         % nd density
+	E = 1/epsi;      % nd Young mod
+	
 	% set properties
 	model = model.set_prop(S, I, rho, E, poisson, k, alpha);
+
 	
 Boundary conditions
 """""""""""""""""""
@@ -108,8 +116,8 @@ Boundary conditions
 .. code-block::
 
 	%% Boundary condition input (Dirichlet condition only)
-	mds.boundary.bc_node_list{1} = struct('node', 1,'dof', [1,2,3]); % node 1 is clamped
-	mds.boundary.bc_node_list{2} = struct('node', 3,'dof', [1,2,3]); % node 3 is clamped
+	bc_node_list{1} = struct('node', 1,'dof', [1,2,3]); % node 1 is clamped
+	bc_node_list{2} = struct('node', 3,'dof', [1,2,3]); % node 3 is clamped
 	% set boundary condition
 	model = model.set_boundary(bc_node_list);
 
@@ -121,7 +129,7 @@ Visualization
 	
 	%% Visualisation node Input (for results display)
 	visu_node_list{1} = struct('node', 2 ,...
-							'dof', [1 2]);
+		'dof', [1 2]);
 	% set visualized nodes
 	model = model.set_visu(visu_node_list); 
 
@@ -132,7 +140,8 @@ Force definitions
 .. code-block::
 
 	% point periodic force
-	periodic_ponctual_force_node_list{1} = struct('node', 2,'dof', [2],'amplitude', [0.1], 'harmonic', [1+1i] ); % complex amplitude f = re(amp) cos + im(amp) sin
+	periodic_ponctual_force_node_list{1} = struct('node', 2,'dof', [2],'amplitude', [0.1], 'harmonic', [1] ); % complex amplitude f = re(amp) cos + im(amp) sin
+	
 	% dynamic loads
 	model = model.set_periodic_loads('ponctual', periodic_ponctual_force_node_list);
 
@@ -153,10 +162,8 @@ Static solution
 
 	% static solution
 	[qs_full, res] = model.solve_static_problem();
-	q0_full = model.vectors.null_vector;
-	fig = figure(99); fig.Name='Static configuration'
-	model.plot_deformed_mesh(q0_full, fig, '--k') % undef mesh
-	model.plot_deformed_mesh(qs_full, fig, '-c') % def mesh
+	model.plot_static_configuration(qs_full)
+
 	% compute stresses
 	[strain,stress] = model.strains_and_stress_at_gauss_point(qs_full);
 
@@ -169,12 +176,8 @@ Modal analysis
 	% modal analysis
 	[shape, freq] = model.linear_modal_analysis(qs_full);
 	% [shape, freq] = model.linear_modal_analysis();
-	fig2 = figure(98); fig2.Name='Mode Shapes'
-	model.plot_deformed_mesh(q0_full, fig2, '--k')
-	model.plot_deformed_mesh(qs_full, fig2, '-c')
-	model.plot_deformed_mesh(shape(:,1), fig2, '-r')
-	model.plot_deformed_mesh(shape(:,2), fig2, '-g')
-	model.plot_deformed_mesh(shape(:,3), fig2, '-b')
+	model.plot_mode_shape([1:4],shape)
+
 
 
 Linear forced analysis
@@ -223,35 +226,30 @@ Define the MANLAB input data and initialize the MAN system:
 	sys = SystHBQ(nz,nz_aux,H,@equations_vector_NL_2D_FEM,@point_display,@global_display,parameters,type,'vectorial');
 
 
-Nonlinear normal modes starting point
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Nonlinear normal modes and forced response starting point
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Find the starting point for the nonlinear modes MANLAB computation:
-
-.. code-block::
-
-	omega0 = (freq(target_mode)*2*pi);
-	lambda0 = 0;
-	idx = sys.getcoord('cos',2 ,1); % dof to be imposed amplitude
-	amp = 1e-5;    % imposed amplitude
-	[Z0] = model.man_initial_point(H, omega0, qs_full, amp*shape(:,target_mode));
-	U0 = sys.init_U0(Z0, omega0, lambda0);
-	U0 = model.solve_MAN_system_at_fixed_amplitude(U0, idx, amp, sys); 
-
-
-Forced response starting point
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Find the starting point for the forced response MANLAB computation:
+Find the starting point for the nonlinear modes or forced response MANLAB computation:
 
 .. code-block::
 
-	omega0 = freq(target_mode)*2*pi*0.8;
-	lambda0 = omega0; % continuation parameter initial value
-	[qp_full, bode] = model.linear_analysis(H, omega0);    
-	[Z0] = model.man_initial_point(H, omega0, qs_full, qp_full);
-	U0 = sys.init_U0(Z0, omega0, lambda0);
-	U0 = model.solve_MAN_system_at_fixed_frequency(U0, omega0, sys);
+	if strcmp(type,'autonomous')
+    		omega0 = (freq(target_mode)*2*pi);
+    		lambda0 = 0;
+    		idx = sys.getcoord('cos',2 ,1); % dof to be imposed amplitude
+    		amp = 1e-5;    % imposed amplitude
+    		[Z0] = model.man_initial_point(H, omega0, qs_full, amp*shape(:,target_mode));
+    		U0 = sys.init_U0(Z0, omega0, lambda0);
+    		U0 = model.solve_MAN_system_at_fixed_amplitude(U0, idx, amp, sys);
+	elseif strcmp(type, 'forced')
+    		omega0 = freq(target_mode)*2*pi*0.8;
+    		lambda0 = omega0; % continuation parameter initial value
+    		[qp_full, bode] = model.linear_analysis(H, omega0);
+    		[Z0] = model.man_initial_point(H, omega0, qs_full, qp_full);
+    		U0 = sys.init_U0(Z0, omega0, lambda0);
+    		U0 = model.solve_MAN_system_at_fixed_frequency(U0, omega0, sys);
+	end
+
 
 
 Display variables and call to MANLAB
@@ -300,12 +298,9 @@ Define the model
 	clear
 	close all
 	clc
-	%% Path of the SRC file.
-	addpath(genpath('..\..\..\SRC'));
-	addpath(genpath('..\..\NonlinearDyn_vectorialform'));
 	%% FEM model definition
 	% load the model data structure
-	mds = toy_house_problem();
+	mds = arthur_beam_problem();
 	% create a new NL_2D_FEM model
 	model = NL_2D_FEM; 
 	% set up the model using the data structure
