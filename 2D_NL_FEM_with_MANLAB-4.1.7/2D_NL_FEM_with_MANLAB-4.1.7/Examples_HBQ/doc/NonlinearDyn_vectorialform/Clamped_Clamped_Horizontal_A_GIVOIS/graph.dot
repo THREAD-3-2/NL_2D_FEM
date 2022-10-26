@@ -1,7 +1,0 @@
-/* Created by mdot for Matlab */
-digraph m2html {
-  run_arthur_detailled_version -> arthur_beam_problem;
-
-  arthur_beam_problem [URL="arthur_beam_problem.html"];
-  run_arthur_detailled_version [URL="run_arthur_detailled_version.html"];
-}

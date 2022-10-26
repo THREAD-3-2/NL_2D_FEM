@@ -1,9 +1,0 @@
-/* Created by mdot for Matlab */
-digraph m2html {
-  run_toy_house_detailled_version -> toy_house_problem;
-  run_toy_house_short_version -> toy_house_problem;
-
-  run_toy_house_detailled_version [URL="run_toy_house_detailled_version.html"];
-  run_toy_house_short_version [URL="run_toy_house_short_version.html"];
-  toy_house_problem [URL="toy_house_problem.html"];
-}
