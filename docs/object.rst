@@ -42,7 +42,7 @@ Attributes
 
     * :mod:`model.visu.visu_node_list`: List (cell array) of observed node and degree of freedom (dof). 
 
-        ** :mod:`model.visu.visu_node_list{n}` is a structure with two fields: a) :mod:`mds.prop.visu.visu_node_list{n}.node`: Node number, and b) :mod:`mds.prop.visu.visu_node_list{n}.dof`: List of dof number(s).
+        ** :mod:`model.visu.visu_node_list{n}` is a structure with two fields: a) :mod:`mds.visu.visu_node_list{n}.node`: Node number, and b) :mod:`mds.visu.visu_node_list{n}.dof`: List of dof number(s).
 
     * :mod:`model.visu.dof`: List of indices of observed dof in the assembled vector. 
 
@@ -62,7 +62,7 @@ Attributes
 
         * :mod:`model.loads.static.static_ponctual_force_node_list`: List (cell array) of forced node(s) and dof. 
 
-            ** :mod:`model.loads..static.static_ponctual_force_node_list{n}` is a structure with three fields: a):mod:`model.loads.static.static_ponctual_force_node_list{n}.node`: Node number, b) :mod:`model.loads.static.static_ponctual_force_node_list{n}.dof`: List of dof number(s), and c) :mod:`model.loads.static.static_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field).
+            ** :mod:`model.loads.static.static_ponctual_force_node_list{n}` is a structure with three fields: a) :mod:`model.loads.static.static_ponctual_force_node_list{n}.node`: Node number, b) :mod:`model.loads.static.static_ponctual_force_node_list{n}.dof`: List of dof number(s), and c) :mod:`model.loads.static.static_ponctual_force_node_list{n}.amplitude`: List of force amplitudes (one amplitude for each dof in the previous field).
 
         * :mod:`model.loads.static.static_distributed_force_direction`: List of directions among (1) x-axis (2) y-axis  or (3) moment.
         * :mod:`model.loads.static.static_distributed_force_amplitude`: List of amplitudes (linear force density). 
