@@ -1,6 +1,6 @@
 .. _walkthrough:
 
-Complete walkthrough of a simple example
+Example
 ========================================
 
 This example outlines the step-by-step procedure to compute the benchmark reference solution of
