@@ -24,8 +24,8 @@ Contents
 .. toctree::
    installation
    walkthrough
-   theory
    object
+   theory
    useful
    inputs
    gui
