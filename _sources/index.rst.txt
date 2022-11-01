@@ -23,10 +23,10 @@ Contents
 
 .. toctree::
    installation
+   walkthrough
    theory
    object
    useful
    inputs
    gui
-   walkthrough
    :maxdepth: 2
