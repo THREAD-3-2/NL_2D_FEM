@@ -1,7 +1,7 @@
 .. _theory:
 
-Theory
-======
+Problem Description
+===================
 
 Finite element model (FEM) of geometrically exact beam structures
 -----------------------------------------------------------------
