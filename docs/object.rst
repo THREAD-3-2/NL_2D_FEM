@@ -1,6 +1,6 @@
 .. _object:
 
-Description of the `NL_2D_FEM` object
+Initial value problems 
 =====================================
 
 The finite element (FE) information and methods are defined in a Matlab object called :mod:`NL_2D_FEM`.
