@@ -26,7 +26,8 @@ In the script, clean the state of Matlab:
 	clear
 	close all
 	clc
-	% dont forget to set the path (run set_src_path from the NonlinearFEM folder)
+	% dont forget to set the path 
+	%(run set_src_path from the NonlinearFEM folder)
 	
 Then create a new FE model:
 
@@ -140,10 +141,13 @@ Force definitions
 .. code-block::
 
 	% point periodic force
-	periodic_ponctual_force_node_list{1} = struct('node', 2,'dof', [2],'amplitude', [0.1], 'harmonic', [1] ); % complex amplitude f = re(amp) cos + im(amp) sin
+	periodic_ponctual_force_node_list{1} = struct('node', 2,'dof', 
+	[2],'amplitude', [0.1], 'harmonic', [1] ); % complex amplitude
+	f = re(amp) cos + im(amp) sin
 	
 	% dynamic loads
-	model = model.set_periodic_loads('ponctual', periodic_ponctual_force_node_list);
+	model = model.set_periodic_loads('ponctual', 
+	periodic_ponctual_force_node_list);
 
 
 Matrices and force vector initialization
