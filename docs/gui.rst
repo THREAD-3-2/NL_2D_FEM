@@ -1,6 +1,6 @@
 .. _gui:
 
-Code use
+Code
 ========
 
 MANLAB Graphical User Interface (GUI)
