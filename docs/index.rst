@@ -22,6 +22,7 @@ Contents
 --------
 
 .. toctree::
+   installation
    theory
    object
    useful
