@@ -1,6 +1,6 @@
 .. _theory:
 
-Problem Description
+Integration methods
 ===================
 
 Finite element model (FEM) of geometrically exact beam structures
