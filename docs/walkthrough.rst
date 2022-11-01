@@ -351,11 +351,13 @@ Initialize the computation
 	angfreq = 'omega'; 
 	% 'omega' or constant value 
 	% MANLAB structure of parameters for equation.m
-	[nz, nz_aux, parameters] = model.set_MAN_parameters(H, type,  model, angfreq);
+	[nz, nz_aux, parameters] = model.set_MAN_parameters
+	(H, type,  model, angfreq);
 	% Construct MANLAB system (matlab object)
 	sys = SystHBQ(nz,nz_aux,H,@equations_vector_NL_2D_FEM,
 	@point_display,@global_display,parameters,type,'vectorial');
-	%% compute static equilibrium, modal analysis and the MANLAB starting point
+	%% compute static equilibrium, 
+	modal analysis and the MANLAB starting point
 	[U0, omega0, lambda0] = model.initialise_MAN_computation
 	(sys, type, target_mode);
 
