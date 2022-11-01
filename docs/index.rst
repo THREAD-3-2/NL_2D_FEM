@@ -26,7 +26,7 @@ Contents
    walkthrough
    object
    theory
+   gui
    useful
    inputs
-   gui
    :maxdepth: 2
