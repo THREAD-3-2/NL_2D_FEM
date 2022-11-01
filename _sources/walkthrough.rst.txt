@@ -217,17 +217,22 @@ Define the MANLAB input data and initialize the MAN system:
 
 	%% MANLAB LAUNCHING SEQUENCE
 	%% MANLAB INPUTS
-	global U Section Diagram   % Global variables to export point from the diagram.
-	H = 10;          % number of harmonics for the Fourier series   
+	global U Section Diagram   
+	% Global variables to export point from the diagram.
+	H = 10;          
+	% number of harmonics for the Fourier series   
 	type = 'autonomous'; % type of system (can be 'forced' or 'autonomous')
 	% type = 'forced'; % type of system (can be 'forced' or 'autonomous')
-	target_mode = 1; % modeto be studied in NNM (autonomous) or in FRF (forced)
+	target_mode = 1; % modeto be studied in NNM (autonomous) 
+	or in FRF (forced)
 	angfreq = 'omega'; % 'omega' or constant value 
 	%% Use the model to initialise MANLAB computation automatically
 	% MANLAB structure of parameters for equation.m
-	[nz, nz_aux, parameters] = model.set_MAN_parameters(H, type,  model, angfreq);
+	[nz, nz_aux, parameters] = model.set_MAN_parameters
+	(H, type,  model, angfreq);
 	% Construct MANLAB system (matlab object)
-	sys = SystHBQ(nz,nz_aux,H,@equations_vector_NL_2D_FEM,@point_display,@global_display,parameters,type,'vectorial');
+	sys = SystHBQ(nz,nz_aux,H,@equations_vector_NL_2D_FEM,
+	@point_display,@global_display,parameters,type,'vectorial');
 
 
 Nonlinear normal modes and forced response starting point
@@ -242,9 +247,11 @@ Find the starting point for the nonlinear modes or forced response MANLAB comput
     		lambda0 = 0;
     		idx = sys.getcoord('cos',2 ,1); % dof to be imposed amplitude
     		amp = 1e-5;    % imposed amplitude
-    		[Z0] = model.man_initial_point(H, omega0, qs_full, amp*shape(:,target_mode));
+    		[Z0] = model.man_initial_point(H, omega0, qs_full,
+		amp*shape(:,target_mode));
     		U0 = sys.init_U0(Z0, omega0, lambda0);
-    		U0 = model.solve_MAN_system_at_fixed_amplitude(U0, idx, amp, sys);
+    		U0 = model.solve_MAN_system_at_fixed_amplitude
+		(U0, idx, amp, sys);
 	elseif strcmp(type, 'forced')
     		omega0 = freq(target_mode)*2*pi*0.8;
     		lambda0 = omega0; % continuation parameter initial value
@@ -273,19 +280,32 @@ Choose the display variables visualized during the computation and call MANLAB:
 	%% Launch of Manlab with options
 	Manlab('sys'       ,sys , ...
 		'U0value'         ,U0, ...
-		'order'           ,20, ...     % order of the series
-		'ANMthreshold'    ,1e-10, ...   % threshold for the domain of validity of the series
-		'Amax_max'        ,1e2, ...    % maximum value of the domain of validity of the series
-		'NRthreshold'     ,1e-12, ...   % threshold for Newton-Raphson (NR) corrections
-		'NRitemax'        ,50, ...     % Maximum number of iteration of NR algorithm
-		'NRstart'         ,0, ...      % NR corrections for the user-defined starting point [on]/off
-		'NRmethod'        ,0, ...      % NR corrections on/[off]
-		'BifDetection'    ,1, ...      % Detection of bifurcation [on]/off
-		'PointDisplay'    ,0, ...      % Point display [on]/off
-		'GlobalDisplay'   ,0, ...      % Global display [on]/off
-		'StabilityCheck'  ,0, ...      % Stability computation on/[off]
-		'StabTol'         ,1e-6, ...   % Stability tolerance
-		'displayvariables',dispvars);     % MANLAB run
+		'order'           ,20, ...     
+		% order of the series
+		'ANMthreshold'    ,1e-10, ...   
+		% threshold for the domain of validity of the series
+		'Amax_max'        ,1e2, ...    
+		% maximum value of the domain of validity of the series
+		'NRthreshold'     ,1e-12, ...   
+		% threshold for Newton-Raphson (NR) corrections
+		'NRitemax'        ,50, ...     
+		% Maximum number of iteration of NR algorithm
+		'NRstart'         ,0, ...      
+		% NR corrections for the user-defined starting point [on]/off
+		'NRmethod'        ,0, ...      
+		% NR corrections on/[off]
+		'BifDetection'    ,1, ...      
+		% Detection of bifurcation [on]/off
+		'PointDisplay'    ,0, ...     
+		% Point display [on]/off
+		'GlobalDisplay'   ,0, ...      
+		% Global display [on]/off
+		'StabilityCheck'  ,0, ...      
+		% Stability computation on/[off]
+		'StabTol'         ,1e-6, ...   
+		% Stability tolerance
+		'displayvariables',dispvars);     
+		% MANLAB run
 
 
 Quick launch of a computation
@@ -318,18 +338,26 @@ Initialize the computation
 
 	%% MANLAB LAUNCHING SEQUENCE
 	%% MANLAB INPUTS
-	global U Section Diagram   % Global variables to export point from the diagram in GUI
-	H = 10;          % number of harmonics for the Fourier series   
-	type = 'autonomous'; % type of system (can be 'forced' or 'autonomous')
-	% type = 'forced'; % type of system (can be 'forced' or 'autonomous')
-	target_mode = 1; % modeto be studied in NNM (autonomous) or in FRF (forced)
-	angfreq = 'omega'; % 'omega' or constant value 
+	global U Section Diagram   
+	% Global variables to export point from the diagram in GUI
+	H = 10;          
+	% number of harmonics for the Fourier series   
+	type = 'autonomous'; 
+	% type of system (can be 'forced' or 'autonomous')
+	% type = 'forced'; 
+	% type of system (can be 'forced' or 'autonomous')
+	target_mode = 1; 
+	% modeto be studied in NNM (autonomous) or in FRF (forced)
+	angfreq = 'omega'; 
+	% 'omega' or constant value 
 	% MANLAB structure of parameters for equation.m
 	[nz, nz_aux, parameters] = model.set_MAN_parameters(H, type,  model, angfreq);
 	% Construct MANLAB system (matlab object)
-	sys = SystHBQ(nz,nz_aux,H,@equations_vector_NL_2D_FEM,@point_display,@global_display,parameters,type,'vectorial');
+	sys = SystHBQ(nz,nz_aux,H,@equations_vector_NL_2D_FEM,
+	@point_display,@global_display,parameters,type,'vectorial');
 	%% compute static equilibrium, modal analysis and the MANLAB starting point
-	[U0, omega0, lambda0] = model.initialise_MAN_computation(sys, type, target_mode);
+	[U0, omega0, lambda0] = model.initialise_MAN_computation
+	(sys, type, target_mode);
 
 
 Call to MANLAB
